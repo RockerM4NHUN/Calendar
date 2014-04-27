@@ -24,7 +24,7 @@ public class CalendarEntry{
 		this.type = type;
 		foregroundColor = foreColor;
 		backgroundColor = backColor;
-		String description = desc;
+		description = desc;
 	}
 	
 	

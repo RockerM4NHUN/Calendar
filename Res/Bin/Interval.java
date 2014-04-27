@@ -3,6 +3,8 @@ package Res.Bin;
 import java.sql.Timestamp;
 
 /**
+ * Holds data for a positively directed interval.
+ * 
  * @author Zombori Dániel
  */
 public class Interval{
@@ -26,7 +28,7 @@ public class Interval{
 	 * @return True if the two intervals have more than one common point.
 	 */
 	public boolean intersect(Interval i){
-		return intersect(i.start) || intersect(i.end);
+		return (intersect(i.start) || intersect(i.end)) || (i.intersect(start) || i.intersect(end));
 	}
 	
 	/**
@@ -46,7 +48,7 @@ public class Interval{
 	 * @return True if there is no interval between the two intervals.
 	 */
 	public boolean joinable(Interval i){
-		return start == i.end || end == i.start;
+		return (start == i.end || end == i.start);
 	}
 	
 	/**
@@ -87,5 +89,12 @@ public class Interval{
 	 */
 	public Timestamp getEndTimestamp(){
 		return new Timestamp(end);
+	}
+	/**
+	 * @author Zombori Dániel
+	 * @return String that represents the interval
+	 */
+	public String toString(){
+		return "[ " + start + " - " + end + " )";
 	}
 }
