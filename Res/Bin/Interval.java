@@ -22,8 +22,6 @@ public class Interval{
 	}
 	
 	/**
-	 * #UNTESTED
-	 * 
 	 * @author Zombori Dániel
 	 * @return True if the two intervals have more than one common point.
 	 */
@@ -32,8 +30,15 @@ public class Interval{
 	}
 	
 	/**
-	 * #UNTESTED
-	 * 
+	 * @author Zombori Dániel
+	 * @return Returns new Interval or null if no intersection.
+	 */
+	public Interval getIntersection(Interval i){
+		if (!intersect(i)) return null;
+		return new Interval(((start > i.start) ? start : i.start),((end > i.end) ? i.end : end));
+	}
+	
+	/**
 	 * @author Zombori Dániel
 	 * @return True if the point is in the interval. (start <= point < end)
 	 */

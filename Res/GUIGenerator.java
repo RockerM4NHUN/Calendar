@@ -1,6 +1,6 @@
 package Res;
 
-import javax.swing.JPanel;
+import java.awt.Container;
 import javax.swing.JFrame;
 
 /**
@@ -10,7 +10,7 @@ public interface GUIGenerator{
 	/**
 	 * Builds the gui in container on parent window.
 	 */
-	public void show(Window parent, JPanel container);
+	public void show(Window parent, Container container);
 	/**
 	 * Called when the gui will be removed from window.
 	 */

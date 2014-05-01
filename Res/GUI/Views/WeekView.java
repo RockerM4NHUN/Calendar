@@ -42,6 +42,15 @@ public class WeekView extends CalendarView{
 		}
 	}
 	
+	class Intersection{
+		public Intersection(Interval interval, int count){
+			this.interval = interval;
+			this.count = count;
+		}
+		Interval interval; //interval int time
+		int count;
+	}
+	
 	
 	private int width;
 	private int height;
@@ -75,6 +84,11 @@ public class WeekView extends CalendarView{
 	public void paintComponent(Graphics g){
 		abstractPaintComponent(g);
 		
+		
+		//***************************\\
+		//    setting environment    \\
+		//***************************\\
+		
 		setBackground(new Color(250,232,155));
 
 		width = getWidth();//width of 
@@ -106,6 +120,11 @@ public class WeekView extends CalendarView{
 		Color[] rowLightColors = new Color[]{new Color(255,230,252),new Color(230,255,233)};
 		//Color selectionColor = new Color(80,255,255,128);
 		Color selectionColor = new Color(56,179,179,128);
+		Color currentTimeColor = new Color(255,0,0);
+		
+		//******************************\\
+		//    drawing static context    \\
+		//******************************\\
 		
 		String[] days = new String[]{"Monday","Thuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 		for(int i = 0,x = firstVerticalLine + xstep / 2;i < days.length;i++,x+=xstep){
@@ -164,6 +183,49 @@ public class WeekView extends CalendarView{
 			g.fillRoundRect(selected.x,selected.y,3,selected.height,3,3);//left
 			g.fillRoundRect(selected.x + selected.width - 3,selected.y,3,selected.height,3,3);//right
 		}
+		
+		//**********************************\\
+		//    drawing current time signs    \\
+		//**********************************\\
+		
+		long currentTime = System.currentTimeMillis();
+		if (weekInterval.intersect(currentTime)){
+			g.setColor(currentTimeColor);
+			Calendar c = Calendar.getInstance();
+			c.setTime(new Date(currentTime));
+			int x = firstVerticalLine + dayOfWeek(currentTime) * xstep;
+			int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
+			
+			y -= 4;
+			
+			//at field
+			g.fillPolygon(
+				new int[]{x,x,x+2,x+8,x+2},
+				new int[]{y,y+8,y+8,y+4,y},
+				5
+				);
+			x += xstep;
+			g.fillPolygon(
+				new int[]{x,x,x-2,x-8,x-2},
+				new int[]{y,y+8,y+8,y+4,y},
+				5
+				);
+			
+			//at side
+			x = 0;
+			g.fillPolygon(
+				new int[]{x,x,x+2,x+8,x+2},
+				new int[]{y,y+8,y+8,y+4,y},
+				5
+				);
+			x = firstVerticalLine;
+			g.fillPolygon(
+				new int[]{x,x,x-2,x-8,x-2},
+				new int[]{y,y+8,y+8,y+4,y},
+				5
+				);
+			
+		}
 	}
 	
 	/**
@@ -171,12 +233,15 @@ public class WeekView extends CalendarView{
 	 */
 	private java.util.List<EntryGFX> generateGFXEntries(java.util.List<CalendarEntry> l){
 		java.util.List<EntryGFX> rects = new ArrayList<EntryGFX>();
+		java.util.List<Interval> intersections = new ArrayList<Interval>();
+		java.util.List<Intersection> isecs = new ArrayList<Intersection>();
 		Calendar c = Calendar.getInstance();
 		
 		
 		int i = 0;
 		for (CalendarEntry e : l){
 			
+			//if not in currently displayed interval skip
 			if (!e.getInterval().intersect(weekInterval)){
 				continue;
 			}
@@ -192,7 +257,7 @@ public class WeekView extends CalendarView{
 			
 			
 			//detect collisions, MUST USE ZONES TO DETERMINE THE NECESSERY WIDTH
-			/* int j = 0;
+			/*int j = 0;
 			for (CalendarEntry ce : l){
 				if (e != ce && e.getInterval().intersect(ce.getInterval())){
 					entry.sharing++;
