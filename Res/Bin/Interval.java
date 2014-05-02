@@ -26,14 +26,14 @@ public class Interval{
 	 * @return True if the two intervals have more than one common point.
 	 */
 	public boolean intersect(Interval i){
-		return (intersect(i.start) || intersect(i.end)) || (i.intersect(start) || i.intersect(end));
+		return (contains(i.start) || contains(i.end - 1)) || (i.contains(start) || i.contains(end - 1));
 	}
 	
 	/**
 	 * @author Zombori Dániel
 	 * @return Returns new Interval or null if no intersection.
 	 */
-	public Interval getIntersection(Interval i){
+	public Interval intersection(Interval i){
 		if (!intersect(i)) return null;
 		return new Interval(((start > i.start) ? start : i.start),((end > i.end) ? i.end : end));
 	}
@@ -42,8 +42,45 @@ public class Interval{
 	 * @author Zombori Dániel
 	 * @return True if the point is in the interval. (start <= point < end)
 	 */
-	public boolean intersect(long i){
+	public boolean contains(long i){
 		return (start <= i && i < end);
+	}
+	
+	/**
+	 * @author Zombori Dániel
+	 * @return True if the parameter is in the interval. (start <= i.start,i.end < end)
+	 */
+	public boolean contains(Interval i){
+		return (contains(i.start) && contains(i.end));
+	}
+	
+	/**
+	 * @author Zombori Dániel
+	 * @return Union of the intervals or null if not possible
+	 */
+	public Interval union(Interval i){
+		if (contains(i)) return clone();
+		if (i.contains(this)) return i.clone();
+		
+		if (intersect(i)){
+			if (start <= i.start){
+				return new Interval(start,(end < i.end ? i.end : end));
+			}
+			return new Interval(i.start,end);
+		}
+		if (joinable(i)){
+			if (start < i.start) return new Interval(start,i.end);
+			return new Interval(i.start,end);
+		}
+		return null;
+	}
+	
+	/**
+	 * @author Zombori Dániel
+	 * @return True if the point is in the interval. (start <= point < end)
+	 */
+	public Interval clone(){
+		return new Interval(start,end);
 	}
 	
 	/**

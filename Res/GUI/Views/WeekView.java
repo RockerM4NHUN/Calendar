@@ -11,7 +11,8 @@ public class WeekView extends CalendarView{
 	public WeekView(){
 		super();
 		setPreferredSize(new Dimension(56 + 7 * 130,48 + 24 * 30));
-		gfxEntries = null;
+		groups = new ArrayList<IntersectionGroup>();
+		gfxEntries = new ArrayList<EntryGFX>();
 		selected = null;
 		
 		addSelectionChangedListener(new CalendarSelectionChangedListener(){
@@ -21,36 +22,237 @@ public class WeekView extends CalendarView{
 		});
 	}
 	
+		//*************************\\
+		//    IntersectionGroup    \\
+		//*************************\\ 
+	/**
+	 * Inner class for storing entries drawing information
+	 * 
+	 * @author Zombori Dániel
+	 */
+	class IntersectionGroup{
+		public IntersectionGroup(CalendarEntry e){
+			entries = new TreeSet<CalendarEntry>();
+			rects = new ArrayList<EntryGFX>();
+			entries.add(e);
+			
+			ival = e.getInterval();
+			
+			layers = new ArrayList<Set<CalendarEntry>>();
+			layers.add(new TreeSet<CalendarEntry>());
+			layers.get(0).add(e);
+			
+			changePerformed = true;
+		}
+		
+		private Interval ival;//interval of group
+		private Set<CalendarEntry> entries;//unique entry list
+		private java.util.List<Set<CalendarEntry>> layers;//layers with well placed entries
+		private java.util.List<EntryGFX> rects;//generated graphic elements
+		private boolean changePerformed;//refresh needed in graphics
+		
+		public Interval getInterval(){
+			return ival;
+		}
+		
+		public Set<CalendarEntry> getEntries(){
+			return entries;
+		}
+		
+		/**
+		 * Merges two groups.
+		 * 
+		 * @author Zombori Dániel
+		 * @return True if changes performed correctly
+		 */
+		public boolean merge(IntersectionGroup g){
+			Interval tmp = ival.union(g.ival);
+			if (tmp == null) return false;
+			
+			boolean change = entries.addAll(g.entries);
+			if (change){
+				ival = ival.union(g.ival);
+				for (CalendarEntry e : g.entries){
+					addToLayers(e);
+				}
+			}
+			return change;
+		}
+		
+		/**
+		 * Adds entry to group.
+		 * 
+		 * @author Zombori Dániel
+		 * @return True if changes performed correctly
+		 */
+		public boolean addEntry(CalendarEntry e){
+			Interval tmp = ival.union(e.getInterval());
+			if (tmp == null) return false;
+			
+			boolean change = entries.add(e);
+			if (change){
+				ival = tmp;
+				addToLayers(e);
+			}
+			return change;
+		}
+		
+		/**
+		 * Removes entry from group.
+		 * 
+		 * @author Zombori Dániel
+		 * @return Intersection group(s) without specific CalendarEntry, the size will be 0 if 
+		 */
+		public java.util.List<IntersectionGroup> removeEntry(CalendarEntry e){
+			java.util.List<IntersectionGroup> ret = new ArrayList<IntersectionGroup>();
+			boolean change = entries.remove(e);
+			if (change){
+				removeFromLayers(e);
+				Iterator<CalendarEntry> it = entries.iterator();
+				for (CalendarEntry entr : entries){
+					addToGroups(ret,new IntersectionGroup(entr));
+				}
+			}
+			if (ret.size() == 0) return null;
+			return ret;
+		}
+		
+		/**
+		 * Returns recently updated graphics.
+		 * 
+		 * @author Zombori Dániel
+		 * @return Array of drawable rectangles
+		 */
+		public EntryGFX[] getRectangles(){
+			if (changePerformed) gfx();
+			return rects.toArray(new EntryGFX[0]);
+		}
+		
+		/**
+		 * Adds entry to layers.
+		 * 
+		 * @author Zombori Dániel
+		 * @return True if changes performed correctly
+		 */
+		private boolean addToLayers(CalendarEntry e){
+			
+			sets:
+			for (Set<CalendarEntry> set : layers){
+				for (CalendarEntry entry : set){
+					if (e.getInterval().intersect(entry.getInterval())) continue sets;
+				}
+				set.add(e);
+				changePerformed = true;
+				return true;
+			}
+			Set<CalendarEntry> ret = new TreeSet<CalendarEntry>();
+			ret.add(e);
+			layers.add(ret);
+			changePerformed = true;
+			return true;
+		}
+		
+		/**
+		 * Removes entry from layers.
+		 * 
+		 * @author Zombori Dániel
+		 * @return True if changes performed correctly
+		 */
+		private boolean removeFromLayers(CalendarEntry e){
+			
+			sets:
+			for (Set<CalendarEntry> set : layers){
+				if (set.remove(e)){
+					if (set.size() == 0) layers.remove(set);
+					changePerformed = true;
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		/**
+		 * Calculates graphics.
+		 * 
+		 * @author Zombori Dániel
+		 */
+		private void gfx(){
+			changePerformed = false;
+			rects.clear();
+			
+			if (layers.size() == 0) return;
+			int w = xstep / layers.size();
+			int wcorr = xstep % layers.size();
+			
+			Calendar c = Calendar.getInstance();
+			
+			int layer = 0;
+			for (Set<CalendarEntry> set : layers){
+				
+				for (CalendarEntry e : set){
+					Interval o = e.getInterval();
+					Interval i = o.clone();
+					
+					c.setTime(i.getStartTimestamp());
+					int start = c.get(Calendar.DAY_OF_MONTH);
+					c.setTime(i.getEndTimestamp());
+					int end = c.get(Calendar.DAY_OF_MONTH);
+					
+					while(start != end){
+						
+						c.setTime(i.getStartTimestamp());
+						int x = firstVerticalLine + dayOfWeek(i.getStart()) * xstep + layer * w;
+						int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
+						int h = (int)(ystep * 24);
+						
+						
+						rects.add(new EntryGFX(e,x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
+						
+						c.add(Calendar.HOUR, 24);
+						c.set(Calendar.HOUR, -12);
+						c.set(Calendar.MINUTE, 0);
+						c.set(Calendar.SECOND, 0);
+						c.set(Calendar.MILLISECOND, 0);
+						i = new Interval(c.getTimeInMillis(),i.getEnd());
+			System.out.println(new Timestamp(c.getTimeInMillis()));
+						start = c.get(Calendar.DAY_OF_MONTH);
+						
+						c.setTime(new Date(i.getEnd() + HOUR_MILLIS * 24));
+						end = c.get(Calendar.DAY_OF_MONTH);
+						
+					}
+					if (i.getLength() != 0){
+						//TODO
+						c.setTime(i.getStartTimestamp());
+						int x = firstVerticalLine + dayOfWeek(i.getStart()) * xstep + layer * w;
+						int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
+						int h = (int)((i.getLength() * ystep) / (double)(HOUR_MILLIS));
+						
+						rects.add(new EntryGFX(e,x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
+					}
+				}
+				
+				layer++;
+			}
+		}
+	}
+
+
 	class EntryGFX{
-		public EntryGFX(CalendarEntry entry, int x, int y, int width, int height, int sharing, int placing, Color foregroundColor, Color backgroundColor){
+		public EntryGFX(CalendarEntry entry, int x, int y, int width, int height){
 			this.entry = entry;
 			this.x = x;
 			this.y = y;
 			this.height = height;
 			this.width = width;
-			this.sharing = sharing;
-			this.placing = placing;
-			this.foregroundColor = foregroundColor;
-			this.backgroundColor = backgroundColor;
 		}
 		CalendarEntry entry;
-		int x,y,height,sharing,placing,width;
-		Color backgroundColor,foregroundColor;
+		int x,y,height,width;
 		
 		public boolean intersect(int x, int y){
 			return (this.x <= x && x <= this.x + width && this.y <= y && y <= this.y + height);
 		}
 	}
-	
-	class Intersection{
-		public Intersection(Interval interval, int count){
-			this.interval = interval;
-			this.count = count;
-		}
-		Interval interval; //interval int time
-		int count;
-	}
-	
 	
 	private int width;
 	private int height;
@@ -62,19 +264,20 @@ public class WeekView extends CalendarView{
 	private int ystep;
 	private int finalVerticalLine;
 	private int finalHorizontalLine;
-	private java.util.List<WeekView.EntryGFX> gfxEntries;
-	private WeekView.EntryGFX selected;
+	private java.util.List<EntryGFX> gfxEntries;
+	private EntryGFX selected;
 	private Interval weekInterval;
+	private java.util.List<IntersectionGroup> groups;
 	
 	public static final long HOUR_MILLIS = (long)3600000;
 	public static final long WEEK_MILLIS = 7*24*HOUR_MILLIS;
 	
 	public void nextInterval(){
-		toInterval(new Date(startTime.getTime() + WEEK_MILLIS * 3 / 2 + 1));
+		toInterval(new Date(startTime.getTime() + WEEK_MILLIS + 1));
 	}
 	public void prevInterval(){
 		if (startTime.getTime() < WEEK_MILLIS) return;
-		toInterval(new Date(startTime.getTime() - WEEK_MILLIS / 2 - 1));
+		toInterval(new Date(startTime.getTime() - WEEK_MILLIS + 1));
 	}
 	
 	/**
@@ -118,7 +321,6 @@ public class WeekView extends CalendarView{
 		
 		Color[] rowColors = new Color[]{new Color(255,212,249),new Color(212,255,217)};
 		Color[] rowLightColors = new Color[]{new Color(255,230,252),new Color(230,255,233)};
-		//Color selectionColor = new Color(80,255,255,128);
 		Color selectionColor = new Color(56,179,179,128);
 		Color currentTimeColor = new Color(255,0,0);
 		
@@ -165,12 +367,17 @@ public class WeekView extends CalendarView{
 		//    drawing entries    \\
 		//***********************\\
 		
-		gfxEntries = generateGFXEntries(entries);
-		for(WeekView.EntryGFX e : gfxEntries){
-			g.setColor(e.backgroundColor);
-			g.fillRect(e.x,e.y,e.width,e.height);
-			g.setColor(Color.BLACK);
-			g.drawRect(e.x,e.y,e.width,e.height);
+		gfxEntries.clear();
+		for (IntersectionGroup group : groups){
+			EntryGFX[] rects = group.getRectangles();
+			for (int i = 0;i < rects.length;i++){
+				if (!rects[i].entry.getInterval().intersect(weekInterval)) continue;
+				gfxEntries.add(rects[i]);
+				g.setColor(rects[i].entry.getBackgroundColor());
+				g.fillRect(rects[i].x,rects[i].y,rects[i].width,rects[i].height);
+				g.setColor(Color.BLACK);
+				g.drawRect(rects[i].x,rects[i].y,rects[i].width,rects[i].height);
+			}
 		}
 		
 		//draw selection
@@ -179,9 +386,9 @@ public class WeekView extends CalendarView{
 			g.fillRect(selected.x,selected.y,selected.width,selected.height);
 			g.setColor(new Color(selectionColor.getRGB()));
 			g.fillRoundRect(selected.x,selected.y,selected.width,3,3,3);//above
-			g.fillRoundRect(selected.x,selected.y + selected.height - 3,selected.width,3,3,3);//below
+			g.fillRoundRect(selected.x,selected.y + selected.height - 3 + 1,selected.width,3,3,3);//below
 			g.fillRoundRect(selected.x,selected.y,3,selected.height,3,3);//left
-			g.fillRoundRect(selected.x + selected.width - 3,selected.y,3,selected.height,3,3);//right
+			g.fillRoundRect(selected.x + selected.width - 3 + 1,selected.y,3,selected.height,3,3);//right
 		}
 		
 		//**********************************\\
@@ -189,7 +396,7 @@ public class WeekView extends CalendarView{
 		//**********************************\\
 		
 		long currentTime = System.currentTimeMillis();
-		if (weekInterval.intersect(currentTime)){
+		if (weekInterval.contains(currentTime)){
 			g.setColor(currentTimeColor);
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date(currentTime));
@@ -229,51 +436,27 @@ public class WeekView extends CalendarView{
 	}
 	
 	/**
-	 * Generate the entries rectangles.
+	 * Adds group to group list.
 	 */
-	private java.util.List<EntryGFX> generateGFXEntries(java.util.List<CalendarEntry> l){
-		java.util.List<EntryGFX> rects = new ArrayList<EntryGFX>();
-		java.util.List<Interval> intersections = new ArrayList<Interval>();
-		java.util.List<Intersection> isecs = new ArrayList<Intersection>();
-		Calendar c = Calendar.getInstance();
+	private boolean addToGroups(java.util.List<IntersectionGroup> glist, IntersectionGroup g){
 		
-		
-		int i = 0;
-		for (CalendarEntry e : l){
+		boolean changePerformed = true;
+		while(changePerformed){
+			changePerformed = false;
 			
-			//if not in currently displayed interval skip
-			if (!e.getInterval().intersect(weekInterval)){
-				continue;
-			}
-			
-			c.setTime(new Date(e.getInterval().getStart()));
-			
-			int x = firstVerticalLine + dayOfWeek(e.getInterval().getStart()) * xstep;
-			int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
-			int h = (int)((e.getInterval().getLength() * ystep) / (double)(HOUR_MILLIS));
-			int w = xstep;
-			
-			EntryGFX entry = new EntryGFX(e,x,y,w,h,1,0,e.getForegroundColor(),e.getBackgroundColor());
-			
-			
-			//detect collisions, MUST USE ZONES TO DETERMINE THE NECESSERY WIDTH
-			/*int j = 0;
-			for (CalendarEntry ce : l){
-				if (e != ce && e.getInterval().intersect(ce.getInterval())){
-					entry.sharing++;
-					if (i > j) entry.placing++;
+			for(Iterator<IntersectionGroup> it = glist.iterator();it.hasNext();){
+				IntersectionGroup igrp = it.next();
+				if (igrp == g) continue;
+				
+				if (g.getInterval().intersect(igrp.getInterval())){
+					g.merge(igrp);
+					it.remove();
+					changePerformed = true;
 				}
-				j++;
 			}
-			
-			entry.width = (int)(xstep / (double)entry.sharing);
-			entry.x += (int)((xstep / (double)entry.sharing) * entry.placing);/* */
-			
-			
-			rects.add(entry);
-			i++;
 		}
-		return rects;
+		glist.add(g);
+		return true;
 	}
 	
 	protected void clickPerformed(MouseEvent e){
@@ -325,6 +508,45 @@ public class WeekView extends CalendarView{
 		weekInterval = new Interval(startTime.getTime(),c.getTime().getTime());
 		
 		repaint();
+	}
+	
+	public boolean setCalendarEntries(java.util.List<CalendarEntry> elist){
+		if (elist == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
+		
+		groups.clear();
+		
+		for(CalendarEntry e : elist){
+			addToGroups(groups, new IntersectionGroup(e));
+		}
+		return true;
+	}
+	
+	public java.util.List<CalendarEntry> getCalendarEntries(){
+		java.util.List<CalendarEntry> ret = new ArrayList<CalendarEntry>();
+		for (IntersectionGroup g : groups){
+			ret.addAll(g.getEntries());
+		}
+		return ret;
+	}
+	
+	public boolean addCalendarEntry(CalendarEntry e){
+		return addToGroups(groups, new IntersectionGroup(e));
+	}
+	
+	public boolean removeCalendarEntry(CalendarEntry e){
+		for (IntersectionGroup g : groups){
+			java.util.List<IntersectionGroup> grps = g.removeEntry(e);
+			if (grps != null){
+				groups.remove(g);
+				groups.addAll(grps);
+				if (selected != null && e == selected.entry){
+					selected = null;
+					dispatchSelectionChanged(null);
+				}
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private static String createHour(int i){

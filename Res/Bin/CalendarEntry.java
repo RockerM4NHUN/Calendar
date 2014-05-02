@@ -2,20 +2,9 @@ package Res.Bin;
 
 import java.awt.Color;
 
-public class CalendarEntry{
+public class CalendarEntry implements Comparable<CalendarEntry>{
 	
-	//constructors
-	public CalendarEntry(int id, String type){
-		if (type == null) Thrower.Throw(new NullPointerException("Null found in constructor"));
-		
-		this.id = id;
-		interval = new Interval();
-		this.type = type;
-		String description = "";
-		foregroundColor = DEFAULT_FOREGROUND_COLOR;
-		backgroundColor = DEFAULT_BACKGROUND_COLOR;
-	}
-	
+	//constructor
 	public CalendarEntry(int id, Interval ival, String type, Color foreColor, Color backColor, String desc){
 		if (ival == null || type == null || foreColor == null || backColor == null || desc == null) Thrower.Throw(new NullPointerException("Null found in constructor"));
 		
@@ -27,6 +16,12 @@ public class CalendarEntry{
 		description = desc;
 	}
 	
+	public int compareTo(CalendarEntry o){
+		long l = interval.getLength() - o.interval.getLength();
+		if (l == 0) return (toString().compareTo(o.toString()) == 0) ? 0 : 1;
+		if (l > Integer.MAX_VALUE) return (int)(l / ((Integer.MAX_VALUE + 1) * 2));
+		return (int)l;
+	}
 	
 	//constants
 	public static final Color DEFAULT_FOREGROUND_COLOR = new Color(0,0,0);
