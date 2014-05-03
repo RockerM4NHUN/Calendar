@@ -10,16 +10,53 @@ import Res.Bin.*;
 public class WeekView extends CalendarView{
 	public WeekView(){
 		super();
-		setPreferredSize(new Dimension(56 + 7 * 130,48 + 24 * 30));
+		
+		//*************************\\
+		//    setting variables    \\
+		//*************************\\
+		
+		
+		firstVerticalLine = 56;
+		firstHorizontalLine = 48;
+		finalVerticalGap = 0;
+		finalHorizontalGap = 0;
+		
+		setBackground(new Color(250,232,155));
+
+		entryFont = new Font("Arial",Font.BOLD,13);
+		hourFont = new Font("Arial",Font.PLAIN,13);
+		dayFont = new Font("Arial",Font.BOLD,16);
+		
+		rowColors = new Color[]{new Color(255,212,249),new Color(212,255,217)};
+		rowLightColors = new Color[]{new Color(255,230,252),new Color(230,255,233)};
+		selectionColor = new Color(56,179,179,128);
+		currentTimeColor = new Color(255,0,0);
+		lineColor = new Color(100,100,100);
+		
 		groups = new ArrayList<IntersectionGroup>();
 		gfxEntries = new ArrayList<EntryGFX>();
 		selected = new ArrayList<EntryGFX>();
 		
+		//***************************\\
+		//    setting environment    \\
+		//***************************\\
+		
+		setPreferredSize(new Dimension(firstVerticalLine + 7 * 130, firstHorizontalLine + 24 * 30));
+		
+		//repaint when selection changed
 		addSelectionChangedListener(new CalendarSelectionChangedListener(){
 			public void selectionChanged(CalendarEntry e){
 				repaint();
 			}
 		});
+		
+		//repaint in every minute, to validate time signes position
+		timer = new javax.swing.Timer((int)(HOUR_MILLIS / 60), new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				repaint();
+			}
+		});
+		timer.start();
 	}
 	
 		//*************************\\
@@ -282,6 +319,10 @@ public class WeekView extends CalendarView{
 		}
 	}
 	
+	
+	
+	
+	
 	private int width;
 	private int height;
 	private int firstVerticalLine;
@@ -297,8 +338,28 @@ public class WeekView extends CalendarView{
 	private Interval weekInterval;
 	private java.util.List<IntersectionGroup> groups;
 	
+	private Font hourFont;
+	private Font dayFont;
+	private Font entryFont;
+	private FontMetrics entryMetrics;
+	private FontMetrics hourMetrics;
+	private FontMetrics dayMetrics;
+		
+	private Color[] rowColors;
+	private Color[] rowLightColors;
+	private Color selectionColor;
+	private Color currentTimeColor;
+	private Color lineColor;
+	
+	private javax.swing.Timer timer;
+		
+	public static final String[] days = new String[]{"Monday","Thuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 	public static final long HOUR_MILLIS = (long)3600000;
 	public static final long WEEK_MILLIS = 7*24*HOUR_MILLIS;
+	
+	
+	
+	
 	
 	public void nextInterval(){
 		toInterval(new Date(startTime.getTime() + WEEK_MILLIS + 1));
@@ -320,43 +381,28 @@ public class WeekView extends CalendarView{
 		//    setting environment    \\
 		//***************************\\
 		
-		setBackground(new Color(250,232,155));
-
-		width = getWidth();//width of 
-		height = getHeight();
-		
-		firstVerticalLine = 56;
-		firstHorizontalLine = 48;
-		finalVerticalGap = 0;
-		finalHorizontalGap = 0;
+		width = getWidth();//width of panel
+		height = getHeight();//height of panel
 		
 		xstep = (width - firstVerticalLine - finalVerticalGap) / 7;
 		ystep = (height - firstHorizontalLine - finalHorizontalGap) / 24;
 		
+		entryMetrics = g.getFontMetrics(entryFont);
+		hourMetrics = g.getFontMetrics(hourFont);
+		dayMetrics = g.getFontMetrics(dayFont);
+		
 		finalVerticalLine = firstVerticalLine + xstep * 7;
 		finalHorizontalLine = firstHorizontalLine + ystep * 24;
 		
-		Font hourFont = new Font("Arial",Font.PLAIN,13);
-		Font dayFont = new Font("Arial",Font.BOLD,16);
-		FontMetrics hourMetrics = g.getFontMetrics(hourFont);
-		FontMetrics dayMetrics = g.getFontMetrics(dayFont);
-		
 		//draw grid
-		int rowColor = 0;
-		Color lineColor = new Color(100,100,100);
+		int rowColor = 0;//index of color in rowColors and rowLightColors
 		g.setFont(dayFont);
 		g.setColor(lineColor);
-		
-		Color[] rowColors = new Color[]{new Color(255,212,249),new Color(212,255,217)};
-		Color[] rowLightColors = new Color[]{new Color(255,230,252),new Color(230,255,233)};
-		Color selectionColor = new Color(56,179,179,128);
-		Color currentTimeColor = new Color(255,0,0);
 		
 		//******************************\\
 		//    drawing static context    \\
 		//******************************\\
 		
-		String[] days = new String[]{"Monday","Thuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 		for(int i = 0,x = firstVerticalLine + xstep / 2;i < days.length;i++,x+=xstep){
 			g.drawString(days[i],x-dayMetrics.stringWidth(days[i]) / 2,(firstHorizontalLine + dayMetrics.getHeight()) / 2);
 		}
@@ -396,6 +442,7 @@ public class WeekView extends CalendarView{
 		//***********************\\
 		
 		gfxEntries.clear();
+		g.setFont(entryFont);
 		for (IntersectionGroup group : groups){
 			EntryGFX[] rects = group.getRectangles();
 			for (int i = 0;i < rects.length;i++){
@@ -406,6 +453,14 @@ public class WeekView extends CalendarView{
 				g.fillRect(rects[i].x,rects[i].y,rects[i].width,rects[i].height);
 				g.setColor(Color.BLACK);
 				g.drawRect(rects[i].x,rects[i].y,rects[i].width,rects[i].height);
+				
+				int height = entryMetrics.getHeight();
+				
+				String[] str = breakToLines(rects[i].entry.getTitle(),entryMetrics,rects[i].width - 6, rects[i].height / (height + 6));
+				g.setColor(rects[i].entry.getForegroundColor());
+				for (int j = 0;j < str.length;j++){
+					g.drawString(str[j],rects[i].x + 3, rects[i].y + height / 2 + (j == 0 ? 6 : 0) + j * (height + 6));
+				}
 			}
 		}
 		
@@ -416,7 +471,7 @@ public class WeekView extends CalendarView{
 		
 		if (selected.size() != 0 && selected.get(0).entry.getInterval().intersect(weekInterval)){
 			int i = -1,size = selected.size();
-			for (EntryGFX entry : selected){System.out.println("Draw");
+			for (EntryGFX entry : selected){
 				i++;
 				if (!weekInterval.intersect(entry.time)) continue;
 				
@@ -510,8 +565,11 @@ public class WeekView extends CalendarView{
 					}
 					
 					selected.clear();
-					for (EntryGFX g2 : gfxEntries){
-						if (g2.entry == g.entry) selected.add(g2);
+					for (IntersectionGroup group : groups){
+						EntryGFX[] entries = group.getRectangles();
+						for (int i = 0;i < entries.length;i++){
+							if (entries[i].entry == g.entry) selected.add(entries[i]);
+						}
 					}
 					dispatchSelectionChanged(g.entry);
 					return;
@@ -524,8 +582,11 @@ public class WeekView extends CalendarView{
 			for (EntryGFX g : gfxEntries){
 				if (g.intersect(e.getX(),e.getY())){
 					selected.clear();
-					for (EntryGFX g2 : gfxEntries){
-						if (g2.entry == g.entry) selected.add(g2);
+					for (IntersectionGroup group : groups){
+						EntryGFX[] entries = group.getRectangles();
+						for (int i = 0;i < entries.length;i++){
+							if (entries[i].entry == g.entry) selected.add(entries[i]);
+						}
 					}
 					dispatchSelectionChanged(g.entry);
 					return;
@@ -594,6 +655,29 @@ public class WeekView extends CalendarView{
 			}
 		}
 		return true;
+	}
+	
+	private static String[] breakToLines(String str, FontMetrics fm, int maxWidth, int maxLines){
+		java.util.List<String> ret = new ArrayList<String>();
+		
+		int start = 0, end, line = 0;
+		while(start != str.length() && line < maxLines){
+			end = str.length();
+			while(fm.stringWidth(str.substring(start,end)) > maxWidth){
+				end--;
+			}
+			
+			ret.add(str.substring(start,end));
+			line++;
+			start = end;
+		}
+		
+		if (ret.size() == 0) return new String[0];
+		
+		int size = ret.get(ret.size() - 1).length();
+		if (start != str.length() && size >= 3) ret.set(ret.size() - 1,ret.get(ret.size() - 1).substring(0,size - 3) + "...");
+		
+		return ret.toArray(new String[0]);
 	}
 	
 	private static String createHour(int i){

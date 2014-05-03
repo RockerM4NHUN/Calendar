@@ -22,16 +22,16 @@ public class WeekViewSampleGUI implements GUIGenerator{
 		
 		w = new WeekView();
 		final java.util.List<CalendarEntry> elist = new ArrayList<CalendarEntry>();
-		Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 1);
+		Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 0);
 		
-		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5,now.getTime() - WeekView.HOUR_MILLIS * 2),"TestType0",Color.BLACK,new Color(255,200,80),"Test Description0"));
+		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5,now.getTime() - WeekView.HOUR_MILLIS * 2),"TestType0","Long Title0",Color.BLACK,new Color(255,200,80),"Test Description0"));
 		
-		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2,now.getTime() + WeekView.HOUR_MILLIS * 36),"TestType1",Color.BLACK,new Color(255,200,80),"Test Description1"));
-		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2,now.getTime() - WeekView.HOUR_MILLIS * 1),"TestType2",Color.BLACK,new Color(200,200,80),"Test Description2"));
+		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2,now.getTime() + WeekView.HOUR_MILLIS * 36),"TestType1","Long Title1",Color.BLACK,new Color(255,200,80),"Test Description1"));
+		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2,now.getTime() - WeekView.HOUR_MILLIS * 1),"TestType2","Long Title2",Color.BLACK,new Color(200,200,80),"Test Description2"));
 		//w.setCalendarEntries(elist);
-		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0,now.getTime() + WeekView.HOUR_MILLIS * 2),"TestType3",CalendarEntry.DEFAULT_FOREGROUND_COLOR,CalendarEntry.DEFAULT_BACKGROUND_COLOR,"Test Description3"));
-		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2,now.getTime() + WeekView.HOUR_MILLIS * 0),"TestType4",Color.BLACK,new Color(255,200,80),"Test Description4"));
-		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1,now.getTime() + WeekView.HOUR_MILLIS * 2),"TestType5",Color.BLACK,new Color(255,200,80),"Test Description5"));
+		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0,now.getTime() + WeekView.HOUR_MILLIS * 2),"TestType3","Long Title3",CalendarEntry.DEFAULT_FOREGROUND_COLOR,CalendarEntry.DEFAULT_BACKGROUND_COLOR,"Test Description3"));
+		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2,now.getTime() + WeekView.HOUR_MILLIS * 0),"TestType4","Long Title4",Color.BLACK,new Color(255,200,80),"Test Description4"));
+		elist.add(new CalendarEntry(0,new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1,now.getTime() + WeekView.HOUR_MILLIS * 2),"TestType5","Long Title5",Color.BLACK,new Color(255,200,80),"Test Description5"));
 		
 		w.setCalendarEntries(elist);
 		w.toInterval(now);
