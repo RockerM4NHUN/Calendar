@@ -18,7 +18,7 @@ public class CalendarEntry implements Comparable<CalendarEntry>{
 	
 	public int compareTo(CalendarEntry o){
 		long l = interval.getLength() - o.interval.getLength();
-		if (l == 0) return (toString().compareTo(o.toString()) == 0) ? 0 : 1;
+		if (l == 0) return (getObjectString().compareTo(o.getObjectString()));
 		if (l > Integer.MAX_VALUE) return (int)(l / ((Integer.MAX_VALUE + 1) * 2));
 		return (int)l;
 	}
@@ -42,6 +42,7 @@ public class CalendarEntry implements Comparable<CalendarEntry>{
 	public int getID(){return id;}
 	public Interval getInterval(){return interval;}
 	public String getType(){return type;}
+	public String getObjectString(){return super.toString();}
 	public String getDescription(){return description;}
 	public Color getForegroundColor(){return foregroundColor;}
 	public Color getBackgroundColor(){return backgroundColor;}

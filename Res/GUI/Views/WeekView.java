@@ -13,7 +13,7 @@ public class WeekView extends CalendarView{
 		setPreferredSize(new Dimension(56 + 7 * 130,48 + 24 * 30));
 		groups = new ArrayList<IntersectionGroup>();
 		gfxEntries = new ArrayList<EntryGFX>();
-		selected = null;
+		selected = new ArrayList<EntryGFX>();
 		
 		addSelectionChangedListener(new CalendarSelectionChangedListener(){
 			public void selectionChanged(CalendarEntry e){
@@ -198,37 +198,63 @@ public class WeekView extends CalendarView{
 					c.setTime(i.getEndTimestamp());
 					int end = c.get(Calendar.DAY_OF_MONTH);
 					
-					while(start != end){
+					//first fragment of shattered
+					if (start != end){
+						c.setTime(i.getStartTimestamp());
+						int x = firstVerticalLine + dayOfWeek(i.getStart()) * xstep + layer * w;
+						int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
+						int h = firstHorizontalLine + ystep * 24 - y;
+						
+						
+						c.add(Calendar.HOUR, 24);
+						c.set(Calendar.HOUR, 0);
+						c.set(Calendar.MINUTE, 0);
+						c.set(Calendar.SECOND, 0);
+						c.set(Calendar.MILLISECOND, 0);
+						c.set(Calendar.AM_PM, Calendar.AM);
+						
+						rects.add(new EntryGFX(e, new Interval(i.getStart(), c.getTimeInMillis()),x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
+						
+						i = new Interval(c.getTimeInMillis(),i.getEnd());
+						start = c.get(Calendar.DAY_OF_MONTH);
+						
+						c.setTime(new Date(i.getEnd() + HOUR_MILLIS * 24));
+						end = c.get(Calendar.DAY_OF_MONTH);
+					}
+					
+					//full days
+					while(start + 1 < end){
 						
 						c.setTime(i.getStartTimestamp());
 						int x = firstVerticalLine + dayOfWeek(i.getStart()) * xstep + layer * w;
 						int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
-						int h = (int)(ystep * 24);
-						
-						
-						rects.add(new EntryGFX(e,x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
+						int h = ystep * 24;
 						
 						c.add(Calendar.HOUR, 24);
-						c.set(Calendar.HOUR, -12);
+						c.set(Calendar.HOUR, 0);
 						c.set(Calendar.MINUTE, 0);
 						c.set(Calendar.SECOND, 0);
 						c.set(Calendar.MILLISECOND, 0);
+						c.set(Calendar.AM_PM, Calendar.AM);
+						
+						rects.add(new EntryGFX(e, new Interval(i.getStart(), c.getTimeInMillis()),x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
+						
 						i = new Interval(c.getTimeInMillis(),i.getEnd());
-			System.out.println(new Timestamp(c.getTimeInMillis()));
 						start = c.get(Calendar.DAY_OF_MONTH);
 						
 						c.setTime(new Date(i.getEnd() + HOUR_MILLIS * 24));
 						end = c.get(Calendar.DAY_OF_MONTH);
 						
 					}
+					
+					//last fragment or full if not shattered
 					if (i.getLength() != 0){
-						//TODO
 						c.setTime(i.getStartTimestamp());
 						int x = firstVerticalLine + dayOfWeek(i.getStart()) * xstep + layer * w;
 						int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
 						int h = (int)((i.getLength() * ystep) / (double)(HOUR_MILLIS));
 						
-						rects.add(new EntryGFX(e,x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
+						rects.add(new EntryGFX(e,i,x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
 					}
 				}
 				
@@ -239,14 +265,16 @@ public class WeekView extends CalendarView{
 
 
 	class EntryGFX{
-		public EntryGFX(CalendarEntry entry, int x, int y, int width, int height){
+		public EntryGFX(CalendarEntry entry, Interval time, int x, int y, int width, int height){
 			this.entry = entry;
+			this.time = time;
 			this.x = x;
 			this.y = y;
 			this.height = height;
 			this.width = width;
 		}
 		CalendarEntry entry;
+		Interval time;
 		int x,y,height,width;
 		
 		public boolean intersect(int x, int y){
@@ -265,7 +293,7 @@ public class WeekView extends CalendarView{
 	private int finalVerticalLine;
 	private int finalHorizontalLine;
 	private java.util.List<EntryGFX> gfxEntries;
-	private EntryGFX selected;
+	private java.util.List<EntryGFX> selected;
 	private Interval weekInterval;
 	private java.util.List<IntersectionGroup> groups;
 	
@@ -371,7 +399,8 @@ public class WeekView extends CalendarView{
 		for (IntersectionGroup group : groups){
 			EntryGFX[] rects = group.getRectangles();
 			for (int i = 0;i < rects.length;i++){
-				if (!rects[i].entry.getInterval().intersect(weekInterval)) continue;
+				if (!rects[i].time.intersect(weekInterval)) continue;
+				
 				gfxEntries.add(rects[i]);
 				g.setColor(rects[i].entry.getBackgroundColor());
 				g.fillRect(rects[i].x,rects[i].y,rects[i].width,rects[i].height);
@@ -380,15 +409,25 @@ public class WeekView extends CalendarView{
 			}
 		}
 		
-		//draw selection
-		if (selected != null && selected.entry.getInterval().intersect(weekInterval)){
-			g.setColor(selectionColor);
-			g.fillRect(selected.x,selected.y,selected.width,selected.height);
-			g.setColor(new Color(selectionColor.getRGB()));
-			g.fillRoundRect(selected.x,selected.y,selected.width,3,3,3);//above
-			g.fillRoundRect(selected.x,selected.y + selected.height - 3 + 1,selected.width,3,3,3);//below
-			g.fillRoundRect(selected.x,selected.y,3,selected.height,3,3);//left
-			g.fillRoundRect(selected.x + selected.width - 3 + 1,selected.y,3,selected.height,3,3);//right
+		
+		//************************************\\
+		//    drawing selection rectangles    \\
+		//************************************\\
+		
+		if (selected.size() != 0 && selected.get(0).entry.getInterval().intersect(weekInterval)){
+			int i = -1,size = selected.size();
+			for (EntryGFX entry : selected){System.out.println("Draw");
+				i++;
+				if (!weekInterval.intersect(entry.time)) continue;
+				
+				g.setColor(selectionColor);
+				g.fillRect(entry.x,entry.y,entry.width,entry.height);
+				g.setColor(new Color(selectionColor.getRGB()));
+				if (i == 0) g.fillRoundRect(entry.x,entry.y,entry.width,3,3,3);//above
+				if (i == size - 1) g.fillRoundRect(entry.x,entry.y + entry.height - 3 + 1,entry.width,3,3,3);//below
+				g.fillRoundRect(entry.x,entry.y,3,entry.height,3,3);//left
+				g.fillRoundRect(entry.x + entry.width - 3 + 1,entry.y,3,entry.height,3,3);//right
+			}
 		}
 		
 		//**********************************\\
@@ -460,27 +499,35 @@ public class WeekView extends CalendarView{
 	}
 	
 	protected void clickPerformed(MouseEvent e){
-		if (selected != null){
+		if (selected.size() != 0){
 			//there is a selected entry
 			for (EntryGFX g : gfxEntries){
 				if (g.intersect(e.getX(),e.getY())){
-					if (selected.entry == g.entry){
-						return;
+					for (EntryGFX entry : selected){
+						if (entry.entry == g.entry){
+							return;
+						}
 					}
 					
-					selected = g;
-					dispatchSelectionChanged(selected.entry);
+					selected.clear();
+					for (EntryGFX g2 : gfxEntries){
+						if (g2.entry == g.entry) selected.add(g2);
+					}
+					dispatchSelectionChanged(g.entry);
 					return;
 				}
 			}
-			selected = null;
+			selected.clear();
 			dispatchSelectionChanged(null);
 		}else{
 			//no selected entry
 			for (EntryGFX g : gfxEntries){
 				if (g.intersect(e.getX(),e.getY())){
-					selected = g;
-					dispatchSelectionChanged(selected.entry);
+					selected.clear();
+					for (EntryGFX g2 : gfxEntries){
+						if (g2.entry == g.entry) selected.add(g2);
+					}
+					dispatchSelectionChanged(g.entry);
 					return;
 				}
 			}
@@ -539,8 +586,8 @@ public class WeekView extends CalendarView{
 			if (grps != null){
 				groups.remove(g);
 				groups.addAll(grps);
-				if (selected != null && e == selected.entry){
-					selected = null;
+				if (selected.size() != 0 && e == selected.get(0).entry){
+					selected.clear();
 					dispatchSelectionChanged(null);
 				}
 				return false;
