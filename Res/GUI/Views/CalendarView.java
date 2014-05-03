@@ -14,7 +14,6 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 		super();
 		
 		toInterval(new Timestamp(System.currentTimeMillis()));
-		entries = new ArrayList<CalendarEntry>();
 		selectionChangedListeners = new ArrayList<CalendarSelectionChangedListener>();
 		
 		addMouseListener(new MouseAdapter(){
@@ -26,18 +25,8 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 		setVisible(true);
 	}
 	
-	protected List<CalendarEntry> entries;
 	protected Timestamp startTime;
-	
 	private List<CalendarSelectionChangedListener> selectionChangedListeners;
-	
-	public List<CalendarEntry> getCalendarEntries(){
-		return entries;
-	}
-	public void setCalendarEntries(List<CalendarEntry> elist){
-		if (elist == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
-		entries = elist;
-	}
 	
 	public Timestamp getDisplayedIntervalStart(){
 		return startTime;
@@ -98,6 +87,25 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 	 * Displays the drawable contents.
 	 */
 	public abstract void paintComponent(Graphics g);
+	/**
+	 * Returns the calendar entries that the view is holding.
+	 */
+	public abstract List<CalendarEntry> getCalendarEntries();
+	/**
+	 * Sets the calendar entries. Will erase previous entries.
+	 * @return True if entries can not be added.
+	 */
+	public abstract boolean setCalendarEntries(List<CalendarEntry> elist);
+	/**
+	 * Adds a new calendar entry.
+	 * @return True if entry can not be set.
+	 */
+	public abstract boolean addCalendarEntry(CalendarEntry e);
+	/**
+	 * Removes calendar entry.
+	 * @return True if entry can not be removed.
+	 */
+	public abstract boolean removeCalendarEntry(CalendarEntry e);
 	
 	protected abstract void clickPerformed(MouseEvent e);
 }

@@ -25,9 +25,12 @@ public class Window extends JFrame{
 		setLocation(location);
 		
 		setResizable(false);
-		setSize(1024+20,768+50);
+		setSize(1024+50,768+50);
 		
 		refreshGUI(new SampleGUI()); //loads the first GUI
+		
+		refreshGUI(new WeekViewSampleGUI()); //for quicker testing
+		
 		setVisible(true);
 	}
 	
