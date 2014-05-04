@@ -16,6 +16,8 @@ public class WeekView extends CalendarView{
 		//*************************\\
 		
 		
+		finalVerticalGap = 0;
+		finalHorizontalGap = 0;
 		
 		setBackground(new Color(250,232,155));
 
@@ -37,7 +39,7 @@ public class WeekView extends CalendarView{
 		//    setting environment    \\
 		//***************************\\
 		
-		setPreferredSize(new Dimension(getViewWidth(),getViewHeight());
+		setPreferredSize(new Dimension(getViewWidth(),getViewHeight()));
 		
 		//repaint when selection changed
 		addSelectionChangedListener(new CalendarSelectionChangedListener(){
@@ -316,11 +318,11 @@ public class WeekView extends CalendarView{
 	}
 	
 	public static int getViewWidth(){
-		return firstVerticalGap + firstVerticalLine + 7 * 130;
+		return firstVerticalLine + 7 * 130;
 	}
 	
 	public static int getViewHeight(){
-		return firstHorizontalGap + firstHorizontalLine + 24 * 30;
+		return firstHorizontalLine + 24 * 30;
 	}
 	
 	
@@ -328,8 +330,8 @@ public class WeekView extends CalendarView{
 	private int height;
 	private static int firstVerticalLine = 56;
 	private static int firstHorizontalLine = 48;
-	private static int firstVerticalGap = 0;
-	private static int firstHorizontalGap = 0;
+	private int finalVerticalGap;
+	private int finalHorizontalGap;
 	private int xstep;
 	private int ystep;
 	private int finalVerticalLine;
