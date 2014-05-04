@@ -328,8 +328,8 @@ public class WeekView extends CalendarView{
 	private int height;
 	private static int firstVerticalLine = 56;
 	private static int firstHorizontalLine = 48;
-	private static int finalVerticalGap = 0;
-	private static int finalHorizontalGap = 0;
+	private static int firstVerticalGap = 0;
+	private static int firstHorizontalGap = 0;
 	private int xstep;
 	private int ystep;
 	private int finalVerticalLine;
