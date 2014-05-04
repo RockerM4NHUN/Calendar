@@ -135,8 +135,8 @@ public class Window extends JFrame{
 		int reqHeight = WeekView.getViewHeight();
 		setSize(reqWidth, reqHeight);
 		Dimension actualSize = getContentPane().getSize();
-		int extraW = reqWidth - actualSize.width;
-		int extraH = reqHeight - actualSize.height;
+		int extraW = 50;//reqWidth - actualSize.width;
+		int extraH = 100;//reqHeight - actualSize.height;
 		setSize(reqWidth + extraW, reqHeight + extraH);
 		
 		refreshGUI(new WeekViewSampleGUI()); //loads the first GUI
