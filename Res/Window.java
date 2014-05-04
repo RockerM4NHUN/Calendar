@@ -128,8 +128,15 @@ public class Window extends JFrame{
 		setLocation(location);
 		
 		setResizable(false);
-		//setSize(1000,500);
-		setSize(1024+20,768+50);
+		
+		//setting Window size according to WeekView's size
+		int reqWidth = WeekView.getViewWidth();
+		int reqHeight = WeekView.getViewHeight();
+		setSize(reqWidth, reqHeight);
+		Dimension actualSize = getContentPane().getSize();
+		int extraW = reqWidth - actualSize.width;
+		int extraH = reqHeight - actualSize.height;
+		setSize(reqWidth + extraW, reqHeight + extraH);
 		
 		refreshGUI(new WeekViewSampleGUI()); //loads the first GUI
 		setVisible(true);
