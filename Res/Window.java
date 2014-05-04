@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 
 import Res.Bin.*;
 import Res.GUI.*;
+import Res.GUI.Views.WeekView;
 
 /**
  * Window class, which extends JFrame to whole GUI.
