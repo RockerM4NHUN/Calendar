@@ -30,13 +30,13 @@ public class CalendarEntry implements Comparable<CalendarEntry>{
 	
 	
 	//attributes
-	private int id;
-	private Interval interval;
-	private String type;
-	private String title;
-	private String description;
-	private Color foregroundColor;
-	private Color backgroundColor;
+	private int id;//entry id
+	private Interval interval;//time interval of entry
+	private String type;//entry type
+	private String title;//entry title
+	private String description;//entry description
+	private Color foregroundColor;//letters color
+	private Color backgroundColor;//rectangles color
 	
 	
 	
