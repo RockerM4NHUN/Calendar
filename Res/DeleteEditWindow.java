@@ -1,12 +1,21 @@
 package Res;
 
-import javax.swing.*;
+import java.util.ArrayList;
 
-public class DeleteEditWindow extends JFrame{
-	
-	DeleteEditWindow(){
-		super("Delete");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(400,400);
+import Res.Bin.CalendarEntry;
+
+public class DeleteEditWindow {
+	private java.util.List<CalendarEntry> list = new ArrayList<CalendarEntry>();
+
+	public java.util.List<CalendarEntry> getList() {
+		return list;
+	}
+
+	public void setList(java.util.List<CalendarEntry> list) {
+		this.list = list;
+	}
+
+	public void deleteEvent() {
+
 	}
 }

@@ -84,8 +84,6 @@ public class Window extends JFrame{
 		deleteItem = new JMenuItem("Delete");
 		deleteItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				DeleteEditWindow d = new DeleteEditWindow();
-				d.setVisible(true);
 			}
 		});
 		viewMenu = new JMenu("View");
