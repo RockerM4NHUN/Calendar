@@ -1,0 +1,68 @@
+Kiselőadás a szorgalmi időszak végén (prezentálás)
+Naptár program elkészítése
+Pl: google calendar
+Szökőév kezelése
+ - heti nézet (és/vagy havi) - táblázat megjelenítése
+ - táblázat: dátum, nap - 0-24-ig 1-1 sor
+ - csak órára pontosan
+ - naptárbejegyzés elég aznap
+ - esemény felvétel
+ - esemény átírása (cím, időtartam)
+ - lehetőség az esemény törlésére
+ - esemény neve, fajtái, stb.
+ - könnyen bővíthető eseményfajtákkal
+ - munkahely, személyes, születésnap, eltérő ábrázolás (bejegyzés)
+ - naptár kimentése egy fájlba és visszatöltése
+ - betölthető bejegyzés (eddigi módosítások maradjanak meg)
+ - grafikus user interface
+	. options megvan> megoldani hogy tudni minden menjen
+	
+	"1","<date><hour1>","<date><hour2>","<esemény>"
+	"2","<date><hour1>","<date><hour2>","<esemény>"
+
+Project:
+ 1 Fejlhasználói igények (word, dokumentálás, stb.) - mit akar ő -
+ 2 Specifikáció (doc) - informatikai szöveg -
+ 3 UML tervek ( - use case diagram - / - használati eset diagram)
+	- osztálydiagrammok -
+ 4 Implementáció (programkód, javadoc)
+ 5 Tesztelési jegyzőkönyv (doc)
+ 6 Prezentáció (akár fóliák) (demó)
+
+1,2,5: doksi
+
+Bemutatás előtt e-mailben elküldeni a cucmót 1 nappal
++ nevek
+
+
+- class>> nagybetűvel kezdődnek		Class
+- fgvnevek kisbetű, minden új szó nagybetűvelkezdődik	newMethod
+- konstansok caps+aláhúzás 	CONST_1
+- fgv.írás:
+	☻ fgv deklarálás+ javadoc (belső működés nemérdekel>> de! mit csinál? külvilággal kapcsolatos dolgok)
+		<beállít egy változót, módosít, létrehoz, etc.>
+		<return mitől függ + hogyan>
+	☻ mit akarok nagyjábol a fgv-el>> majd részletezem ha kész
+	☻ fgv kész >> tesztelni
+	
+	fgv 1. sorába elejére:
+	// #UNSAFE @Kopi
+	// #UNSAFE @Dani
+	// #UNSAFE @Norbi
+	ha kész, tesztelve lett:
+	// #
+	
+	
+	Dolgozok <valami.java>
+	Kész <valami.java>
+	
+	
+	Main.java
+	
+	packe
+	 valami1
+		-dolgozok @kopi
+		-dolgozok @norbi
+	 valami2
+	 
+	 
