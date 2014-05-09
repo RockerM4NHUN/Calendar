@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 
 import Res.Edit.DeleteEditWindow;
 import Res.Edit.NewEditWindow;
+import Res.Edit.NoSelect;
 import Res.Edit.RewriteEditWindow;
 import Res.GUI.WeekViewSampleGUI;
 import Res.GUI.Views.WeekView;
@@ -22,7 +23,7 @@ import Res.GUI.Views.WeekView;
 /**
  * Window class, which extends JFrame to whole GUI.
  * 
- * @author ZODVAAT.SZE / Fekete Norbert
+ * @author ZODVAAT.SZE / FENVABT.SZE
  */
 public class Window extends JFrame {
 	/** File's path. */
@@ -94,8 +95,13 @@ public class Window extends JFrame {
 		reWriteItem.addActionListener(new ActionListener() { // Action listener to reWriteItem
 					@Override
 					public void actionPerformed(ActionEvent e) { // If select rewrite item show rewrite edit window
-						RewriteEditWindow r = new RewriteEditWindow();
-						r.setVisible(true);
+						if (Res.GUI.WeekViewSampleGUI.selectedEntry == null) {
+							NoSelect no = new NoSelect();
+							no.setVisible(true);
+						} else {
+							RewriteEditWindow r = new RewriteEditWindow();
+							r.setVisible(true);
+						}
 					}
 				});
 		deleteItem = new JMenuItem("Delete");

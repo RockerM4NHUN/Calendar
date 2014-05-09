@@ -21,8 +21,10 @@ import Res.GUI.Views.WeekView;
 public class WeekViewSampleGUI implements GUIGenerator {
 
 	private Window parent;
-	private WeekView w;
+	public static WeekView w;
 	private JLabel label;
+	public static CalendarEntry selectedEntry;
+	public static int ID = 1;
 
 	@Override
 	public void show(final Window parent, Container container) {
@@ -31,26 +33,33 @@ public class WeekViewSampleGUI implements GUIGenerator {
 		final EventedList<CalendarEntry> elist = DataModel.getEntryList();
 		Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 0);
 
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5, now.getTime()
+		elist.add(new CalendarEntry(ID, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5, now.getTime()
 				- WeekView.HOUR_MILLIS * 2), "TestType0", "Long Title0", Color.BLACK, new Color(255, 200, 80),
 				"Test Description0"));
+		ID++;
 
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
+		elist.add(new CalendarEntry(ID, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
 				+ WeekView.HOUR_MILLIS * 36), "TestType1", "Long Title1", Color.BLACK, new Color(255, 200, 80),
 				"Test Description1"));
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
+		ID++;
+		elist.add(new CalendarEntry(ID, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
 				- WeekView.HOUR_MILLIS * 1), "TestType2", "Long Title2", Color.BLACK, new Color(200, 200, 80),
 				"Test Description2"));
-
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0, now.getTime()
+		ID++;
+		elist.add(new CalendarEntry(ID, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0, now.getTime()
 				+ WeekView.HOUR_MILLIS * 2), "TestType3", "Long Title3", CalendarEntry.DEFAULT_FOREGROUND_COLOR,
 				CalendarEntry.DEFAULT_BACKGROUND_COLOR, "Test Description3"));
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
-				+ WeekView.HOUR_MILLIS * 0), "TestType4", "Long Title4", Color.BLACK, new Color(255, 200, 80),
-				"Test Description4"));
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
-				+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
-				"Test Description5"));
+		ID++;
+		Res.Data.DataModel.getEntryList().add(
+				new CalendarEntry(ID, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
+						+ WeekView.HOUR_MILLIS * 0), "TestType4", "Long Title4", Color.BLACK, new Color(255, 200, 80),
+						"Test Description4"));
+		ID++;
+		Res.Data.DataModel.getEntryList().add(
+				new CalendarEntry(ID, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
+						+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
+						"Test Description5"));
+		ID++;
 
 		w = new WeekView(elist);
 
@@ -59,9 +68,11 @@ public class WeekViewSampleGUI implements GUIGenerator {
 			@Override
 			public void selectionChanged(CalendarEntry e) {
 				if (e == null) {
+					selectedEntry = null;
 					System.out.println("Nothing selected");
 					return;
 				}
+				selectedEntry = e;
 				System.out.println(e.getType());
 			}
 		});

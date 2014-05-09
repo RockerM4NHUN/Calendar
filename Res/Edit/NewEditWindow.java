@@ -27,9 +27,6 @@ import Res.Bin.Interval;
  * @author FENVABT.SZE
  * */
 public class NewEditWindow extends JDialog {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	/** JLabels to show texts on the window. */
 	private JLabel hourFromLabel;
@@ -217,15 +214,19 @@ public class NewEditWindow extends JDialog {
 					error.setVisible(true);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
 					Res.Data.DataModel.getEntryList().add(
-							new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
-									(String) boxType.getSelectedItem(), titleField.getText(), lc.getLetterColor(), bc
-											.getBackColor(), eventField.getText()));
+							new CalendarEntry(Res.GUI.WeekViewSampleGUI.ID, new Interval(fromDate.getTimeInMillis(),
+									tillDate.getTimeInMillis()), (String) boxType.getSelectedItem(), titleField
+									.getText(), lc.getLetterColor(), bc.getBackColor(), eventField.getText()));
+					Res.GUI.WeekViewSampleGUI.ID++;
+					Res.GUI.WeekViewSampleGUI.w.repaint();
 					dispose();
 				} else { // Else make new Entry with new tpye
 					Res.Data.DataModel.getEntryList().add(
-							new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
-									newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
-											.getBackColor(), eventField.getText()));
+							new CalendarEntry(Res.GUI.WeekViewSampleGUI.ID, new Interval(fromDate.getTimeInMillis(),
+									tillDate.getTimeInMillis()), newTypeField.getText(), titleField.getText(), lc
+									.getLetterColor(), bc.getBackColor(), eventField.getText()));
+					Res.GUI.WeekViewSampleGUI.ID++;
+					Res.GUI.WeekViewSampleGUI.w.repaint();
 					dispose();
 				}
 			}
