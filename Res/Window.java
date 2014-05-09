@@ -22,7 +22,7 @@ import Res.GUI.Views.WeekView;
 /**
  * Window class, which extends JFrame to whole GUI.
  * 
- * @author Zombori Dániel / Fekete Norbert
+ * @author ZODVAAT.SZE / Fekete Norbert
  */
 public class Window extends JFrame {
 	/** File's path. */
@@ -169,7 +169,7 @@ public class Window extends JFrame {
 	/**
 	 * Sets contents of window.
 	 * 
-	 * @author Zombori DÃ¡niel
+	 * @author ZODVAAT.SZE
 	 * @param gui
 	 *            Component holder class to show
 	 */
