@@ -8,13 +8,33 @@ import java.util.*;
 import Res.Bin.*;
 
 public class WeekView extends CalendarView{
-	public WeekView(){
+	public WeekView(EventedList<CalendarEntry> elist){
 		super();
 		
 		//*************************\\
 		//    setting variables    \\
 		//*************************\\
 		
+		if (elist == null){
+			Thrower.Throw(new NullPointerException("Parameter can't be null"));
+		}
+		
+		groups = new ArrayList<IntersectionGroup>();
+		gfxEntries = new ArrayList<EntryGFX>();
+		selected = new ArrayList<EntryGFX>();
+		
+		setCalendarEntries(elist);
+		elist.addItemAddedListener(new EventedListListener<CalendarEntry>(){
+			public void listModified(CalendarEntry e){
+				addCalendarEntry(e);;
+			}
+		});
+		
+		elist.addItemRemovedListener(new EventedListListener<CalendarEntry>(){
+			public void listModified(CalendarEntry e){
+				removeCalendarEntry(e);;
+			}
+		});
 		
 		finalVerticalGap = 0;
 		finalHorizontalGap = 0;
@@ -30,10 +50,6 @@ public class WeekView extends CalendarView{
 		selectionColor = new Color(56,179,179,128);
 		currentTimeColor = new Color(255,0,0);
 		lineColor = new Color(100,100,100);
-		
-		groups = new ArrayList<IntersectionGroup>();
-		gfxEntries = new ArrayList<EntryGFX>();
-		selected = new ArrayList<EntryGFX>();
 		
 		//***************************\\
 		//    setting environment    \\
@@ -621,9 +637,7 @@ public class WeekView extends CalendarView{
 		repaint();
 	}
 	
-	public boolean setCalendarEntries(java.util.List<CalendarEntry> elist){
-		if (elist == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
-		
+	private boolean setCalendarEntries(EventedList<CalendarEntry> elist){
 		groups.clear();
 		
 		for(CalendarEntry e : elist){
@@ -632,19 +646,19 @@ public class WeekView extends CalendarView{
 		return true;
 	}
 	
-	public java.util.List<CalendarEntry> getCalendarEntries(){
+	/*public java.util.List<CalendarEntry> getCalendarEntries(){
 		java.util.List<CalendarEntry> ret = new ArrayList<CalendarEntry>();
 		for (IntersectionGroup g : groups){
 			ret.addAll(g.getEntries());
 		}
 		return ret;
-	}
+	}*/
 	
-	public boolean addCalendarEntry(CalendarEntry e){
+	private boolean addCalendarEntry(CalendarEntry e){
 		return addToGroups(groups, new IntersectionGroup(e));
 	}
 	
-	public boolean removeCalendarEntry(CalendarEntry e){
+	private boolean removeCalendarEntry(CalendarEntry e){
 		for (IntersectionGroup g : groups){
 			java.util.List<IntersectionGroup> grps = g.removeEntry(e);
 			if (grps != null){

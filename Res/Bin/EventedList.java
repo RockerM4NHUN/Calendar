@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * 
  * @author ZODVAAT.SZE
  */
-public class EventedList<ListItem>{
+public class EventedList<ListItem> implements Iterable<ListItem>{
 	private List<ListItem> list;
 	private List<EventedListListener<ListItem>> addListeners;
 	private List<EventedListListener<ListItem>> removeListeners;
@@ -70,7 +70,7 @@ public class EventedList<ListItem>{
 	 * 
 	 * @author ZODVAAT.SZE
 	 */
-	public void addItemRemoveListener(EventedListListener<ListItem> l){
+	public void addItemRemovedListener(EventedListListener<ListItem> l){
 		removeListeners.add(l);
 	}
 	
@@ -90,7 +90,7 @@ public class EventedList<ListItem>{
 	 * @author ZODVAAT.SZE
 	 * @return Boolean as specified in List.
 	 */
-	public boolean removeItemRemoveListener(EventedListListener<ListItem> l){
+	public boolean removeItemRemovedListener(EventedListListener<ListItem> l){
 		return removeListeners.remove(l);
 	}
 	
@@ -119,6 +119,16 @@ public class EventedList<ListItem>{
 				dispatchItemRemovedEvent(current);
 			}
 		};
+	}
+	
+	/**
+	 * Return's lists size.
+	 * 
+	 * @author ZODVAAT.SZE
+	 * @return Size of list.
+	 */
+	public int size(){
+		return list.size();
 	}
 	
 	private void dispatchItemAddedEvent(ListItem item){
