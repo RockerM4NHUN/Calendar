@@ -11,7 +11,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Background Color window to choose background color.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class BackColor extends JDialog {
 	/** backColor to store new color */

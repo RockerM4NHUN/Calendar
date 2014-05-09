@@ -11,7 +11,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Letter Color window to choose letter color.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class LetterColor extends JDialog {
 	/** letterColor to letter color */

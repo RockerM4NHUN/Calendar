@@ -20,12 +20,11 @@ import javax.swing.SpinnerNumberModel;
 
 import Res.Bin.CalendarEntry;
 import Res.Bin.Interval;
-import Res.GUI.Views.WeekView;
 
 /**
  * New Edit Window to edit new events.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class NewEditWindow extends JDialog {
 	/**
@@ -217,26 +216,17 @@ public class NewEditWindow extends JDialog {
 					BadData error = new BadData();
 					error.setVisible(true);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
-<<<<<<< HEAD
-					/*System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
-							tillDate.getTime()), (String) boxType.getSelectedItem(), titleField.getText(), lc
-=======
-				} else { // Else make new Entry with new type
-					System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(),
-							tillDate.getTimeInMillis()), newTypeField.getText(), titleField.getText(), lc
->>>>>>> 7e6966857c91280aa768c6bed011d003ef6495bb
-							.getLetterColor(), bc.getBackColor(), eventField.getText())));
-					w.repaint();*/
+					Res.Data.DataModel.getEntryList().add(
+							new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
+									(String) boxType.getSelectedItem(), titleField.getText(), lc.getLetterColor(), bc
+											.getBackColor(), eventField.getText()));
 					dispose();
-<<<<<<< HEAD
 				} else { // Else make new Entry with new tpye
-					/*System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
-							tillDate.getTime()), newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
-							.getBackColor(), eventField.getText())));
-					w.repaint();*/
+					Res.Data.DataModel.getEntryList().add(
+							new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
+									newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
+											.getBackColor(), eventField.getText()));
 					dispose();
-=======
->>>>>>> 7e6966857c91280aa768c6bed011d003ef6495bb
 				}
 			}
 		});
