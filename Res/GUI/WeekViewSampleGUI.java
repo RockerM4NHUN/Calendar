@@ -15,7 +15,9 @@ import Res.Window;
 import Res.Bin.CalendarEntry;
 import Res.Bin.CalendarSelectionChangedListener;
 import Res.Bin.Interval;
+import Res.Bin.EventedList;
 import Res.GUI.Views.WeekView;
+import Res.Data.DataModel;
 
 public class WeekViewSampleGUI implements GUIGenerator {
 
@@ -27,10 +29,10 @@ public class WeekViewSampleGUI implements GUIGenerator {
 	public void show(final Window parent, Container container) {
 		this.parent = parent;
 
-		w = new WeekView();
-		final java.util.List<CalendarEntry> elist = new ArrayList<CalendarEntry>();
+		final EventedList<CalendarEntry> elist = DataModel.getEntryList();
 		Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 0);
-
+		
+		
 		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5, now.getTime()
 				- WeekView.HOUR_MILLIS * 2), "TestType0", "Long Title0", Color.BLACK, new Color(255, 200, 80),
 				"Test Description0"));
@@ -41,7 +43,7 @@ public class WeekViewSampleGUI implements GUIGenerator {
 		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
 				- WeekView.HOUR_MILLIS * 1), "TestType2", "Long Title2", Color.BLACK, new Color(200, 200, 80),
 				"Test Description2"));
-		// w.setCalendarEntries(elist);
+				
 		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0, now.getTime()
 				+ WeekView.HOUR_MILLIS * 2), "TestType3", "Long Title3", CalendarEntry.DEFAULT_FOREGROUND_COLOR,
 				CalendarEntry.DEFAULT_BACKGROUND_COLOR, "Test Description3"));
@@ -52,7 +54,8 @@ public class WeekViewSampleGUI implements GUIGenerator {
 				+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
 				"Test Description5"));
 
-		w.setCalendarEntries(elist);
+		w = new WeekView(elist);
+		
 		w.toInterval(now);
 		w.addSelectionChangedListener(new CalendarSelectionChangedListener() {
 			@Override
@@ -95,7 +98,7 @@ public class WeekViewSampleGUI implements GUIGenerator {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if (elist.size() > 0) {
-					w.removeCalendarEntry(elist.remove(0));
+					elist.remove(0);
 					w.repaint();
 				}
 			}

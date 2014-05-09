@@ -100,7 +100,6 @@ public class NewEditWindow extends JDialog {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
-		final WeekView w = new WeekView();
 		date = new Date();
 
 		yearFromM = new SpinnerNumberModel(date.getYear() + 1900, date.getYear() + 1900, 5000, 1); // Instantiation
@@ -231,16 +230,16 @@ public class NewEditWindow extends JDialog {
 					BadData error = new BadData();
 					error.setVisible(true);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
-					System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
+					/*System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
 							tillDate.getTime()), (String) boxType.getSelectedItem(), titleField.getText(), lc
 							.getLetterColor(), bc.getBackColor(), eventField.getText())));
-					w.repaint();
+					w.repaint();*/
 					dispose();
 				} else { // Else make new Entry with new tpye
-					System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
+					/*System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
 							tillDate.getTime()), newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
 							.getBackColor(), eventField.getText())));
-					w.repaint();
+					w.repaint();*/
 					dispose();
 				}
 				// System.out.println(fromDateYear);
