@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -22,37 +23,39 @@ public class WeekViewSampleGUI implements GUIGenerator {
 	private Window parent;
 	private WeekView w;
 	private JLabel label;
+	private List<CalendarEntry> entryList = new ArrayList<CalendarEntry>();
 
 	@Override
 	public void show(final Window parent, Container container) {
 		this.parent = parent;
 
 		w = new WeekView();
-		final java.util.List<CalendarEntry> elist = new ArrayList<CalendarEntry>();
-		Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 0);
+		final Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 0);
 
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5, now.getTime()
+		entryList.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5, now.getTime()
 				- WeekView.HOUR_MILLIS * 2), "TestType0", "Long Title0", Color.BLACK, new Color(255, 200, 80),
 				"Test Description0"));
 
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
+		entryList.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
 				+ WeekView.HOUR_MILLIS * 36), "TestType1", "Long Title1", Color.BLACK, new Color(255, 200, 80),
 				"Test Description1"));
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
+		entryList.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
 				- WeekView.HOUR_MILLIS * 1), "TestType2", "Long Title2", Color.BLACK, new Color(200, 200, 80),
 				"Test Description2"));
 		// w.setCalendarEntries(elist);
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0, now.getTime()
+		entryList.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0, now.getTime()
 				+ WeekView.HOUR_MILLIS * 2), "TestType3", "Long Title3", CalendarEntry.DEFAULT_FOREGROUND_COLOR,
 				CalendarEntry.DEFAULT_BACKGROUND_COLOR, "Test Description3"));
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
+		entryList.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
 				+ WeekView.HOUR_MILLIS * 0), "TestType4", "Long Title4", Color.BLACK, new Color(255, 200, 80),
 				"Test Description4"));
-		elist.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
+		entryList.add(new CalendarEntry(0, new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
 				+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
 				"Test Description5"));
-
-		w.setCalendarEntries(elist);
+		for (int i = 0; i < entryList.size(); i++) {
+			System.out.println(entryList.get(i).getTitle());
+		}
+		w.setCalendarEntries(entryList);
 		w.toInterval(now);
 		w.addSelectionChangedListener(new CalendarSelectionChangedListener() {
 			@Override
@@ -94,8 +97,8 @@ public class WeekViewSampleGUI implements GUIGenerator {
 		btnTest.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				if (elist.size() > 0) {
-					w.removeCalendarEntry(elist.remove(0));
+				if (entryList.size() > 0) {
+					w.removeCalendarEntry(entryList.remove(0));
 					w.repaint();
 				}
 			}
@@ -111,5 +114,13 @@ public class WeekViewSampleGUI implements GUIGenerator {
 
 	@Override
 	public void destroy() {
+	}
+
+	public List<CalendarEntry> getCalendarEntryList() {
+		return entryList;
+	}
+
+	public void setCalendarEntryList(List<CalendarEntry> entryList) {
+		this.entryList = entryList;
 	}
 }

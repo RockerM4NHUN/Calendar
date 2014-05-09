@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -31,22 +32,6 @@ public class NewEditWindow extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	// private int fromDateYear;
-	// private int fromDateMonth;
-	// private int fromDateDay;
-	// private int tillDateYear;
-	// private int tillDateMonth;
-	// private int tillDateDay;
-	// private int fromHour;
-	// private int tillHour;
-	// private int fromMin;
-	// private int tillMin;
-	// private String titleOfEvent;
-	// private String typeOfEvent;
-	// private String newType;
-	// private String event;
-	// private Color letterColor;
-	// private Color backColor;
 	/** JLabels to show texts on the window. */
 	private JLabel hourFromLabel;
 	private JLabel hourTillLabel;
@@ -203,10 +188,12 @@ public class NewEditWindow extends JDialog {
 		okButton.addActionListener(new ActionListener() { // Action listener to Ok button
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Date fromDate = new Date((int) yearDateFrom.getValue(), (int) monthDateFrom.getValue(),
+				Calendar fromDate = Calendar.getInstance();
+				fromDate.set((int) yearDateFrom.getValue(), (int) monthDateFrom.getValue() - 1,
 						(int) dayDateFrom.getValue(), (int) hourFrom.getValue(), (int) minFrom.getValue());
-				Date tillDate = new Date((int) yearDateTill.getValue(), (int) monthDateTill.getValue(),
-						(int) dayDateTill.getValue(), (int) hourTill.getValue(), (int) minTill.getValue());
+				Calendar tillDate = Calendar.getInstance();
+				tillDate.set((int) yearDateTill.getValue(), (int) monthDateTill.getValue() - 1,
+						(int) dayDateFrom.getValue(), (int) hourTill.getValue(), (int) minTill.getValue());
 
 				if (((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
 						&& (int) monthDateFrom.getValue() == (int) monthDateTill.getValue()
@@ -231,34 +218,13 @@ public class NewEditWindow extends JDialog {
 					BadData error = new BadData();
 					error.setVisible(true);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
-					System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
-							tillDate.getTime()), (String) boxType.getSelectedItem(), titleField.getText(), lc
+				} else { // Else make new Entry with new type
+					System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(),
+							tillDate.getTimeInMillis()), newTypeField.getText(), titleField.getText(), lc
 							.getLetterColor(), bc.getBackColor(), eventField.getText())));
 					w.repaint();
 					dispose();
-				} else { // Else make new Entry with new tpye
-					System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTime(),
-							tillDate.getTime()), newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
-							.getBackColor(), eventField.getText())));
-					w.repaint();
-					dispose();
 				}
-				// System.out.println(fromDateYear);
-				// System.out.println(fromDateMonth);
-				// System.out.println(fromDateDay);
-				// System.out.println(fromHour);
-				// System.out.println(fromMin);
-				// System.out.println(tillDateYear);
-				// System.out.println(tillDateMonth);
-				// System.out.println(tillDateDay);
-				// System.out.println(tillHour);
-				// System.out.println(tillMin);
-				// System.out.println(typeOfEvent);
-				// System.out.println(newType);
-				// System.out.println(titleOfEvent);
-				// System.out.println(event);
-				// System.out.println(leterColor);
-				// System.out.println(backColor);
 			}
 		});
 
@@ -300,94 +266,3 @@ public class NewEditWindow extends JDialog {
 		setSize(450, 450);
 	}
 }
-// // public String getDate() {
-// // return date;
-// // }
-//
-// public int getFromHour() {
-// return fromHour;
-// }
-//
-// public int getFromMin() {
-// return fromMin;
-// }
-//
-// public int getTillHour() {
-// return tillHour;
-// }
-//
-// public int getTillMin() {
-// return tillMin;
-// }
-//
-// public String getTypeOfEvent() {
-// return typeOfEvent;
-// }
-//
-// public String getNewType() {
-// return newType;
-// }
-//
-// public String getTitleOfEvent() {
-// return titleOfEvent;
-// }
-//
-// public String getEvent() {
-// return event;
-// }
-//
-// public Color getLeterColor() {
-// return leterColor;
-// }
-//
-// public Color getBackColor() {
-// return backColor;
-// }
-//
-// // public void setDate(String date) {
-// // this.date = date;
-// // }
-//
-// public CalendarEntry getCalendarEntry() {
-// return entry;
-// }
-//
-// public void setFromHour(int fromHour) {
-// this.fromHour = fromHour;
-// }
-//
-// public void setFromMin(int fromMin) {
-// this.fromMin = fromMin;
-// }
-//
-// public void setTillHour(int tillHour) {
-// this.tillHour = tillHour;
-// }
-//
-// public void setTillMin(int tillMin) {
-// this.tillMin = tillMin;
-// }
-//
-// public void setTypeOfEvent(String typeOfEvent) {
-// this.typeOfEvent = typeOfEvent;
-// }
-//
-// public void setNewType(String newType) {
-// this.newType = newType;
-// }
-//
-// public void setTitleOfEvent(String titleOfEvent) {
-// this.titleOfEvent = titleOfEvent;
-// }
-//
-// public void setEvent(String event) {
-// this.event = event;
-// }
-//
-// public void setLeterColor(Color leterColor) {
-// this.leterColor = leterColor;
-// }
-//
-// public void setBackColor(Color backColor) {
-// this.backColor = backColor;
-// }
