@@ -32,20 +32,17 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 		return startTime;
 	}
 	
-	
 	public void addSelectionChangedListener(CalendarSelectionChangedListener listener){
 		for (CalendarSelectionChangedListener l : selectionChangedListeners){
 			if (l == listener) return;
 		}
 		selectionChangedListeners.add(listener);
 	}
+	
 	public void removeSelectionChangedListener(CalendarSelectionChangedListener listener){
 		selectionChangedListeners.remove(listener);
 	}
-	/**
-	 * Selected will hold the selected calendar entry.
-	 * If nothing is selected null.
-	 */
+	
 	public void dispatchSelectionChanged(CalendarEntry selected){
 		for (CalendarSelectionChangedListener l : selectionChangedListeners){
 			l.selectionChanged(selected);
@@ -87,25 +84,25 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 	 * Displays the drawable contents.
 	 */
 	public abstract void paintComponent(Graphics g);
-	/**
+	/*/**
 	 * Returns the calendar entries that the view is holding.
-	 */
+	 * /
 	public abstract List<CalendarEntry> getCalendarEntries();
 	/**
 	 * Sets the calendar entries. Will erase previous entries.
 	 * @return True if entries can not be added.
-	 */
+	 * /
 	public abstract boolean setCalendarEntries(List<CalendarEntry> elist);
 	/**
 	 * Adds a new calendar entry.
 	 * @return True if entry can not be set.
-	 */
+	 * /
 	public abstract boolean addCalendarEntry(CalendarEntry e);
 	/**
 	 * Removes calendar entry.
 	 * @return True if entry can not be removed.
-	 */
-	public abstract boolean removeCalendarEntry(CalendarEntry e);
+	 * /
+	public abstract boolean removeCalendarEntry(CalendarEntry e);*/
 	
 	protected abstract void clickPerformed(MouseEvent e);
 }

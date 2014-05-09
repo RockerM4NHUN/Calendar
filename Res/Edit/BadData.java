@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 /**
  * Bad data window to error.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class BadData extends JDialog {
 	/** JLabel to show text. */

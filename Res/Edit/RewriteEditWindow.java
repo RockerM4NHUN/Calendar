@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 /**
  * Rewriter Edit Window to edit events.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class RewriteEditWindow extends JFrame {
 

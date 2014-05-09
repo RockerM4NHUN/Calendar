@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 /**
  * Delete Edit Window to delete entry.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class DeleteEditWindow extends JDialog {
 	/** JLabel to show text. */

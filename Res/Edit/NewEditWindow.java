@@ -20,12 +20,11 @@ import javax.swing.SpinnerNumberModel;
 
 import Res.Bin.CalendarEntry;
 import Res.Bin.Interval;
-import Res.GUI.Views.WeekView;
 
 /**
  * New Edit Window to edit new events.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class NewEditWindow extends JDialog {
 	/**
@@ -85,7 +84,6 @@ public class NewEditWindow extends JDialog {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
-		final WeekView w = new WeekView();
 		date = new Date();
 
 		yearFromM = new SpinnerNumberModel(date.getYear() + 1900, date.getYear() + 1900, 5000, 1); // Instantiation
@@ -218,11 +216,16 @@ public class NewEditWindow extends JDialog {
 					BadData error = new BadData();
 					error.setVisible(true);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
-				} else { // Else make new Entry with new type
-					System.out.println(w.addCalendarEntry(new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(),
-							tillDate.getTimeInMillis()), newTypeField.getText(), titleField.getText(), lc
-							.getLetterColor(), bc.getBackColor(), eventField.getText())));
-					w.repaint();
+					Res.Data.DataModel.getEntryList().add(
+							new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
+									(String) boxType.getSelectedItem(), titleField.getText(), lc.getLetterColor(), bc
+											.getBackColor(), eventField.getText()));
+					dispose();
+				} else { // Else make new Entry with new tpye
+					Res.Data.DataModel.getEntryList().add(
+							new CalendarEntry(0, new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
+									newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
+											.getBackColor(), eventField.getText()));
 					dispose();
 				}
 			}
