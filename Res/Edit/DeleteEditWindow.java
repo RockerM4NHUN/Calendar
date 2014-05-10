@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 /**
  * Delete Edit Window to delete entry.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class DeleteEditWindow extends JDialog {
 	/** JLabel to show text. */
@@ -34,6 +34,8 @@ public class DeleteEditWindow extends JDialog {
 		yesButton.addActionListener(new ActionListener() { // Action listener to yes button
 					@Override
 					public void actionPerformed(ActionEvent e) { // If push the button delete entry
+						Res.Data.DataModel.getEntryList().remove(Res.GUI.WeekViewSampleGUI.selectedEntry);
+						Res.GUI.WeekViewSampleGUI.w.repaint();
 						dispose();
 					}
 				});

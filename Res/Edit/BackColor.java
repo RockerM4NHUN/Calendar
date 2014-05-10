@@ -11,11 +11,12 @@ import javax.swing.event.ChangeListener;
 /**
  * Background Color window to choose background color.
  * 
- * @author Fekete Norbert
+ * @author FENVABT.SZE
  * */
 public class BackColor extends JDialog {
 	/** backColor to store new color */
 	private Color backColor = new Color(0, 0, 0);
+	private static boolean change = false;
 
 	private JColorChooser colorChooser; // Instantiation JColorChooser
 
@@ -31,7 +32,8 @@ public class BackColor extends JDialog {
 		colorChooser.getSelectionModel().addChangeListener(new ChangeListener() { // Change listener to color chooser
 					@Override
 					public void stateChanged(ChangeEvent e) { // If choose color, store the new color
-						backColor = colorChooser.getBackground();
+						backColor = colorChooser.getColor();
+						change = true;
 					}
 				});
 
