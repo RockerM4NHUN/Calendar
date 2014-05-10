@@ -71,6 +71,10 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 		return backgroundColor;
 	}
 
+	public void setInterval(Interval interval) {
+		this.interval = interval;
+	}
+
 	public void setType(String type) {
 		this.type = type;
 	}

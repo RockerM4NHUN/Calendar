@@ -10,13 +10,16 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
-import Res.Data.*;
-import Res.Bin.*;
+import Res.Bin.CalendarEntry;
+import Res.Bin.EventedList;
+import Res.Bin.Interval;
+import Res.Data.DataModel;
 
 /**
  * Rewriter Edit Window to edit events.
@@ -185,12 +188,12 @@ public class RewriteEditWindow extends JDialog {
 								&& (int) dayDateFrom.getValue() == (int) dayDateTill.getValue()
 								&& (int) hourFrom.getValue() == (int) hourTill.getValue() && (int) minFrom.getValue() > (int) minTill
 								.getValue())) { // If have any error show error window
-					BadData error = new BadData();
-					error.setVisible(true);
-				} else { // Else rewrite entry
-					
-					TUDO "allitsd be az osszes adattagot"
+					JOptionPane.showMessageDialog(null, "Begening of event equals end of event.", "Date Error",
+							JOptionPane.ERROR_MESSAGE);
 
+				} else { // Else rewrite entry
+					entry.setInterval(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()));
+					entry.setType(newTypeField.getText());
 					entry.setTitle(titleField.getText());
 					entry.setForegroundColor(lc.getLetterColor());
 					entry.setBackgroundColor(bc.getBackColor());

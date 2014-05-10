@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
@@ -76,7 +77,7 @@ public class NewEditWindow extends JDialog {
 	/**
 	 * Default constructor to JDialog.
 	 * */
-	//@SuppressWarnings("deprecation")
+	// @SuppressWarnings("deprecation")
 	public NewEditWindow() {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
@@ -210,20 +211,20 @@ public class NewEditWindow extends JDialog {
 								&& (int) dayDateFrom.getValue() == (int) dayDateTill.getValue()
 								&& (int) hourFrom.getValue() == (int) hourTill.getValue() && (int) minFrom.getValue() > (int) minTill
 								.getValue())) { // If have any error show error window
-					BadData error = new BadData();
-					error.setVisible(true);
+					JOptionPane.showMessageDialog(null, "Begening of event equals end of event.", "Date Error",
+							JOptionPane.ERROR_MESSAGE);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
 					Res.Data.DataModel.getEntryList().add(
-							new CalendarEntry(new Interval(fromDate.getTimeInMillis(),
-									tillDate.getTimeInMillis()), (String) boxType.getSelectedItem(), titleField
-									.getText(), lc.getLetterColor(), bc.getBackColor(), eventField.getText()));
+							new CalendarEntry(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
+									(String) boxType.getSelectedItem(), titleField.getText(), lc.getLetterColor(), bc
+											.getBackColor(), eventField.getText()));
 					Res.GUI.ViewGUI.w.repaint();
 					dispose();
 				} else { // Else make new Entry with new tpye
 					Res.Data.DataModel.getEntryList().add(
-							new CalendarEntry(new Interval(fromDate.getTimeInMillis(),
-									tillDate.getTimeInMillis()), newTypeField.getText(), titleField.getText(), lc
-									.getLetterColor(), bc.getBackColor(), eventField.getText()));
+							new CalendarEntry(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
+									newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
+											.getBackColor(), eventField.getText()));
 					Res.GUI.ViewGUI.w.repaint();
 					dispose();
 				}

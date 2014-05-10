@@ -12,10 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
-import Res.Edit.DeleteEditWindow;
 import Res.Edit.NewEditWindow;
-import Res.Edit.NoSelect;
 import Res.Edit.RewriteEditWindow;
 import Res.GUI.ViewGUI;
 import Res.GUI.Views.WeekView;
@@ -51,9 +50,9 @@ public class Window extends JFrame {
 	 */
 	public Window() {
 		super("Calendar");
-		
+
 		final ViewGUI wgui = new ViewGUI();
-		
+
 		gui = null;
 		GUIPanel = getContentPane();
 
@@ -98,8 +97,8 @@ public class Window extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent e) { // If select rewrite item show rewrite edit window
 						if (Res.GUI.ViewGUI.selectedEntry == null) {
-							NoSelect no = new NoSelect();
-							no.setVisible(true);
+							JOptionPane.showMessageDialog(null, "No selected event!", "Selected Error",
+									JOptionPane.ERROR_MESSAGE);
 						} else {
 							RewriteEditWindow r = new RewriteEditWindow(wgui.selectedEntry);
 							r.setVisible(true);
@@ -110,8 +109,12 @@ public class Window extends JFrame {
 		deleteItem.addActionListener(new ActionListener() { // Action listener to deleteItem
 					@Override
 					public void actionPerformed(ActionEvent e) { // If select delete item show delete edit window
-						DeleteEditWindow d = new DeleteEditWindow();
-						d.setVisible(true);
+						int res = JOptionPane.showConfirmDialog(null, "Are you sure to delete it?", "Warning",
+								JOptionPane.YES_NO_OPTION);
+						if (res == JOptionPane.YES_OPTION) {
+							Res.Data.DataModel.getEntryList().remove(Res.GUI.ViewGUI.selectedEntry);
+							Res.GUI.ViewGUI.w.repaint();
+						}
 					}
 				});
 		viewMenu = new JMenu("View");
