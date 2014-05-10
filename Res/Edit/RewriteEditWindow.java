@@ -189,17 +189,17 @@ public class RewriteEditWindow extends JDialog {
 					error.setVisible(true);
 				} else { // Else rewrite entry
 					
-					TODO "allitsd be az osszes adattagot"
-					
+					TUDO "allitsd be az osszes adattagot"
+
 					entry.setTitle(titleField.getText());
 					entry.setForegroundColor(lc.getLetterColor());
 					entry.setBackgroundColor(bc.getBackColor());
-					
-					//modification finished
+
+					// modification finished
 					EventedList<CalendarEntry> elist = DataModel.getEntryList();
 					elist.remove(entry);
 					elist.add(entry);
-					
+
 					dispose();
 				}
 			}
