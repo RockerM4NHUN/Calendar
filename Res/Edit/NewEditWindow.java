@@ -190,8 +190,7 @@ public class NewEditWindow extends JDialog {
 						(int) dayDateFrom.getValue(), (int) hourFrom.getValue(), (int) minFrom.getValue());
 				Calendar tillDate = Calendar.getInstance();
 				tillDate.set((int) yearDateTill.getValue(), (int) monthDateTill.getValue() - 1,
-						(int) dayDateFrom.getValue(), (int) hourTill.getValue(), (int) minTill.getValue());
-
+						(int) dayDateTill.getValue(), (int) hourTill.getValue(), (int) minTill.getValue());
 				if ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
 						&& (int) monthDateFrom.getValue() == (int) monthDateTill.getValue()
 						&& (int) dayDateFrom.getValue() == (int) dayDateTill.getValue()

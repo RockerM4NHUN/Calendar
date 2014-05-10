@@ -22,7 +22,7 @@ import Res.GUI.Views.WeekView;
 public class ViewGUI implements GUIGenerator {
 
 	private Window parent;
-	public static WeekView w;
+	private WeekView w;
 	private JLabel label;
 	public static CalendarEntry selectedEntry;
 
