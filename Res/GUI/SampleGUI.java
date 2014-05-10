@@ -18,7 +18,7 @@ public class SampleGUI implements GUIGenerator{
 		btn = new JButton("Test sample");
 		btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				parent.refreshGUI(new WeekViewSampleGUI());
+				parent.refreshGUI(new ViewGUI());
 			}
 		});
 		
