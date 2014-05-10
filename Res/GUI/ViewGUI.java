@@ -18,7 +18,7 @@ import Res.Bin.Interval;
 import Res.Data.DataModel;
 import Res.GUI.Views.WeekView;
 
-public class WeekViewSampleGUI implements GUIGenerator {
+public class ViewGUI implements GUIGenerator {
 
 	private Window parent;
 	public static WeekView w;
