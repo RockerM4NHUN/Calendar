@@ -79,6 +79,7 @@ public class NewEditWindow extends JDialog {
 	 * Default constructor to JDialog.
 	 * */
 	// @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public NewEditWindow(final CalendarView usingCalendarView) {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window

@@ -27,6 +27,8 @@ import Res.Data.DataModel;
  * @author FENVABT.SZE
  * */
 public class RewriteEditWindow extends JDialog {
+
+	private static final long serialVersionUID = 1L;
 	/** JLabels to show texts on the window. */
 	private JLabel hourFromLabel;
 	private JLabel hourTillLabel;
@@ -72,6 +74,7 @@ public class RewriteEditWindow extends JDialog {
 	/**
 	 * Default constructor to JDialog.
 	 * */
+	@SuppressWarnings("deprecation")
 	public RewriteEditWindow(final CalendarEntry entry) {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window

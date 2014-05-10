@@ -28,6 +28,7 @@ import Res.GUI.Views.WeekView;
 public class Window extends JFrame {
 	/** File's path. */
 	private String path;
+	/** Now using calendar view. */
 	private CalendarView usingCalendarView;
 	/** JMenuBar to menu items. */
 	private JMenuBar menu;
