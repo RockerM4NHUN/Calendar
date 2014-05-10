@@ -188,12 +188,15 @@ public class RewriteEditWindow extends JDialog {
 					BadData error = new BadData();
 					error.setVisible(true);
 				} else { // Else rewrite entry
-					EventedList<CalendarEntry> elist = DataModel.getEntryList();
 					
-					System.out.println("TODO: set entry attributes in RewriteEditWindow");
+					TODO "allitsd be az osszes adattagot"
+					
 					entry.setTitle(titleField.getText());
+					entry.setForegroundColor(lc.getLetterColor());
+					entry.setBackgroundColor(bc.getBackColor());
 					
 					//modification finished
+					EventedList<CalendarEntry> elist = DataModel.getEntryList();
 					elist.remove(entry);
 					elist.add(entry);
 					

@@ -34,8 +34,8 @@ public class DeleteEditWindow extends JDialog {
 		yesButton.addActionListener(new ActionListener() { // Action listener to yes button
 					@Override
 					public void actionPerformed(ActionEvent e) { // If push the button delete entry
-						Res.Data.DataModel.getEntryList().remove(Res.GUI.WeekViewSampleGUI.selectedEntry);
-						Res.GUI.WeekViewSampleGUI.w.repaint();
+						Res.Data.DataModel.getEntryList().remove(Res.GUI.ViewGUI.selectedEntry);
+						Res.GUI.ViewGUI.w.repaint();
 						dispose();
 					}
 				});
