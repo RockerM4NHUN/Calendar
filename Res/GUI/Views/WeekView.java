@@ -26,13 +26,19 @@ public class WeekView extends CalendarView{
 		setCalendarEntries(elist);
 		elist.addItemAddedListener(new EventedListListener<CalendarEntry>(){
 			public void listModified(CalendarEntry e){
-				addCalendarEntry(e);;
+				addCalendarEntry(e);
+				repaint();
 			}
 		});
 		
 		elist.addItemRemovedListener(new EventedListListener<CalendarEntry>(){
 			public void listModified(CalendarEntry e){
-				removeCalendarEntry(e);;
+				removeCalendarEntry(e);
+				if (selected.size() != 0 && selected.get(0).entry == e){
+					selected.clear();
+					dispatchSelectionChanged(null);
+				}
+				repaint();
 			}
 		});
 		
@@ -314,6 +320,9 @@ public class WeekView extends CalendarView{
 		}
 	}
 
+		//****************\\
+		//    EntryGFX    \\
+		//****************\\
 
 	class EntryGFX{
 		public EntryGFX(CalendarEntry entry, Interval time, int x, int y, int width, int height){
@@ -333,14 +342,9 @@ public class WeekView extends CalendarView{
 		}
 	}
 	
-	public static int getViewWidth(){
-		return firstVerticalLine + 7 * 130;
-	}
-	
-	public static int getViewHeight(){
-		return firstHorizontalLine + 24 * 30;
-	}
-	
+		//*****************\\
+		//    Variables    \\
+		//*****************\\ 
 	
 	private int width;
 	private int height;
@@ -372,26 +376,32 @@ public class WeekView extends CalendarView{
 	
 	private javax.swing.Timer timer;
 		
-	public static final String[] days = new String[]{"Monday","Thuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+	public static final String[] days = new String[]{"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 	public static final long HOUR_MILLIS = (long)3600000;
 	public static final long WEEK_MILLIS = 7*24*HOUR_MILLIS;
 	
 	
+		//**********************\\
+		//    Public methods    \\
+		//**********************\\ 
 	
+	public static int getViewWidth(){
+		return firstVerticalLine + 7 * 130;
+	}
 	
+	public static int getViewHeight(){
+		return firstHorizontalLine + 24 * 30;
+	}
 	
 	public void nextInterval(){
 		toInterval(new Date(startTime.getTime() + WEEK_MILLIS + 1));
 	}
+	
 	public void prevInterval(){
 		if (startTime.getTime() < WEEK_MILLIS) return;
 		toInterval(new Date(startTime.getTime() - WEEK_MILLIS + 1));
 	}
 	
-	/**
-	 * Paints the full view.
-	 * @override
-	 */
 	public void paintComponent(Graphics g){
 		abstractPaintComponent(g);
 		
@@ -548,6 +558,41 @@ public class WeekView extends CalendarView{
 		}
 	}
 	
+	public void toInterval(Date start){
+		if (start == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
+		Calendar c = Calendar.getInstance();
+		c.setTime(start);
+		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+		c.set(Calendar.HOUR_OF_DAY,0);
+		c.set(Calendar.MINUTE,0);
+		c.set(Calendar.SECOND,0);
+		c.set(Calendar.MILLISECOND,0);
+		startTime = new Timestamp(c.getTime().getTime());
+		
+		c.setTime(new Date(startTime.getTime() + WEEK_MILLIS + HOUR_MILLIS * 2));
+		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+		c.set(Calendar.HOUR_OF_DAY,0);
+		c.set(Calendar.MINUTE,0);
+		c.set(Calendar.SECOND,0);
+		c.set(Calendar.MILLISECOND,0);
+		
+		weekInterval = new Interval(startTime.getTime(),c.getTime().getTime());
+		
+		repaint();
+	}
+	
+	public void modifySelectedEntry(CalendarEntry e){
+		if (selected.size() == 0) return;
+		
+		removeCalendarEntry(selected.get(0).entry);
+		addCalendarEntry(e);
+		setSelected(e);
+	}
+	
+		//***********************\\
+		//    Private methods    \\
+		//***********************\\ 
+	
 	/**
 	 * Adds group to group list.
 	 */
@@ -583,13 +628,8 @@ public class WeekView extends CalendarView{
 						}
 					}
 					
-					selected.clear();
-					for (IntersectionGroup group : groups){
-						EntryGFX[] entries = group.getRectangles();
-						for (int i = 0;i < entries.length;i++){
-							if (entries[i].entry == g.entry) selected.add(entries[i]);
-						}
-					}
+					setSelected(g.entry);
+					
 					dispatchSelectionChanged(g.entry);
 					return;
 				}
@@ -600,13 +640,9 @@ public class WeekView extends CalendarView{
 			//no selected entry
 			for (EntryGFX g : gfxEntries){
 				if (g.intersect(e.getX(),e.getY())){
-					selected.clear();
-					for (IntersectionGroup group : groups){
-						EntryGFX[] entries = group.getRectangles();
-						for (int i = 0;i < entries.length;i++){
-							if (entries[i].entry == g.entry) selected.add(entries[i]);
-						}
-					}
+					
+					setSelected(g.entry);
+					
 					dispatchSelectionChanged(g.entry);
 					return;
 				}
@@ -614,29 +650,28 @@ public class WeekView extends CalendarView{
 		}
 	}
 	
-	public void toInterval(Date start){
-		if (start == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
-		Calendar c = Calendar.getInstance();
-		c.setTime(start);
-		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
-		c.set(Calendar.HOUR_OF_DAY,0);
-		c.set(Calendar.MINUTE,0);
-		c.set(Calendar.SECOND,0);
-		c.set(Calendar.MILLISECOND,0);
-		startTime = new Timestamp(c.getTime().getTime());
+	/**
+	 * Selects the given entry, don't repaint view.
+	 */
+	private void setSelected(CalendarEntry e){
+		boolean added = false;
 		
-		c.setTime(new Date(startTime.getTime() + WEEK_MILLIS + HOUR_MILLIS * 2));
-		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
-		c.set(Calendar.HOUR_OF_DAY,0);
-		c.set(Calendar.MINUTE,0);
-		c.set(Calendar.SECOND,0);
-		c.set(Calendar.MILLISECOND,0);
-		
-		weekInterval = new Interval(startTime.getTime(),c.getTime().getTime());
-		
-		repaint();
+		selected.clear();
+		for (IntersectionGroup group : groups){
+			EntryGFX[] entries = group.getRectangles();
+			for (int i = 0;i < entries.length;i++){
+				if (entries[i].entry == e){
+					added = true;
+					selected.add(entries[i]);
+				}
+			}
+			if (added) break;
+		}
 	}
 	
+	/**
+	 * Sets the calendar entries list.
+	 */
 	private boolean setCalendarEntries(EventedList<CalendarEntry> elist){
 		groups.clear();
 		
@@ -646,18 +681,16 @@ public class WeekView extends CalendarView{
 		return true;
 	}
 	
-	/*public java.util.List<CalendarEntry> getCalendarEntries(){
-		java.util.List<CalendarEntry> ret = new ArrayList<CalendarEntry>();
-		for (IntersectionGroup g : groups){
-			ret.addAll(g.getEntries());
-		}
-		return ret;
-	}*/
-	
+	/**
+	 * Adds new entry to list.
+	 */
 	private boolean addCalendarEntry(CalendarEntry e){
 		return addToGroups(groups, new IntersectionGroup(e));
 	}
 	
+	/**
+	 * Removes entry from list.
+	 */
 	private boolean removeCalendarEntry(CalendarEntry e){
 		for (IntersectionGroup g : groups){
 			java.util.List<IntersectionGroup> grps = g.removeEntry(e);
@@ -674,6 +707,9 @@ public class WeekView extends CalendarView{
 		return true;
 	}
 	
+	/**
+	 * Breaks a string to lines with given width.
+	 */
 	private static String[] breakToLines(String str, FontMetrics fm, int maxWidth, int maxLines){
 		java.util.List<String> ret = new ArrayList<String>();
 		
@@ -697,6 +733,9 @@ public class WeekView extends CalendarView{
 		return ret.toArray(new String[0]);
 	}
 	
+	/**
+	 * Generates fixed size hour string.
+	 */
 	private static String createHour(int i){
 		if (i < 0 || i >= 100) return "??:??";
 		if (i < 10) return ("0" + i + ":00");
