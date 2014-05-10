@@ -71,13 +71,6 @@ public class ViewGUI implements GUIGenerator {
 
 		label = new JLabel(w.getDisplayedIntervalStart().toString());
 
-		// JButton btnBack = new JButton("Back");
-		// btnBack.addActionListener(new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent event) {
-		// parent.refreshGUI(new SampleGUI());
-		// }
-		// });
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			@Override
@@ -94,22 +87,11 @@ public class ViewGUI implements GUIGenerator {
 				label.setText(w.getDisplayedIntervalStart().toString());
 			}
 		});
-		JButton btnTest = new JButton("Test");
-		btnTest.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				if (elist.size() > 0) {
-					elist.remove(0);
-					w.repaint();
-				}
-			}
-		});
 
 		// container.add(btnBack);
 		container.add(btnPrev);
 		container.add(label);
 		container.add(btnNext);
-		container.add(btnTest);
 		container.add(w);
 
 		return w;
