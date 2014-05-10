@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import Res.Edit.NewEditWindow;
 import Res.Edit.RewriteEditWindow;
 import Res.GUI.ViewGUI;
+import Res.GUI.Views.CalendarView;
 import Res.GUI.Views.WeekView;
 
 /**
@@ -27,6 +28,7 @@ import Res.GUI.Views.WeekView;
 public class Window extends JFrame {
 	/** File's path. */
 	private String path;
+	private CalendarView usingCalendarView;
 	/** JMenuBar to menu items. */
 	private JMenuBar menu;
 	/** JMenu into the menu bar. */
@@ -88,7 +90,7 @@ public class Window extends JFrame {
 		newItem.addActionListener(new ActionListener() { // Action listener to newItem
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select new item show new edit window
-				NewEditWindow n = new NewEditWindow();
+				NewEditWindow n = new NewEditWindow(usingCalendarView);
 				n.setVisible(true);
 			}
 		});
@@ -96,8 +98,8 @@ public class Window extends JFrame {
 		reWriteItem.addActionListener(new ActionListener() { // Action listener to reWriteItem
 					@Override
 					public void actionPerformed(ActionEvent e) { // If select rewrite item show rewrite edit window
-						if (Res.GUI.ViewGUI.selectedEntry == null) {
-							JOptionPane.showMessageDialog(null, "No selected event!", "Selected Error",
+						if (wgui.selectedEntry == null) {
+							JOptionPane.showMessageDialog(getContentPane(), "No selected event!", "Selected Error",
 									JOptionPane.ERROR_MESSAGE);
 						} else {
 							RewriteEditWindow r = new RewriteEditWindow(wgui.selectedEntry);
@@ -109,11 +111,16 @@ public class Window extends JFrame {
 		deleteItem.addActionListener(new ActionListener() { // Action listener to deleteItem
 					@Override
 					public void actionPerformed(ActionEvent e) { // If select delete item show delete edit window
-						int res = JOptionPane.showConfirmDialog(null, "Are you sure to delete it?", "Warning",
-								JOptionPane.YES_NO_OPTION);
-						if (res == JOptionPane.YES_OPTION) {
-							Res.Data.DataModel.getEntryList().remove(Res.GUI.ViewGUI.selectedEntry);
-							Res.GUI.ViewGUI.w.repaint();
+						if (wgui.selectedEntry == null) {
+							JOptionPane.showMessageDialog(getContentPane(), "No selected event!", "Selected Error",
+									JOptionPane.ERROR_MESSAGE);
+						} else {
+							int res = JOptionPane.showConfirmDialog(getContentPane(), "Are you sure to delete it?",
+									"Warning", JOptionPane.YES_NO_OPTION);
+							if (res == JOptionPane.YES_OPTION) {
+								Res.Data.DataModel.getEntryList().remove(Res.GUI.ViewGUI.selectedEntry);
+								usingCalendarView.repaint();
+							}
 						}
 					}
 				});
@@ -191,9 +198,10 @@ public class Window extends JFrame {
 		GUIPanel.removeAll();
 
 		this.gui = gui;
-		gui.show(this, GUIPanel);
+		usingCalendarView = gui.show(this, GUIPanel);
 
 		validate();
 		GUIPanel.repaint();
+
 	}
 }

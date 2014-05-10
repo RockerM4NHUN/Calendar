@@ -16,6 +16,7 @@ import Res.Bin.CalendarSelectionChangedListener;
 import Res.Bin.EventedList;
 import Res.Bin.Interval;
 import Res.Data.DataModel;
+import Res.GUI.Views.CalendarView;
 import Res.GUI.Views.WeekView;
 
 public class ViewGUI implements GUIGenerator {
@@ -26,7 +27,7 @@ public class ViewGUI implements GUIGenerator {
 	public static CalendarEntry selectedEntry;
 
 	@Override
-	public void show(final Window parent, Container container) {
+	public CalendarView show(final Window parent, Container container) {
 		this.parent = parent;
 
 		final EventedList<CalendarEntry> elist = DataModel.getEntryList();
@@ -45,14 +46,12 @@ public class ViewGUI implements GUIGenerator {
 		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0, now.getTime()
 				+ WeekView.HOUR_MILLIS * 2), "TestType3", "Long Title3", CalendarEntry.DEFAULT_FOREGROUND_COLOR,
 				CalendarEntry.DEFAULT_BACKGROUND_COLOR, "Test Description3"));
-		elist.add(
-				new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
-						+ WeekView.HOUR_MILLIS * 0), "TestType4", "Long Title4", Color.BLACK, new Color(255, 200, 80),
-						"Test Description4"));
-		elist.add(
-				new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
-						+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
-						"Test Description5"));
+		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
+				+ WeekView.HOUR_MILLIS * 0), "TestType4", "Long Title4", Color.BLACK, new Color(255, 200, 80),
+				"Test Description4"));
+		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
+				+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
+				"Test Description5"));
 
 		w = new WeekView(elist);
 
@@ -72,13 +71,13 @@ public class ViewGUI implements GUIGenerator {
 
 		label = new JLabel(w.getDisplayedIntervalStart().toString());
 
-		JButton btnBack = new JButton("Back");
-		btnBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				parent.refreshGUI(new SampleGUI());
-			}
-		});
+		// JButton btnBack = new JButton("Back");
+		// btnBack.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent event) {
+		// parent.refreshGUI(new SampleGUI());
+		// }
+		// });
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			@Override
@@ -106,12 +105,14 @@ public class ViewGUI implements GUIGenerator {
 			}
 		});
 
-		container.add(btnBack);
+		// container.add(btnBack);
 		container.add(btnPrev);
 		container.add(label);
 		container.add(btnNext);
 		container.add(btnTest);
 		container.add(w);
+
+		return w;
 	}
 
 	@Override

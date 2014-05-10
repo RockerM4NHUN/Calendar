@@ -168,12 +168,15 @@ public class RewriteEditWindow extends JDialog {
 				tillDate.set((int) yearDateTill.getValue(), (int) monthDateTill.getValue() - 1,
 						(int) dayDateFrom.getValue(), (int) hourTill.getValue(), (int) minTill.getValue());
 
-				if (((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
+				if ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
 						&& (int) monthDateFrom.getValue() == (int) monthDateTill.getValue()
 						&& (int) dayDateFrom.getValue() == (int) dayDateTill.getValue()
-						&& (int) hourFrom.getValue() == (int) hourTill.getValue() && (int) minFrom.getValue() == (int) minTill
-						.getValue())
-						|| ((int) yearDateFrom.getValue() > (int) yearDateTill.getValue())
+						&& (int) hourFrom.getValue() == (int) hourTill.getValue()
+						&& (int) minFrom.getValue() == (int) minTill.getValue()) { // If have any error show error
+																					// window
+					JOptionPane.showMessageDialog(getContentPane(), "Begening of the event equals end of event!",
+							"Date Error", JOptionPane.ERROR_MESSAGE);
+				} else if (((int) yearDateFrom.getValue() > (int) yearDateTill.getValue())
 						|| ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue() && (int) monthDateFrom
 								.getValue() > (int) monthDateTill.getValue())
 						|| ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
@@ -187,16 +190,16 @@ public class RewriteEditWindow extends JDialog {
 								&& (int) monthDateFrom.getValue() == (int) monthDateTill.getValue()
 								&& (int) dayDateFrom.getValue() == (int) dayDateTill.getValue()
 								&& (int) hourFrom.getValue() == (int) hourTill.getValue() && (int) minFrom.getValue() > (int) minTill
-								.getValue())) { // If have any error show error window
-					JOptionPane.showMessageDialog(null, "Begening of event equals end of event.", "Date Error",
+								.getValue())) {
+					JOptionPane.showMessageDialog(getContentPane(),
+							"Begening of the event mustn't be leater than the and of it!", "Date Error",
 							JOptionPane.ERROR_MESSAGE);
-
 				} else { // Else rewrite entry
 					entry.setInterval(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()));
 					entry.setType(newTypeField.getText());
 					entry.setTitle(titleField.getText());
-					entry.setForegroundColor(lc.getLetterColor());
-					entry.setBackgroundColor(bc.getBackColor());
+					entry.setForegroundColor((lc.change) ? lc.getLetterColor() : entry.getForegroundColor());
+					entry.setBackgroundColor((bc.change) ? bc.getBackColor() : entry.getBackgroundColor());
 
 					// modification finished
 					EventedList<CalendarEntry> elist = DataModel.getEntryList();

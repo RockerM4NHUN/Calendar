@@ -15,8 +15,8 @@ import javax.swing.event.ChangeListener;
  * */
 public class LetterColor extends JDialog {
 	/** letterColor to letter color */
-	private Color letterColor = new Color(255, 255, 255);
-	private static boolean change = false;
+	private Color letterColor = Res.Bin.CalendarEntry.DEFAULT_FOREGROUND_COLOR;
+	public boolean change = false;
 
 	/** JColorChooser to choose color. */
 	private JColorChooser colorChooser;
@@ -29,7 +29,7 @@ public class LetterColor extends JDialog {
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
 		colorChooser = new JColorChooser(); // Instantiation JColorChooser class
-
+		change = false;
 		colorChooser.getSelectionModel().addChangeListener(new ChangeListener() {// Change listener to color chooser
 					@Override
 					public void stateChanged(ChangeEvent e) { // If choose color, store the new color

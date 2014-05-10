@@ -21,6 +21,7 @@ import javax.swing.SpinnerNumberModel;
 
 import Res.Bin.CalendarEntry;
 import Res.Bin.Interval;
+import Res.GUI.Views.CalendarView;
 
 /**
  * New Edit Window to edit new events.
@@ -78,7 +79,7 @@ public class NewEditWindow extends JDialog {
 	 * Default constructor to JDialog.
 	 * */
 	// @SuppressWarnings("deprecation")
-	public NewEditWindow() {
+	public NewEditWindow(final CalendarView usingCalendarView) {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
@@ -191,12 +192,15 @@ public class NewEditWindow extends JDialog {
 				tillDate.set((int) yearDateTill.getValue(), (int) monthDateTill.getValue() - 1,
 						(int) dayDateFrom.getValue(), (int) hourTill.getValue(), (int) minTill.getValue());
 
-				if (((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
+				if ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
 						&& (int) monthDateFrom.getValue() == (int) monthDateTill.getValue()
 						&& (int) dayDateFrom.getValue() == (int) dayDateTill.getValue()
-						&& (int) hourFrom.getValue() == (int) hourTill.getValue() && (int) minFrom.getValue() == (int) minTill
-						.getValue())
-						|| ((int) yearDateFrom.getValue() > (int) yearDateTill.getValue())
+						&& (int) hourFrom.getValue() == (int) hourTill.getValue()
+						&& (int) minFrom.getValue() == (int) minTill.getValue()) { // If have any error show error
+																					// window
+					JOptionPane.showMessageDialog(getContentPane(), "Begening of the event equals end of event!",
+							"Date Error", JOptionPane.ERROR_MESSAGE);
+				} else if (((int) yearDateFrom.getValue() > (int) yearDateTill.getValue())
 						|| ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue() && (int) monthDateFrom
 								.getValue() > (int) monthDateTill.getValue())
 						|| ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
@@ -210,22 +214,23 @@ public class NewEditWindow extends JDialog {
 								&& (int) monthDateFrom.getValue() == (int) monthDateTill.getValue()
 								&& (int) dayDateFrom.getValue() == (int) dayDateTill.getValue()
 								&& (int) hourFrom.getValue() == (int) hourTill.getValue() && (int) minFrom.getValue() > (int) minTill
-								.getValue())) { // If have any error show error window
-					JOptionPane.showMessageDialog(null, "Begening of event equals end of event.", "Date Error",
+								.getValue())) {
+					JOptionPane.showMessageDialog(getContentPane(),
+							"Begening of the event mustn't be leater than the and of it!", "Date Error",
 							JOptionPane.ERROR_MESSAGE);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
 					Res.Data.DataModel.getEntryList().add(
 							new CalendarEntry(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
 									(String) boxType.getSelectedItem(), titleField.getText(), lc.getLetterColor(), bc
 											.getBackColor(), eventField.getText()));
-					Res.GUI.ViewGUI.w.repaint();
+					usingCalendarView.repaint();
 					dispose();
 				} else { // Else make new Entry with new tpye
 					Res.Data.DataModel.getEntryList().add(
 							new CalendarEntry(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
 									newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
 											.getBackColor(), eventField.getText()));
-					Res.GUI.ViewGUI.w.repaint();
+					usingCalendarView.repaint();
 					dispose();
 				}
 			}

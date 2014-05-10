@@ -1,16 +1,18 @@
 package Res;
 
 import java.awt.Container;
-import javax.swing.JFrame;
+
+import Res.GUI.Views.CalendarView;
 
 /**
  * Builds and holds the changing contents of window.
  */
-public interface GUIGenerator{
+public interface GUIGenerator {
 	/**
 	 * Builds the gui in container on parent window.
 	 */
-	public void show(Window parent, Container container);
+	public CalendarView show(Window parent, Container container);
+
 	/**
 	 * Called when the gui will be removed from window.
 	 */

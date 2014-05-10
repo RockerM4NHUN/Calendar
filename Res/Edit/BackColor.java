@@ -15,8 +15,8 @@ import javax.swing.event.ChangeListener;
  * */
 public class BackColor extends JDialog {
 	/** backColor to store new color */
-	private Color backColor = new Color(0, 0, 0);
-	private static boolean change = false;
+	private Color backColor = Res.Bin.CalendarEntry.DEFAULT_BACKGROUND_COLOR;
+	public boolean change = false;
 
 	private JColorChooser colorChooser; // Instantiation JColorChooser
 
@@ -28,7 +28,7 @@ public class BackColor extends JDialog {
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
 		colorChooser = new JColorChooser();
-
+		change = false;
 		colorChooser.getSelectionModel().addChangeListener(new ChangeListener() { // Change listener to color chooser
 					@Override
 					public void stateChanged(ChangeEvent e) { // If choose color, store the new color
