@@ -76,7 +76,7 @@ public class NewEditWindow extends JDialog {
 	/**
 	 * Default constructor to JDialog.
 	 * */
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	public NewEditWindow() {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
@@ -214,18 +214,16 @@ public class NewEditWindow extends JDialog {
 					error.setVisible(true);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
 					Res.Data.DataModel.getEntryList().add(
-							new CalendarEntry(Res.GUI.WeekViewSampleGUI.ID, new Interval(fromDate.getTimeInMillis(),
+							new CalendarEntry(new Interval(fromDate.getTimeInMillis(),
 									tillDate.getTimeInMillis()), (String) boxType.getSelectedItem(), titleField
 									.getText(), lc.getLetterColor(), bc.getBackColor(), eventField.getText()));
-					Res.GUI.WeekViewSampleGUI.ID++;
 					Res.GUI.WeekViewSampleGUI.w.repaint();
 					dispose();
 				} else { // Else make new Entry with new tpye
 					Res.Data.DataModel.getEntryList().add(
-							new CalendarEntry(Res.GUI.WeekViewSampleGUI.ID, new Interval(fromDate.getTimeInMillis(),
+							new CalendarEntry(new Interval(fromDate.getTimeInMillis(),
 									tillDate.getTimeInMillis()), newTypeField.getText(), titleField.getText(), lc
 									.getLetterColor(), bc.getBackColor(), eventField.getText()));
-					Res.GUI.WeekViewSampleGUI.ID++;
 					Res.GUI.WeekViewSampleGUI.w.repaint();
 					dispose();
 				}
