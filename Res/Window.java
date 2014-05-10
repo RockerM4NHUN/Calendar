@@ -17,7 +17,7 @@ import Res.Edit.DeleteEditWindow;
 import Res.Edit.NewEditWindow;
 import Res.Edit.NoSelect;
 import Res.Edit.RewriteEditWindow;
-import Res.GUI.WeekViewSampleGUI;
+import Res.GUI.ViewGUI;
 import Res.GUI.Views.WeekView;
 
 /**
@@ -52,7 +52,7 @@ public class Window extends JFrame {
 	public Window() {
 		super("Calendar");
 		
-		final WeekViewSampleGUI wgui = new WeekViewSampleGUI();
+		final ViewGUI wgui = new ViewGUI();
 		
 		gui = null;
 		GUIPanel = getContentPane();
@@ -97,7 +97,7 @@ public class Window extends JFrame {
 		reWriteItem.addActionListener(new ActionListener() { // Action listener to reWriteItem
 					@Override
 					public void actionPerformed(ActionEvent e) { // If select rewrite item show rewrite edit window
-						if (Res.GUI.WeekViewSampleGUI.selectedEntry == null) {
+						if (Res.GUI.ViewGUI.selectedEntry == null) {
 							NoSelect no = new NoSelect();
 							no.setVisible(true);
 						} else {
@@ -126,7 +126,7 @@ public class Window extends JFrame {
 		// monthItem.addActionListener(new ActionListener() { // Action listener to monthItem
 		// @Override
 		// public void actionPerformed(ActionEvent e) { // If select month item refresh gui to month view
-		// refreshGUI(new WeekViewSampleGUI());
+		// refreshGUI(new ViewGUI());
 		// }
 		// });
 
@@ -167,7 +167,7 @@ public class Window extends JFrame {
 		int extraH = 100;// reqHeight - actualSize.height;
 		setSize(reqWidth + extraW, reqHeight + extraH);
 
-		refreshGUI(new WeekViewSampleGUI()); // loads the first GUI
+		refreshGUI(new ViewGUI()); // loads the first GUI
 		setVisible(true);
 	}
 

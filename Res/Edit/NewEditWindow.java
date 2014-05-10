@@ -217,14 +217,14 @@ public class NewEditWindow extends JDialog {
 							new CalendarEntry(new Interval(fromDate.getTimeInMillis(),
 									tillDate.getTimeInMillis()), (String) boxType.getSelectedItem(), titleField
 									.getText(), lc.getLetterColor(), bc.getBackColor(), eventField.getText()));
-					Res.GUI.WeekViewSampleGUI.w.repaint();
+					Res.GUI.ViewGUI.w.repaint();
 					dispose();
 				} else { // Else make new Entry with new tpye
 					Res.Data.DataModel.getEntryList().add(
 							new CalendarEntry(new Interval(fromDate.getTimeInMillis(),
 									tillDate.getTimeInMillis()), newTypeField.getText(), titleField.getText(), lc
 									.getLetterColor(), bc.getBackColor(), eventField.getText()));
-					Res.GUI.WeekViewSampleGUI.w.repaint();
+					Res.GUI.ViewGUI.w.repaint();
 					dispose();
 				}
 			}
