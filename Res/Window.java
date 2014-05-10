@@ -51,7 +51,9 @@ public class Window extends JFrame {
 	 */
 	public Window() {
 		super("Calendar");
-
+		
+		final WeekViewSampleGUI wgui = new WeekViewSampleGUI();
+		
 		gui = null;
 		GUIPanel = getContentPane();
 
@@ -99,7 +101,7 @@ public class Window extends JFrame {
 							NoSelect no = new NoSelect();
 							no.setVisible(true);
 						} else {
-							RewriteEditWindow r = new RewriteEditWindow();
+							RewriteEditWindow r = new RewriteEditWindow(wgui.selectedEntry);
 							r.setVisible(true);
 						}
 					}
@@ -117,7 +119,7 @@ public class Window extends JFrame {
 		weekItem.addActionListener(new ActionListener() { // Action listener to weekItem
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select week item refresh gui to week view
-				refreshGUI(new WeekViewSampleGUI());
+				refreshGUI(wgui);
 			}
 		});
 		monthItem = new JMenuItem("Month");

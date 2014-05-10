@@ -5,12 +5,11 @@ import java.awt.Color;
 public class CalendarEntry implements Comparable<CalendarEntry> {
 
 	// constructor
-	public CalendarEntry(int id, Interval ival, String type, String title, Color foreColor, Color backColor, String desc) {
+	public CalendarEntry(Interval ival, String type, String title, Color foreColor, Color backColor, String desc) {
 		if (ival == null || type == null || foreColor == null || backColor == null || desc == null) {
 			Thrower.Throw(new NullPointerException("Null found in constructor"));
 		}
 
-		this.id = id;
 		interval = ival;
 		this.type = type;
 		this.title = title;
@@ -36,7 +35,6 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 	public static final Color DEFAULT_BACKGROUND_COLOR = new Color(255, 102, 0);
 
 	// attributes
-	private int id;
 	private Interval interval;
 	private String type;
 	private String title;
@@ -45,10 +43,6 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 	private Color backgroundColor;
 
 	// getters
-	public int getID() {
-		return id;
-	}
-
 	public Interval getInterval() {
 		return interval;
 	}
@@ -75,10 +69,6 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 
 	public Color getBackgroundColor() {
 		return backgroundColor;
-	}
-
-	public void setID(int id) {
-		this.id = id;
 	}
 
 	public void setType(String type) {

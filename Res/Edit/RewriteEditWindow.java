@@ -15,7 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
-import Res.Bin.Interval;
+import Res.Data.*;
+import Res.Bin.*;
 
 /**
  * Rewriter Edit Window to edit events.
@@ -68,16 +69,14 @@ public class RewriteEditWindow extends JDialog {
 	/**
 	 * Default constructor to JDialog.
 	 * */
-	public RewriteEditWindow() {
+	public RewriteEditWindow(final CalendarEntry entry) {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
 		date = new Date();
-		System.out.println(Res.GUI.WeekViewSampleGUI.selectedEntry.getID());
 		Date from = new Date();
 		Date till = new Date();
-		Interval interval = new Interval();
-		interval = Res.GUI.WeekViewSampleGUI.selectedEntry.getInterval();
+		Interval interval = entry.getInterval();
 		from.setTime(interval.getStart());
 		till.setTime(interval.getEnd());
 
@@ -107,9 +106,9 @@ public class RewriteEditWindow extends JDialog {
 		minFrom = new JSpinner(minFromM);
 		hourTill = new JSpinner(hourTillM);
 		minTill = new JSpinner(minTillM);
-		titleField = new JTextField(Res.GUI.WeekViewSampleGUI.selectedEntry.getTitle());
-		eventField = new JTextField(Res.GUI.WeekViewSampleGUI.selectedEntry.getDescription());
-		newTypeField = new JTextField(Res.GUI.WeekViewSampleGUI.selectedEntry.getType());
+		titleField = new JTextField(entry.getTitle());
+		eventField = new JTextField(entry.getDescription());
+		newTypeField = new JTextField(entry.getType());
 		selectLetterColor = new JButton("Select color of letters");
 		selectBackColor = new JButton("Select color of background");
 		okButton = new JButton("Ok");
@@ -189,6 +188,15 @@ public class RewriteEditWindow extends JDialog {
 					BadData error = new BadData();
 					error.setVisible(true);
 				} else { // Else rewrite entry
+					EventedList<CalendarEntry> elist = DataModel.getEntryList();
+					
+					System.out.println("TODO: set entry attributes in RewriteEditWindow");
+					entry.setTitle(titleField.getText());
+					
+					//modification finished
+					elist.remove(entry);
+					elist.add(entry);
+					
 					dispose();
 				}
 			}
