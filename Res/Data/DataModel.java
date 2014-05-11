@@ -1,6 +1,6 @@
 package Res.Data;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import Res.Bin.EventedList;
 import Res.Bin.CalendarEntry;
@@ -11,7 +11,7 @@ import Res.Bin.CalendarEntry;
  * @author ZODVAAT.SZE
  */
 public class DataModel{
-	private static EventedList<CalendarEntry> entryList = new EventedList<>();
+	private static EventedList<CalendarEntry> entryList = new EventedList<CalendarEntry>(new ArrayList<CalendarEntry>());
 	
 	/**
 	 * @author ZODVAAT.SZE

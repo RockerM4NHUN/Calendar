@@ -3,18 +3,18 @@ package Res.Bin;
 import java.util.List;
 
 /**
- * Listener for EventedList events.
+ * Adapter for EventedList events.
  * 
  * @author ZODVAAT.SZE
  */
-public interface EventedListListener<ListItem>{
+public class EventedListAdapter<ListItem> implements EventedListListener<ListItem>{
 	/**
 	 * Called when single list item modified.
 	 * 
 	 * @author ZODVAAT.SZE
 	 * @param item Modified item.
 	 */
-	public void itemModified(ListItem item);
+	public void itemModified(ListItem item){}
 	/**
 	 * Called when full list modified.
 	 * 
@@ -22,5 +22,5 @@ public interface EventedListListener<ListItem>{
 	 * @param oldVersion Old entries of list.
 	 * @param newVersion New entries of list.
 	 */
-	public void listModified(List<ListItem> oldVersion, List<ListItem> newVersion);
+	public void listModified(List<ListItem> oldVersion, List<ListItem> newVersion){}
 }

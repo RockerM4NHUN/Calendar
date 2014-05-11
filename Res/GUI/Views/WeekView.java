@@ -24,15 +24,15 @@ public class WeekView extends CalendarView{
 		selected = new ArrayList<EntryGFX>();
 		
 		setCalendarEntries(elist);
-		elist.addItemAddedListener(new EventedListListener<CalendarEntry>(){
-			public void listModified(CalendarEntry e){
+		elist.addItemAddedListener(new EventedListAdapter<CalendarEntry>(){
+			public void itemModified(CalendarEntry e){
 				addCalendarEntry(e);
 				repaint();
 			}
 		});
 		
-		elist.addItemRemovedListener(new EventedListListener<CalendarEntry>(){
-			public void listModified(CalendarEntry e){
+		elist.addItemRemovedListener(new EventedListAdapter<CalendarEntry>(){
+			public void itemModified(CalendarEntry e){
 				removeCalendarEntry(e);
 				if (selected.size() != 0 && selected.get(0).entry == e){
 					selected.clear();
@@ -565,14 +565,14 @@ public class WeekView extends CalendarView{
 		c.set(Calendar.MILLISECOND,0);
 		startTime = new Timestamp(c.getTime().getTime());
 		
-		c.setTime(new Date(startTime.getTime() + WEEK_MILLIS + HOUR_MILLIS * 2));
+		c.add(Calendar.DAY_OF_YEAR,7);
 		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
 		c.set(Calendar.HOUR_OF_DAY,0);
 		c.set(Calendar.MINUTE,0);
 		c.set(Calendar.SECOND,0);
 		c.set(Calendar.MILLISECOND,0);
 		
-		weekInterval = new Interval(startTime.getTime(),c.getTime().getTime());
+		weekInterval = new Interval(startTime.getTime(),c.getTimeInMillis());
 		
 		repaint();
 	}
