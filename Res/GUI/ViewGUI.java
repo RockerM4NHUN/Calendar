@@ -69,14 +69,14 @@ public class ViewGUI implements GUIGenerator {
 			}
 		});
 
-		label = new JLabel(w.getDisplayedIntervalStart().toString());
+		label = new JLabel(w.getDisplayedInterval().getStartTimestamp().toString());
 
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				w.nextInterval();
-				label.setText(w.getDisplayedIntervalStart().toString());
+				label.setText(w.getDisplayedInterval().getStartTimestamp().toString());
 			}
 		});
 		JButton btnPrev = new JButton("Prev");
@@ -84,7 +84,7 @@ public class ViewGUI implements GUIGenerator {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				w.prevInterval();
-				label.setText(w.getDisplayedIntervalStart().toString());
+				label.setText(w.getDisplayedInterval().getStartTimestamp().toString());
 			}
 		});
 

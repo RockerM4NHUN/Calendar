@@ -25,11 +25,11 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 		setVisible(true);
 	}
 	
-	protected Timestamp startTime;
+	protected Interval viewInterval;
 	private List<CalendarSelectionChangedListener> selectionChangedListeners;
 	
-	public Timestamp getDisplayedIntervalStart(){
-		return startTime;
+	public Interval getDisplayedInterval(){
+		return viewInterval.clone();
 	}
 	
 	public void addSelectionChangedListener(CalendarSelectionChangedListener listener){

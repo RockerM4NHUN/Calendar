@@ -361,7 +361,6 @@ public class WeekView extends CalendarView{
 	private int finalHorizontalLine;
 	private java.util.List<EntryGFX> gfxEntries;
 	private java.util.List<EntryGFX> selected;
-	private Interval weekInterval;
 	private java.util.List<IntersectionGroup> groups;
 	
 	private Font hourFont;
@@ -397,12 +396,12 @@ public class WeekView extends CalendarView{
 	}
 	
 	public void nextInterval(){
-		toInterval(new Date(startTime.getTime() + WEEK_MILLIS * 3 / 2 + 1));
+		toInterval(new Date(viewInterval.getEnd() + 1));
 	}
 	
 	public void prevInterval(){
-		if (startTime.getTime() < WEEK_MILLIS) return;
-		toInterval(new Date(startTime.getTime() - WEEK_MILLIS / 2 + 1));
+		if (viewInterval.getStart() < WEEK_MILLIS) return;
+		toInterval(new Date(viewInterval.getStart() - HOUR_MILLIS * 24 - 1));
 	}
 	
 	public void paintComponent(Graphics g){
@@ -478,7 +477,7 @@ public class WeekView extends CalendarView{
 		for (IntersectionGroup group : groups){
 			EntryGFX[] rects = group.getRectangles();
 			for (int i = 0;i < rects.length;i++){
-				if (!rects[i].time.intersect(weekInterval)) continue;
+				if (!rects[i].time.intersect(viewInterval)) continue;
 				
 				gfxEntries.add(rects[i]);
 				g.setColor(rects[i].entry.getBackgroundColor());
@@ -501,11 +500,11 @@ public class WeekView extends CalendarView{
 		//    drawing selection rectangles    \\
 		//************************************\\
 		
-		if (selected.size() != 0 && selected.get(0).entry.getInterval().intersect(weekInterval)){
+		if (selected.size() != 0 && selected.get(0).entry.getInterval().intersect(viewInterval)){
 			int i = -1,size = selected.size();
 			for (EntryGFX entry : selected){
 				i++;
-				if (!weekInterval.intersect(entry.time)) continue;
+				if (!viewInterval.intersect(entry.time)) continue;
 				
 				g.setColor(selectionColor);
 				g.fillRect(entry.x,entry.y,entry.width,entry.height);
@@ -522,7 +521,7 @@ public class WeekView extends CalendarView{
 		//**********************************\\
 		
 		long currentTime = System.currentTimeMillis();
-		if (weekInterval.contains(currentTime)){
+		if (viewInterval.contains(currentTime)){
 			g.setColor(currentTimeColor);
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date(currentTime));
@@ -561,16 +560,18 @@ public class WeekView extends CalendarView{
 		}
 	}
 	
-	public void toInterval(Date start){
-		if (start == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
+	public void toInterval(Date week){
+		if (week == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
 		Calendar c = Calendar.getInstance();
-		c.setTime(start);
+		c.setTime(week);
 		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
 		c.set(Calendar.HOUR_OF_DAY,0);
 		c.set(Calendar.MINUTE,0);
 		c.set(Calendar.SECOND,0);
 		c.set(Calendar.MILLISECOND,0);
-		startTime = new Timestamp(c.getTime().getTime());
+		c.set(Calendar.AM_PM, Calendar.AM);
+		
+		long start = c.getTimeInMillis();
 		
 		c.add(Calendar.DAY_OF_YEAR,7);
 		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
@@ -578,8 +579,9 @@ public class WeekView extends CalendarView{
 		c.set(Calendar.MINUTE,0);
 		c.set(Calendar.SECOND,0);
 		c.set(Calendar.MILLISECOND,0);
+		c.set(Calendar.AM_PM, Calendar.AM);
 		
-		weekInterval = new Interval(startTime.getTime(),c.getTimeInMillis());
+		viewInterval = new Interval(start,c.getTimeInMillis());
 		
 		repaint();
 	}

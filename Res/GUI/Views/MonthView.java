@@ -1,7 +1,7 @@
 /*package Res.GUI.Views;
 
 public class MonthView extends CalendarView{
-	public MonthView(){
+	public MonthView(EventedList<CalendarEntry> elist){
 		
 	}
 	
@@ -21,15 +21,43 @@ public class MonthView extends CalendarView{
 	/**
 	 * Displays the next time interval.
 	 *//*
-	public abstract void nextInterval();
+	public abstract void nextInterval(){
+	}
 	/**
 	 * Displays the previous time interval.
 	 *//*
-	public abstract void prevInterval();
+	public abstract void prevInterval(){
+		Calendar c = Calendar.getInstance();
+		
+	}
 	/**
 	 * Displays the specified time interval.
 	 *//*
-	public abstract void toInterval(Date t);
+	public abstract void toInterval(Date month){
+		if (month == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
+		Calendar c = Calendar.getInstance();
+		c.setTime(month);
+		c.set(Calendar.DAY_OF_MONTH,0);
+		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+		c.set(Calendar.HOUR_OF_DAY,0);
+		c.set(Calendar.MINUTE,0);
+		c.set(Calendar.SECOND,0);
+		c.set(Calendar.MILLISECOND,0);
+		c.set(Calendar.AM_PM, Calendar.AM);
+		* 
+		long start = c.getTimeInMillis();
+		
+		c.add(Calendar.DAY_OF_YEAR,6 * 7);
+		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+		c.set(Calendar.HOUR_OF_DAY,0);
+		c.set(Calendar.MINUTE,0);
+		c.set(Calendar.SECOND,0);
+		c.set(Calendar.MILLISECOND,0);
+		c.set(Calendar.AM_PM, Calendar.AM);
+		
+		viewInterval = new Interval(start,c.getTimeInMillis());
+		repaint();
+	}
 	/**
 	 * Displays the drawable contents.
 	 *//*
