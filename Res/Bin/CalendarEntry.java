@@ -25,7 +25,7 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 			return (getObjectString().compareTo(o.getObjectString()));
 		}
 		if (l > Integer.MAX_VALUE) {
-			return (int) (l / ((Integer.MAX_VALUE + 1) * 2));
+			return (int) (l / (((long)(Integer.MAX_VALUE) + 1) * 2));
 		}
 		return (int) l;
 	}
