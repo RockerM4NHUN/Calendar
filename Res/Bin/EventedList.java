@@ -46,9 +46,8 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 */
 	public void resetList(List<ListItem> l){
 		if (l == null) Thrower.Throw(new NullPointerException("Argument can't be null"));
-		List<ListItem> old = list;
 		list = l;
-		dispatchListResetEvent(old,list);
+		dispatchListResetEvent(this);
 	}
 	
 	/**
@@ -196,9 +195,9 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 		}
 	}
 
-	private void dispatchListResetEvent(List<ListItem> oldVersion, List<ListItem> newVersion){
+	private void dispatchListResetEvent(EventedList<ListItem> newVersion){
 		for(EventedListListener<ListItem> l : resetListeners){
-			l.listModified(oldVersion,newVersion);
+			l.listModified(newVersion);
 		}
 	}
 	

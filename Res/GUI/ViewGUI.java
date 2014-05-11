@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -31,7 +31,7 @@ public class ViewGUI implements GUIGenerator {
 		this.parent = parent;
 
 		final EventedList<CalendarEntry> elist = DataModel.getEntryList();
-		Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 1);
+		final Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 1);
 
 		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5, now.getTime()
 				- WeekView.HOUR_MILLIS * 2), "TestType0", "Long Title0", Color.BLACK, new Color(255, 200, 80),
@@ -88,7 +88,6 @@ public class ViewGUI implements GUIGenerator {
 			}
 		});
 
-		// container.add(btnBack);
 		container.add(btnPrev);
 		container.add(label);
 		container.add(btnNext);

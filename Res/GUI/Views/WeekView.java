@@ -24,6 +24,7 @@ public class WeekView extends CalendarView{
 		selected = new ArrayList<EntryGFX>();
 		
 		setCalendarEntries(elist);
+		
 		elist.addItemAddedListener(new EventedListAdapter<CalendarEntry>(){
 			public void itemModified(CalendarEntry e){
 				addCalendarEntry(e);
@@ -39,6 +40,12 @@ public class WeekView extends CalendarView{
 					dispatchSelectionChanged(null);
 				}
 				repaint();
+			}
+		});
+		
+		elist.addListResetListener(new EventedListAdapter<CalendarEntry>(){
+			public void listModified(EventedList<CalendarEntry> newVersion){
+				setCalendarEntries(newVersion);
 			}
 		});
 		
