@@ -251,19 +251,21 @@ public class WeekView extends CalendarView{
 					Interval i = o.clone();
 					
 					c.setTime(i.getStartTimestamp());
-					int start = c.get(Calendar.DAY_OF_MONTH);
+					int start = c.get(Calendar.DAY_OF_YEAR);
+					int startYear = c.get(Calendar.YEAR);
 					c.setTime(i.getEndTimestamp());
-					int end = c.get(Calendar.DAY_OF_MONTH);
+					int end = c.get(Calendar.DAY_OF_YEAR);
+					int endYear = c.get(Calendar.YEAR);
 					
 					//first fragment of shattered
-					if (start != end){
+					if (start != end || startYear != endYear){
 						c.setTime(i.getStartTimestamp());
 						int x = firstVerticalLine + dayOfWeek(i.getStart()) * xstep + layer * w;
 						int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
 						int h = firstHorizontalLine + ystep * 24 - y;
 						
 						
-						c.add(Calendar.HOUR, 24);
+						c.add(Calendar.DAY_OF_YEAR, 1);
 						c.set(Calendar.HOUR, 0);
 						c.set(Calendar.MINUTE, 0);
 						c.set(Calendar.SECOND, 0);
@@ -273,21 +275,19 @@ public class WeekView extends CalendarView{
 						rects.add(new EntryGFX(e, new Interval(i.getStart(), c.getTimeInMillis()),x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
 						
 						i = new Interval(c.getTimeInMillis(),i.getEnd());
-						start = c.get(Calendar.DAY_OF_MONTH);
-						
-						c.setTime(new Date(i.getEnd() + HOUR_MILLIS * 24));
-						end = c.get(Calendar.DAY_OF_MONTH);
+						start = c.get(Calendar.DAY_OF_YEAR);
+						startYear = c.get(Calendar.YEAR);
 					}
 					
 					//full days
-					while(start + 1 < end){
+					while(start != end || startYear != endYear){
 						
 						c.setTime(i.getStartTimestamp());
 						int x = firstVerticalLine + dayOfWeek(i.getStart()) * xstep + layer * w;
 						int y = firstHorizontalLine + (int)((c.get(Calendar.HOUR_OF_DAY) * HOUR_MILLIS + c.get(Calendar.MINUTE) * HOUR_MILLIS / 60) * (double)(ystep / 60.0) / 60000.0);
 						int h = ystep * 24;
 						
-						c.add(Calendar.HOUR, 24);
+						c.add(Calendar.DAY_OF_YEAR, 1);
 						c.set(Calendar.HOUR, 0);
 						c.set(Calendar.MINUTE, 0);
 						c.set(Calendar.SECOND, 0);
@@ -297,10 +297,8 @@ public class WeekView extends CalendarView{
 						rects.add(new EntryGFX(e, new Interval(i.getStart(), c.getTimeInMillis()),x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
 						
 						i = new Interval(c.getTimeInMillis(),i.getEnd());
-						start = c.get(Calendar.DAY_OF_MONTH);
-						
-						c.setTime(new Date(i.getEnd() + HOUR_MILLIS * 24));
-						end = c.get(Calendar.DAY_OF_MONTH);
+						start = c.get(Calendar.DAY_OF_YEAR);
+						startYear = c.get(Calendar.YEAR);
 						
 					}
 					
@@ -346,12 +344,10 @@ public class WeekView extends CalendarView{
 		//    Variables    \\
 		//*****************\\ 
 	
-	private int width;
-	private int height;
 	private static int firstVerticalLine = 56;
 	private static int firstHorizontalLine = 48;
-	private int finalVerticalGap;
-	private int finalHorizontalGap;
+	private static int finalVerticalGap = 0;//gap between final vertical line and width
+	private static int finalHorizontalGap = 0;//gap between final horizontal line and height
 	private int xstep;
 	private int ystep;
 	private int finalVerticalLine;
@@ -386,20 +382,20 @@ public class WeekView extends CalendarView{
 		//**********************\\ 
 	
 	public static int getViewWidth(){
-		return firstVerticalLine + 7 * 130;
+		return firstVerticalLine + 7 * 130 + finalVerticalGap;
 	}
 	
 	public static int getViewHeight(){
-		return firstHorizontalLine + 24 * 30;
+		return firstHorizontalLine + 24 * 30 + finalHorizontalGap;
 	}
 	
 	public void nextInterval(){
-		toInterval(new Date(startTime.getTime() + WEEK_MILLIS + 1));
+		toInterval(new Date(startTime.getTime() + WEEK_MILLIS * 3 / 2 + 1));
 	}
 	
 	public void prevInterval(){
 		if (startTime.getTime() < WEEK_MILLIS) return;
-		toInterval(new Date(startTime.getTime() - WEEK_MILLIS + 1));
+		toInterval(new Date(startTime.getTime() - WEEK_MILLIS / 2 + 1));
 	}
 	
 	public void paintComponent(Graphics g){
@@ -410,8 +406,8 @@ public class WeekView extends CalendarView{
 		//    setting environment    \\
 		//***************************\\
 		
-		width = getWidth();//width of panel
-		height = getHeight();//height of panel
+		int width = getWidth();//width of panel
+		int height = getHeight();//height of panel
 		
 		xstep = (width - firstVerticalLine - finalVerticalGap) / 7;
 		ystep = (height - firstHorizontalLine - finalHorizontalGap) / 24;
@@ -483,12 +479,12 @@ public class WeekView extends CalendarView{
 				g.setColor(Color.BLACK);
 				g.drawRect(rects[i].x,rects[i].y,rects[i].width,rects[i].height);
 				
-				int height = entryMetrics.getHeight();
+				int mheight = entryMetrics.getHeight();
 				
-				String[] str = breakToLines(rects[i].entry.getTitle(),entryMetrics,rects[i].width - 6, rects[i].height / (height + 6));
+				String[] str = breakToLines(rects[i].entry.getTitle(),entryMetrics,rects[i].width - 6, rects[i].height / (mheight + 6));
 				g.setColor(rects[i].entry.getForegroundColor());
 				for (int j = 0;j < str.length;j++){
-					g.drawString(str[j],rects[i].x + 3, rects[i].y + height / 2 + (j == 0 ? 6 : 0) + j * (height + 6));
+					g.drawString(str[j],rects[i].x + 3, rects[i].y + mheight / 2 + (j == 0 ? 6 : 0) + j * (mheight + 6));
 				}
 			}
 		}
