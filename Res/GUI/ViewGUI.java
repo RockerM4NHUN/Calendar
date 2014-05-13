@@ -54,8 +54,6 @@ public class ViewGUI implements GUIGenerator {
 		int barWidth = 15;
 		scroll.getVerticalScrollBar().setPreferredSize(new Dimension(barWidth, 0));
 		scroll.setPreferredSize(new Dimension(WeekView.getViewWidth() + barWidth + 6, parent.getHeight() - 100));
-		System.out.println(parent.size.getHeight());
-		System.out.println(parent.getHeight());
 
 		label = new JLabel(w.getDisplayedInterval().getStartTimestamp().toString());
 

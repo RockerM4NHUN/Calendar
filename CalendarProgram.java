@@ -38,7 +38,7 @@ public class CalendarProgram {
 			System.exit(1);
 		}
 
-		// belépés az ablakos rendszerbe
+		// Start GUI
 		Window w = new Window();
 
 		// Init BoxList

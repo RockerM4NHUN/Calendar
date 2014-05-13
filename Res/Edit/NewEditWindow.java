@@ -1,6 +1,6 @@
 package Res.Edit;
 
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -8,7 +8,7 @@ import java.awt.event.ItemListener;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.swing.JButton;
+import javax.swing.*;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -37,6 +37,8 @@ public class NewEditWindow extends JDialog {
 	private JLabel titleLabel;
 	private JLabel eventLabel;
 	private JLabel newTypeLabel;
+	private JLabel letterColorLabel;
+	private JLabel backColorLabel;
 	/** JTextFields to input data. */
 	private JTextField titleField;
 	private JTextField eventField;
@@ -101,6 +103,8 @@ public class NewEditWindow extends JDialog {
 		titleLabel = new JLabel("Title of event:");
 		eventLabel = new JLabel("Event:");
 		newTypeLabel = new JLabel("New type of entry:");
+		letterColorLabel = new JLabel("Color of letters:");
+		backColorLabel = new JLabel("Color of background:");
 		yearDateFrom = new JSpinner(yearFromM);
 		monthDateFrom = new JSpinner(monthFromM);
 		dayDateFrom = new JSpinner(dayFromM);
@@ -115,8 +119,10 @@ public class NewEditWindow extends JDialog {
 		eventField = new JTextField();
 		newTypeField = new JTextField();
 		boxType = new JComboBox<String>(Res.Data.DataModel.getTypeList().toArray(new String[0]));
-		selectLetterColor = new JButton("Select color of letters");
-		selectBackColor = new JButton("Select color of background");
+		selectLetterColor = new JButton();
+		selectBackColor = new JButton();
+		//selectLetterColor = new JButton("Select color of letters");
+		//selectBackColor = new JButton("Select color of background");
 		okButton = new JButton("Ok");
 		cancelButton = new JButton("Cancel");
 		lc = new LetterColor();
@@ -142,13 +148,18 @@ public class NewEditWindow extends JDialog {
 		titleField.setBounds(10, 210, 150, 30);
 		eventLabel.setBounds(10, 250, 200, 20);
 		eventField.setBounds(10, 270, 365, 30);
-		selectLetterColor.setBounds(10, 310, 200, 30);
-		selectBackColor.setBounds(220, 310, 200, 30);
-		okButton.setBounds(260, 365, 50, 30);
-		cancelButton.setBounds(320, 365, 100, 30);
+		letterColorLabel.setBounds(10, 310, 140, 30);
+		backColorLabel.setBounds(10, 340, 140, 30);
+		selectLetterColor.setBounds(150, 310, 50, 30);
+		selectBackColor.setBounds(150, 340, 50, 30);
+		//selectLetterColor.setBounds(10, 310, 200, 30);
+		//selectBackColor.setBounds(220, 310, 200, 30);
+		okButton.setBounds(260, 375, 50, 30);
+		cancelButton.setBounds(320, 375, 100, 30);
 
 		selectLetterColor.setBackground(lc.getLetterColor());
 		selectBackColor.setBackground(bc.getBackColor());
+		
 
 		boxType.addItemListener(new ItemListener() { // Item listener to box list
 			@Override
@@ -250,7 +261,8 @@ public class NewEditWindow extends JDialog {
 						dispose();
 					}
 				});
-
+		
+		
 		add(hourFromLabel); // Ad items to JDialog
 		add(yearDateFrom);
 		add(monthDateFrom);
@@ -269,6 +281,8 @@ public class NewEditWindow extends JDialog {
 		add(titleField);
 		add(eventLabel);
 		add(eventField);
+		add(letterColorLabel);
+		add(backColorLabel);
 		add(selectLetterColor);
 		add(selectBackColor);
 		add(okButton);
