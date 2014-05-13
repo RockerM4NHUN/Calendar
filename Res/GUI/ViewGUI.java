@@ -1,58 +1,38 @@
 package Res.GUI;
 
-import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 import Res.GUIGenerator;
 import Res.Window;
 import Res.Bin.CalendarEntry;
 import Res.Bin.CalendarSelectionChangedListener;
 import Res.Bin.EventedList;
-import Res.Bin.Interval;
 import Res.Data.DataModel;
 import Res.GUI.Views.CalendarView;
 import Res.GUI.Views.WeekView;
 
 public class ViewGUI implements GUIGenerator {
-	
+
 	private Window parent;
 	private WeekView w;
 	private JLabel label;
+	private JScrollPane scroll;
 	public static CalendarEntry selectedEntry;
 
 	@Override
 	public CalendarView show(final Window parent, Container container) {
 		this.parent = parent;
 
-		final EventedList<CalendarEntry> elist = DataModel.getEntryList();
-		final Date now = new Date(System.currentTimeMillis() - WeekView.HOUR_MILLIS * 48 * 1);
-
-		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 5, now.getTime()
-				- WeekView.HOUR_MILLIS * 2), "TestType0", "Long Title0", Color.BLACK, new Color(255, 200, 80),
-				"Test Description0"));
-
-		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
-				+ WeekView.HOUR_MILLIS * 36), "TestType1", "Long Title1", Color.BLACK, new Color(255, 200, 80),
-				"Test Description1"));
-		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
-				- WeekView.HOUR_MILLIS * 1), "TestType2", "Long Title2", Color.BLACK, new Color(200, 200, 80),
-				"Test Description2"));
-		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 0, now.getTime()
-				+ WeekView.HOUR_MILLIS * 2), "TestType3", "Long Title3", CalendarEntry.DEFAULT_FOREGROUND_COLOR,
-				CalendarEntry.DEFAULT_BACKGROUND_COLOR, "Test Description3"));
-		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 2, now.getTime()
-				+ WeekView.HOUR_MILLIS * 0), "TestType4", "Long Title4", Color.BLACK, new Color(255, 200, 80),
-				"Test Description4"));
-		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
-				+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
-				"Test Description5"));
-
+		Date now = new Date(System.currentTimeMillis());
+		EventedList<CalendarEntry> elist = DataModel.getEntryList();
 		w = new WeekView(elist);
 
 		w.toInterval(now);
@@ -65,9 +45,17 @@ public class ViewGUI implements GUIGenerator {
 					return;
 				}
 				selectedEntry = e;
-				System.out.println(e.getType() + " | " + e.getInterval().getStartTimestamp().toString() + " --- " + e.getInterval().getEndTimestamp().toString());
+				System.out.println(e.getType() + " | " + e.getInterval().getStartTimestamp().toString() + " --- "
+						+ e.getInterval().getEndTimestamp().toString());
 			}
 		});
+
+		scroll = new JScrollPane(w);
+		int barWidth = 15;
+		scroll.getVerticalScrollBar().setPreferredSize(new Dimension(barWidth, 0));
+		scroll.setPreferredSize(new Dimension(WeekView.getViewWidth() + barWidth + 6, parent.getHeight() - 100));
+		System.out.println(parent.size.getHeight());
+		System.out.println(parent.getHeight());
 
 		label = new JLabel(w.getDisplayedInterval().getStartTimestamp().toString());
 
@@ -77,6 +65,7 @@ public class ViewGUI implements GUIGenerator {
 			public void actionPerformed(ActionEvent event) {
 				w.nextInterval();
 				label.setText(w.getDisplayedInterval().getStartTimestamp().toString());
+				System.out.println(parent.getHeight());
 			}
 		});
 		JButton btnPrev = new JButton("Prev");
@@ -91,8 +80,8 @@ public class ViewGUI implements GUIGenerator {
 		container.add(btnPrev);
 		container.add(label);
 		container.add(btnNext);
-		container.add(w);
-
+		container.add(scroll);
+		// container.add(w);
 		return w;
 	}
 

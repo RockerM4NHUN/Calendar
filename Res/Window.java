@@ -3,6 +3,8 @@ package Res;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +29,7 @@ import Res.GUI.Views.WeekView;
  */
 public class Window extends JFrame {
 	/** File's path. */
-	private String path;
+	private String openPath;
 	/** Now using calendar view. */
 	private CalendarView usingCalendarView;
 	/** JMenuBar to menu items. */
@@ -39,6 +41,7 @@ public class Window extends JFrame {
 	/** JMenuItem into the menus. */
 	private JMenuItem openItem;
 	private JMenuItem saveItem;
+	private JMenuItem saveAsItem;
 	private JMenuItem exitItem;
 	private JMenuItem reWriteItem;
 	private JMenuItem deleteItem;
@@ -47,6 +50,8 @@ public class Window extends JFrame {
 	private JMenuItem monthItem;
 	/** JFileChooser to select files to save and open. */
 	private JFileChooser fileChooser;
+
+	public Dimension size;
 
 	/**
 	 * Default constructor, which make window.
@@ -67,18 +72,30 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) { // If select open item show chooser window and store file path
 				fileChooser = new JFileChooser();
 				fileChooser.showOpenDialog(null);
-				path = fileChooser.getSelectedFile().getPath();
+				openPath = fileChooser.getSelectedFile().getPath();
+				// List<CalendarEntry> elist = megnyit(path);
+				// DataModel.getEntryList().resetList(elist);
 			}
 		});
 		saveItem = new JMenuItem("Save");
 		saveItem.addActionListener(new ActionListener() { // Action listener to saveItem
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select save item show chooser window and store file path
-				fileChooser = new JFileChooser();
+				fileChooser = new JFileChooser(openPath);
 				fileChooser.showSaveDialog(null);
-				path = fileChooser.getSelectedFile().getPath();
+				String path = fileChooser.getSelectedFile().getPath();
 			}
 		});
+		saveAsItem = new JMenuItem("Save As");
+		saveAsItem.addActionListener(new ActionListener() { // Action listener to saveAsItem
+					@Override
+					public void actionPerformed(ActionEvent e) { // If select save as item show chooser window and store
+																	// file path
+						fileChooser = new JFileChooser(openPath);
+						fileChooser.showSaveDialog(null);
+						String path = fileChooser.getSelectedFile().getPath();
+					}
+				});
 		exitItem = new JMenuItem("Exit");
 		exitItem.addActionListener(new ActionListener() { // Action listener to exitItem
 			@Override
@@ -149,6 +166,8 @@ public class Window extends JFrame {
 		fileMenu.addSeparator();
 		fileMenu.add(saveItem);
 		fileMenu.addSeparator();
+		fileMenu.add(saveAsItem);
+		fileMenu.addSeparator();
 		fileMenu.add(exitItem);
 		editMenu.add(newItem); // Add menu items to edit menu
 		editMenu.addSeparator();
@@ -172,11 +191,22 @@ public class Window extends JFrame {
 		// setting Window size according to WeekView's size
 		int reqWidth = WeekView.getViewWidth();
 		int reqHeight = WeekView.getViewHeight();
-		setSize(reqWidth, reqHeight);
-		Dimension actualSize = getContentPane().getSize();
+		// Dimension actualSize = getContentPane().getSize();
 		int extraW = 50;// reqWidth - actualSize.width;
 		int extraH = 100;// reqHeight - actualSize.height;
-		setSize(reqWidth + extraW, reqHeight + extraH);
+
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		// int width = gd.getDisplayMode().getWidth();
+		int height = gd.getDisplayMode().getHeight();
+		System.out.println(height + " - " + (reqHeight + extraH));
+		// height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+		if (height < reqHeight + extraH) {
+			setSize(reqWidth + extraW, height - 50);
+			size = new Dimension(reqWidth + extraW, height - 50);
+		} else {
+			setSize(reqWidth + extraW, reqHeight + extraH);
+			size = new Dimension(reqWidth + extraW, reqHeight + extraH);
+		}
 
 		refreshGUI(new ViewGUI()); // loads the first GUI
 		setVisible(true);

@@ -3,10 +3,13 @@ package Res.Edit;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,6 +38,7 @@ public class RewriteEditWindow extends JDialog {
 	private JLabel typeLabel;
 	private JLabel titleLabel;
 	private JLabel eventLabel;
+	private JLabel newTypeLabel;
 	/** JTextFields to input data. */
 	private JTextField titleField;
 	private JTextField eventField;
@@ -50,6 +54,8 @@ public class RewriteEditWindow extends JDialog {
 	private JSpinner minFrom;
 	private JSpinner hourTill;
 	private JSpinner minTill;
+	/** JComboBox to selected data. */
+	private JComboBox<String> boxType;
 	/** SpinnerModels to JSpinner. */
 	private SpinnerModel yearFromM;
 	private SpinnerModel monthFromM;
@@ -74,7 +80,6 @@ public class RewriteEditWindow extends JDialog {
 	/**
 	 * Default constructor to JDialog.
 	 * */
-	@SuppressWarnings("deprecation")
 	public RewriteEditWindow(final CalendarEntry entry) {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
@@ -102,6 +107,7 @@ public class RewriteEditWindow extends JDialog {
 		typeLabel = new JLabel("Type of event:");
 		titleLabel = new JLabel("Title of event:");
 		eventLabel = new JLabel("Event:");
+		newTypeLabel = new JLabel("New type of entry:");
 		yearDateFrom = new JSpinner(yearFromM);
 		monthDateFrom = new JSpinner(monthFromM);
 		dayDateFrom = new JSpinner(dayFromM);
@@ -115,12 +121,15 @@ public class RewriteEditWindow extends JDialog {
 		titleField = new JTextField(entry.getTitle());
 		eventField = new JTextField(entry.getDescription());
 		newTypeField = new JTextField(entry.getType());
+		boxType = new JComboBox<String>(Res.Data.DataModel.getTypeList().toArray(new String[0]));
 		selectLetterColor = new JButton("Select color of letters");
 		selectBackColor = new JButton("Select color of background");
 		okButton = new JButton("Ok");
 		cancelButton = new JButton("Cancel");
 		lc = new LetterColor();
 		bc = new BackColor();
+
+		boxType.setSelectedItem(entry.getType());
 
 		hourFromLabel.setBounds(10, 10, 200, 20); // Set bounds all of item in window
 		yearDateFrom.setBounds(10, 30, 65, 30);
@@ -135,6 +144,8 @@ public class RewriteEditWindow extends JDialog {
 		hourTill.setBounds(200, 90, 50, 30);
 		minTill.setBounds(250, 90, 50, 30);
 		typeLabel.setBounds(10, 130, 200, 20);
+		boxType.setBounds(10, 150, 100, 30);
+		newTypeLabel.setBounds(10, 130, 200, 20);
 		newTypeField.setBounds(10, 150, 100, 30);
 		titleLabel.setBounds(10, 190, 200, 20);
 		titleField.setBounds(10, 210, 150, 30);
@@ -145,11 +156,28 @@ public class RewriteEditWindow extends JDialog {
 		okButton.setBounds(260, 365, 50, 30);
 		cancelButton.setBounds(320, 365, 100, 30);
 
+		selectLetterColor.setBackground(entry.getForegroundColor());
+		selectBackColor.setBackground(entry.getBackgroundColor());
+
+		boxType.addItemListener(new ItemListener() { // Item listener to box list
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (((String) e.getItem()).equals("New")) { // If select new, you can make new type of event
+					remove(typeLabel); // If make new type, delete box list
+					remove(boxType);
+					add(newTypeLabel);
+					add(newTypeField);
+					repaint();
+				}
+			}
+		});
+
 		selectLetterColor.addActionListener(new ActionListener() { // Action listener to color select button
 					@Override
 					public void actionPerformed(ActionEvent e) { // If push the button show letter color window to
 																	// choose color
 						lc.setVisible(true);
+						selectLetterColor.setBackground(lc.getLetterColor());
 					}
 				});
 
@@ -158,6 +186,7 @@ public class RewriteEditWindow extends JDialog {
 					public void actionPerformed(ActionEvent e) { // If push the button show background color window to
 																	// choose color
 						bc.setVisible(true);
+						selectBackColor.setBackground(bc.getBackColor());
 					}
 				});
 
@@ -197,6 +226,19 @@ public class RewriteEditWindow extends JDialog {
 					JOptionPane.showMessageDialog(getContentPane(),
 							"Begening of the event mustn't be leater than the and of it!", "Date Error",
 							JOptionPane.ERROR_MESSAGE);
+				} else if (newTypeField.getText().equals("")) {
+					entry.setInterval(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()));
+					entry.setType((String) boxType.getSelectedItem());
+					entry.setTitle(titleField.getText());
+					entry.setForegroundColor((lc.change) ? lc.getLetterColor() : entry.getForegroundColor());
+					entry.setBackgroundColor((bc.change) ? bc.getBackColor() : entry.getBackgroundColor());
+
+					// modification finished
+					Res.Data.DataModel.getTypeList().add(newTypeField.getText());
+					EventedList<CalendarEntry> elist = DataModel.getEntryList();
+					elist.remove(entry);
+					elist.add(entry);
+					dispose();
 				} else { // Else rewrite entry
 					entry.setInterval(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()));
 					entry.setType(newTypeField.getText());
@@ -204,11 +246,21 @@ public class RewriteEditWindow extends JDialog {
 					entry.setForegroundColor((lc.change) ? lc.getLetterColor() : entry.getForegroundColor());
 					entry.setBackgroundColor((bc.change) ? bc.getBackColor() : entry.getBackgroundColor());
 
+					boolean faild = false;
+					for (int i = 0; i < Res.Data.DataModel.getTypeList().size(); i++) {
+						if (Res.Data.DataModel.getTypeList().equals(newTypeField.getText())) {
+							faild = false;
+							break;
+						}
+					}
+					if (!faild) {
+						Res.Data.DataModel.getTypeList().add(newTypeField.getText());
+					}
+
 					// modification finished
 					EventedList<CalendarEntry> elist = DataModel.getEntryList();
 					elist.remove(entry);
 					elist.add(entry);
-
 					dispose();
 				}
 			}
@@ -234,7 +286,7 @@ public class RewriteEditWindow extends JDialog {
 		add(hourTill);
 		add(minTill);
 		add(typeLabel);
-		add(newTypeField);
+		add(boxType);
 		add(titleLabel);
 		add(titleField);
 		add(eventLabel);

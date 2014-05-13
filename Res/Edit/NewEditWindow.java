@@ -78,8 +78,6 @@ public class NewEditWindow extends JDialog {
 	/**
 	 * Default constructor to JDialog.
 	 * */
-	// @SuppressWarnings("deprecation")
-	@SuppressWarnings("deprecation")
 	public NewEditWindow(final CalendarView usingCalendarView) {
 		setTitle("New"); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
@@ -116,18 +114,13 @@ public class NewEditWindow extends JDialog {
 		titleField = new JTextField();
 		eventField = new JTextField();
 		newTypeField = new JTextField();
-		boxType = new JComboBox<String>();
+		boxType = new JComboBox<String>(Res.Data.DataModel.getTypeList().toArray(new String[0]));
 		selectLetterColor = new JButton("Select color of letters");
 		selectBackColor = new JButton("Select color of background");
 		okButton = new JButton("Ok");
 		cancelButton = new JButton("Cancel");
 		lc = new LetterColor();
 		bc = new BackColor();
-
-		boxType.addItem("Meeting"); // Add items to box list
-		boxType.addItem("Work");
-		boxType.addItem("Family");
-		boxType.addItem("New");
 
 		hourFromLabel.setBounds(10, 10, 200, 20); // Set bounds all of item in window
 		yearDateFrom.setBounds(10, 30, 65, 30);
@@ -154,6 +147,9 @@ public class NewEditWindow extends JDialog {
 		okButton.setBounds(260, 365, 50, 30);
 		cancelButton.setBounds(320, 365, 100, 30);
 
+		selectLetterColor.setBackground(lc.getLetterColor());
+		selectBackColor.setBackground(bc.getBackColor());
+
 		boxType.addItemListener(new ItemListener() { // Item listener to box list
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -172,6 +168,7 @@ public class NewEditWindow extends JDialog {
 					public void actionPerformed(ActionEvent e) { // If push the button show letter color window to
 																	// choose color
 						lc.setVisible(true);
+						selectLetterColor.setBackground(lc.getLetterColor());
 					}
 				});
 
@@ -180,6 +177,7 @@ public class NewEditWindow extends JDialog {
 					public void actionPerformed(ActionEvent e) { // If push the button show background color window to
 																	// choose color
 						bc.setVisible(true);
+						selectBackColor.setBackground(bc.getBackColor());
 					}
 				});
 
@@ -230,6 +228,16 @@ public class NewEditWindow extends JDialog {
 							new CalendarEntry(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
 									newTypeField.getText(), titleField.getText(), lc.getLetterColor(), bc
 											.getBackColor(), eventField.getText()));
+					boolean faild = false;
+					for (int i = 0; i < Res.Data.DataModel.getTypeList().size(); i++) {
+						if (Res.Data.DataModel.getTypeList().equals(newTypeField.getText())) {
+							faild = false;
+							break;
+						}
+					}
+					if (!faild) {
+						Res.Data.DataModel.getTypeList().add(newTypeField.getText());
+					}
 					usingCalendarView.repaint();
 					dispose();
 				}
