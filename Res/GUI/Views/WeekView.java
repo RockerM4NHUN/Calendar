@@ -46,6 +46,9 @@ public class WeekView extends CalendarView{
 		elist.addListResetListener(new EventedListAdapter<CalendarEntry>(){
 			public void listModified(EventedList<CalendarEntry> newVersion){
 				setCalendarEntries(newVersion);
+				setSelected(null);
+				dispatchSelectionChanged(null);
+				repaint();
 			}
 		});
 		
@@ -273,17 +276,18 @@ public class WeekView extends CalendarView{
 						
 						
 						c.add(Calendar.DAY_OF_YEAR, 1);
+						c.set(Calendar.AM_PM, Calendar.AM);
 						c.set(Calendar.HOUR, 0);
 						c.set(Calendar.MINUTE, 0);
 						c.set(Calendar.SECOND, 0);
 						c.set(Calendar.MILLISECOND, 0);
-						c.set(Calendar.AM_PM, Calendar.AM);
 						
 						rects.add(new EntryGFX(e, new Interval(i.getStart(), c.getTimeInMillis()),x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
 						
 						i = new Interval(c.getTimeInMillis(),i.getEnd());
 						start = c.get(Calendar.DAY_OF_YEAR);
 						startYear = c.get(Calendar.YEAR);
+						
 					}
 					
 					//full days
@@ -295,11 +299,11 @@ public class WeekView extends CalendarView{
 						int h = ystep * 24;
 						
 						c.add(Calendar.DAY_OF_YEAR, 1);
+						c.set(Calendar.AM_PM, Calendar.AM);
 						c.set(Calendar.HOUR, 0);
 						c.set(Calendar.MINUTE, 0);
 						c.set(Calendar.SECOND, 0);
 						c.set(Calendar.MILLISECOND, 0);
-						c.set(Calendar.AM_PM, Calendar.AM);
 						
 						rects.add(new EntryGFX(e, new Interval(i.getStart(), c.getTimeInMillis()),x + ((layer < wcorr) ? layer : wcorr),y,w + ((layer < wcorr) ? 1 : 0),h));
 						
@@ -565,24 +569,23 @@ public class WeekView extends CalendarView{
 		Calendar c = Calendar.getInstance();
 		c.setTime(week);
 		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+		c.set(Calendar.AM_PM, Calendar.AM);
 		c.set(Calendar.HOUR_OF_DAY,0);
 		c.set(Calendar.MINUTE,0);
 		c.set(Calendar.SECOND,0);
 		c.set(Calendar.MILLISECOND,0);
-		c.set(Calendar.AM_PM, Calendar.AM);
 		
 		long start = c.getTimeInMillis();
 		
 		c.add(Calendar.DAY_OF_YEAR,7);
 		c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+		c.set(Calendar.AM_PM, Calendar.AM);
 		c.set(Calendar.HOUR_OF_DAY,0);
 		c.set(Calendar.MINUTE,0);
 		c.set(Calendar.SECOND,0);
 		c.set(Calendar.MILLISECOND,0);
-		c.set(Calendar.AM_PM, Calendar.AM);
 		
 		viewInterval = new Interval(start,c.getTimeInMillis());
-		
 		repaint();
 	}
 	
@@ -662,6 +665,9 @@ public class WeekView extends CalendarView{
 		boolean added = false;
 		
 		selected.clear();
+		if (e == null){
+			return;
+		}
 		for (IntersectionGroup group : groups){
 			EntryGFX[] entries = group.getRectangles();
 			for (int i = 0;i < entries.length;i++){

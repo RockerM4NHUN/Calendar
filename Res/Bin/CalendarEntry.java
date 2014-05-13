@@ -3,7 +3,15 @@ package Res.Bin;
 import java.awt.Color;
 
 public class CalendarEntry implements Comparable<CalendarEntry> {
-
+	public CalendarEntry(){
+		
+		interval = null;
+		this.type = null;
+		this.title = null;
+		foregroundColor = null;
+		backgroundColor = null;
+		description = null;
+	}
 	// constructor
 	public CalendarEntry(Interval ival, String type, String title, Color foreColor, Color backColor, String desc) {
 		if (ival == null || type == null || foreColor == null || backColor == null || desc == null) {

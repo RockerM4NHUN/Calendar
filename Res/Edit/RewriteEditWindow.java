@@ -15,7 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
@@ -43,7 +45,7 @@ public class RewriteEditWindow extends JDialog {
 	private JLabel backColorLabel;
 	/** JTextFields to input data. */
 	private JTextField titleField;
-	private JTextField eventField;
+	private JTextArea eventField;
 	private JTextField newTypeField;
 	/** JSpinners to selected data. */
 	private JSpinner yearDateFrom;
@@ -78,6 +80,7 @@ public class RewriteEditWindow extends JDialog {
 	private LetterColor lc;
 	private BackColor bc;
 	private Date date;
+	private JScrollPane eventScroll;
 
 	/**
 	 * Default constructor to JDialog.
@@ -123,7 +126,7 @@ public class RewriteEditWindow extends JDialog {
 		hourTill = new JSpinner(hourTillM);
 		minTill = new JSpinner(minTillM);
 		titleField = new JTextField(entry.getTitle());
-		eventField = new JTextField(entry.getDescription());
+		eventField = new JTextArea(entry.getDescription());
 		newTypeField = new JTextField(entry.getType());
 		boxType = new JComboBox<String>(Res.Data.DataModel.getTypeList().toArray(new String[0]));
 		selectLetterColor = new JButton();
@@ -156,15 +159,17 @@ public class RewriteEditWindow extends JDialog {
 		titleLabel.setBounds(10, 190, 200, 20);
 		titleField.setBounds(10, 210, 150, 30);
 		eventLabel.setBounds(10, 250, 200, 20);
-		eventField.setBounds(10, 270, 365, 30);
-		letterColorLabel.setBounds(10, 310, 140, 30);
-		backColorLabel.setBounds(10, 340, 140, 30);
-		selectLetterColor.setBounds(150, 310, 50, 30);
-		selectBackColor.setBounds(150, 340, 50, 30);
+		//eventField.setBounds(10, 270, 365, 100);
+		eventScroll = new JScrollPane(eventField,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED ,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		eventScroll.setBounds(10, 270, 365, 100);
+		letterColorLabel.setBounds(10, 380, 140, 30);
+		backColorLabel.setBounds(10, 410, 140, 30);
+		selectLetterColor.setBounds(150, 380, 50, 30);
+		selectBackColor.setBounds(150, 410, 50, 30);
 		//selectLetterColor.setBounds(10, 310, 200, 30);
 		//selectBackColor.setBounds(220, 310, 200, 30);
-		okButton.setBounds(260, 365, 50, 30);
-		cancelButton.setBounds(320, 365, 100, 30);
+		okButton.setBounds(260, 435, 50, 30);
+		cancelButton.setBounds(320, 435, 100, 30);
 
 		selectLetterColor.setBackground(entry.getForegroundColor());
 		selectBackColor.setBackground(entry.getBackgroundColor());
@@ -242,6 +247,7 @@ public class RewriteEditWindow extends JDialog {
 					entry.setTitle(titleField.getText());
 					entry.setForegroundColor((lc.change) ? lc.getLetterColor() : entry.getForegroundColor());
 					entry.setBackgroundColor((bc.change) ? bc.getBackColor() : entry.getBackgroundColor());
+					entry.setDescription(eventField.getText());
 
 					// modification finished
 					Res.Data.DataModel.getTypeList().add(newTypeField.getText());
@@ -255,16 +261,18 @@ public class RewriteEditWindow extends JDialog {
 					entry.setTitle(titleField.getText());
 					entry.setForegroundColor((lc.change) ? lc.getLetterColor() : entry.getForegroundColor());
 					entry.setBackgroundColor((bc.change) ? bc.getBackColor() : entry.getBackgroundColor());
+					entry.setDescription(eventField.getText());
 
 					boolean faild = false;
-					for (int i = 0; i < Res.Data.DataModel.getTypeList().size(); i++) {
-						if (Res.Data.DataModel.getTypeList().equals(newTypeField.getText())) {
-							faild = false;
+					for (String str : DataModel.getTypeList()) {
+						if (str.equals(newTypeField.getText())) {
+							faild = true;
+							entry.setType(str);
 							break;
 						}
 					}
 					if (!faild) {
-						Res.Data.DataModel.getTypeList().add(newTypeField.getText());
+						DataModel.getTypeList().add(newTypeField.getText());
 					}
 
 					// modification finished
@@ -300,7 +308,7 @@ public class RewriteEditWindow extends JDialog {
 		add(titleLabel);
 		add(titleField);
 		add(eventLabel);
-		add(eventField);
+		add(eventScroll);
 		add(letterColorLabel);
 		add(backColorLabel);
 		add(selectLetterColor);
@@ -313,6 +321,6 @@ public class RewriteEditWindow extends JDialog {
 		Point location = new Point(400, 300);
 		setLocation(location);
 		setResizable(false);
-		setSize(450, 450);
+		setSize(450, 500);
 	}
 }

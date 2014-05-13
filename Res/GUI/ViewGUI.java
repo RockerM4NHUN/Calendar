@@ -63,7 +63,6 @@ public class ViewGUI implements GUIGenerator {
 			public void actionPerformed(ActionEvent event) {
 				w.nextInterval();
 				label.setText(w.getDisplayedInterval().getStartTimestamp().toString());
-				System.out.println(parent.getHeight());
 			}
 		});
 		JButton btnPrev = new JButton("Prev");

@@ -15,6 +15,7 @@ import Res.Bin.EventedList;
 public class DataModel {
 	private static EventedList<CalendarEntry> entryList = new EventedList<CalendarEntry>(new ArrayList<CalendarEntry>());
 	private static List<String> typeList = new LinkedList<String>();
+	private static String[] defaultTypeArray = new String[]{"Meeting","Birthday","Work","New"};
 
 	/**
 	 * @author ZODVAAT.SZE
@@ -26,5 +27,9 @@ public class DataModel {
 
 	public static List<String> getTypeList() {
 		return typeList;
+	}
+	
+	public static String[] getDefaultTypeArray() {
+		return defaultTypeArray;
 	}
 }

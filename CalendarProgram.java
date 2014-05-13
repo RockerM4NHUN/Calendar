@@ -1,14 +1,14 @@
 import java.awt.Color;
-import java.util.Date;
+import java.util.*;
+import java.io.*;
+import java.util.zip.DataFormatException;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import Res.Window;
-import Res.Bin.CalendarEntry;
-import Res.Bin.EventedList;
-import Res.Bin.Interval;
-import Res.Data.DataModel;
+import Res.Bin.*;
+import Res.Data.*;
 import Res.GUI.Views.WeekView;
 
 /**
@@ -69,6 +69,47 @@ public class CalendarProgram {
 		elist.add(new CalendarEntry(new Interval(now.getTime() - WeekView.HOUR_MILLIS * 1, now.getTime()
 				+ WeekView.HOUR_MILLIS * 2), "TestType5", "Long Title5", Color.BLACK, new Color(255, 200, 80),
 				"Test Description5"));
-
+		
+		
+		String input;
+		while(true){
+			//*
+			System.out.print("Press enter to write entries: ");
+			input = System.console().readLine();
+			if (input.equals("e")){
+				System.exit(0);
+			}
+			
+			// Test Save
+			if (input.length() != 0){
+				try{
+					DataHandler.writeData("TestSave.csv",DataModel.getEntryList());
+					System.out.println("Action performed");
+				}catch(IOException e){
+					System.err.println(e.getMessage());
+				}/**/
+			}
+			
+			System.out.print("Press enter to read entries: ");
+			input = System.console().readLine();
+			if (input.equals("e")){
+				System.exit(0);
+			}
+			
+			if (input.length() != 0){
+				List<CalendarEntry> list = new LinkedList<CalendarEntry>();
+				try{
+					DataHandler.readData("TestSave.csv",list);
+					DataModel.getEntryList().resetList(list);
+					System.out.println("Action performed");
+				}catch(IOException e){
+					System.err.println("IOException");
+					e.printStackTrace();
+				}catch(DataFormatException e){
+					System.err.println("DataFormatException");
+					System.err.println(e.getMessage());
+				}
+			}
+		}
 	}
 }

@@ -198,7 +198,7 @@ public class Window extends JFrame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		// int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		System.out.println(height + " - " + (reqHeight + extraH));
+		//System.out.println(height + " - " + (reqHeight + extraH));
 		// height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		if (height < reqHeight + extraH) {
 			setSize(reqWidth + extraW, height - 50);
