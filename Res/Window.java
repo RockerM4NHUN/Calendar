@@ -8,6 +8,12 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.zip.DataFormatException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -16,6 +22,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import Res.Bin.CalendarEntry;
+import Res.Data.DataHandler;
+import Res.Data.DataModel;
 import Res.Edit.NewEditWindow;
 import Res.Edit.RewriteEditWindow;
 import Res.GUI.ViewGUI;
@@ -30,6 +39,7 @@ import Res.GUI.Views.WeekView;
 public class Window extends JFrame {
 	/** File's path. */
 	private String openPath;
+	private String savePath;
 	/** Now using calendar view. */
 	private CalendarView usingCalendarView;
 	/** JMenuBar to menu items. */
@@ -56,10 +66,12 @@ public class Window extends JFrame {
 	/**
 	 * Default constructor, which make window.
 	 */
-	public Window() {
+	public Window(String path) {
 		super("Calendar");
 
 		final ViewGUI wgui = new ViewGUI();
+		openPath = path;
+		savePath = path;
 
 		gui = null;
 		GUIPanel = getContentPane();
@@ -70,11 +82,19 @@ public class Window extends JFrame {
 		openItem.addActionListener(new ActionListener() { // Action listener to openItem
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select open item show chooser window and store file path
-				fileChooser = new JFileChooser();
+				fileChooser = new JFileChooser(openPath);
 				fileChooser.showOpenDialog(null);
 				openPath = fileChooser.getSelectedFile().getPath();
-				// List<CalendarEntry> elist = megnyit(path);
-				// DataModel.getEntryList().resetList(elist);
+				List<CalendarEntry> list = new LinkedList<CalendarEntry>();
+				try {
+					DataHandler.readData(openPath, list);
+					DataModel.getEntryList().resetList(list);
+				} catch (IOException exception) {
+					exception.printStackTrace();
+				} catch (DataFormatException exception) {
+					JOptionPane.showMessageDialog(getContentPane(), "exception.getMessage()", "Read Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		saveItem = new JMenuItem("Save");
@@ -83,7 +103,16 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) { // If select save item show chooser window and store file path
 				fileChooser = new JFileChooser(openPath);
 				fileChooser.showSaveDialog(null);
-				String path = fileChooser.getSelectedFile().getPath();
+				savePath = fileChooser.getSelectedFile().getPath();
+				try {
+					DataHandler.writeData(savePath, DataModel.getEntryList());
+					Writer write = new FileWriter("Config.txt");
+					write.write(savePath);
+					write.close();
+				} catch (IOException exception) {
+					JOptionPane.showMessageDialog(getContentPane(), "exception.getMessage()", "Write Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		saveAsItem = new JMenuItem("Save As");
@@ -93,7 +122,16 @@ public class Window extends JFrame {
 																	// file path
 						fileChooser = new JFileChooser(openPath);
 						fileChooser.showSaveDialog(null);
-						String path = fileChooser.getSelectedFile().getPath();
+						savePath = fileChooser.getSelectedFile().getPath();
+						try {
+							DataHandler.writeData(savePath, DataModel.getEntryList());
+							Writer write = new FileWriter("Config.txt");
+							write.write(savePath);
+							write.close();
+						} catch (IOException exception) {
+							JOptionPane.showMessageDialog(getContentPane(), "exception.getMessage()", "Write Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				});
 		exitItem = new JMenuItem("Exit");
@@ -198,7 +236,7 @@ public class Window extends JFrame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		// int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		//System.out.println(height + " - " + (reqHeight + extraH));
+		// System.out.println(height + " - " + (reqHeight + extraH));
 		// height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		if (height < reqHeight + extraH) {
 			setSize(reqWidth + extraW, height - 50);
