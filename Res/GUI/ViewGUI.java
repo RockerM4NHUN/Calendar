@@ -26,6 +26,10 @@ public class ViewGUI implements GUIGenerator {
 	private JLabel label;
 	private JScrollPane scroll;
 	public static CalendarEntry selectedEntry;
+	
+	public static int getGUIHeight(){
+		return WeekView.getViewHeight() + 115;
+	}
 
 	@Override
 	public CalendarView show(final Window parent, Container container) {
@@ -55,14 +59,14 @@ public class ViewGUI implements GUIGenerator {
 		scroll.getVerticalScrollBar().setPreferredSize(new Dimension(barWidth, 0));
 		scroll.setPreferredSize(new Dimension(WeekView.getViewWidth() + barWidth + 6, parent.getHeight() - 100));
 
-		label = new JLabel(w.getDisplayedInterval().getStartTimestamp().toString());
+		label = new JLabel(getDateString(w.getDisplayedInterval().getStartTimestamp().toString()));
 
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				w.nextInterval();
-				label.setText(w.getDisplayedInterval().getStartTimestamp().toString());
+				label.setText(getDateString(w.getDisplayedInterval().getStartTimestamp().toString()));
 			}
 		});
 		JButton btnPrev = new JButton("Prev");
@@ -70,7 +74,7 @@ public class ViewGUI implements GUIGenerator {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				w.prevInterval();
-				label.setText(w.getDisplayedInterval().getStartTimestamp().toString());
+				label.setText(getDateString(w.getDisplayedInterval().getStartTimestamp().toString()));
 			}
 		});
 
@@ -78,8 +82,11 @@ public class ViewGUI implements GUIGenerator {
 		container.add(label);
 		container.add(btnNext);
 		container.add(scroll);
-		// container.add(w);
 		return w;
+	}
+	
+	private static String getDateString(String time){
+		return time.split(" ")[0];
 	}
 
 	@Override

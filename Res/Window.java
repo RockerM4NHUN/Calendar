@@ -260,10 +260,9 @@ public class Window extends JFrame {
 
 		// setting Window size according to WeekView's size
 		int reqWidth = WeekView.getViewWidth();
-		int reqHeight = WeekView.getViewHeight();
-		// Dimension actualSize = getContentPane().getSize();
-		int extraW = 50;// reqWidth - actualSize.width;
-		int extraH = 100;// reqHeight - actualSize.height;
+		int reqHeight = ViewGUI.getGUIHeight();
+		int extraW = 50;
+		int extraH = 0*100;
 
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		// int width = gd.getDisplayMode().getWidth();
