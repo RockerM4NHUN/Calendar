@@ -14,6 +14,9 @@ import Res.Bin.*;
  */
 
 public class DataHandler{
+	
+	public static final String calendarExtension = "cal";
+	
 	private static String escape(String str){
 		return str.replaceAll("/","//").replaceAll(",","/c").replaceAll("\n","/n");
 	}
