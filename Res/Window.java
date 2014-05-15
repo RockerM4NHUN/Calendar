@@ -8,6 +8,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -21,6 +22,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Res.Bin.CalendarEntry;
 import Res.Data.DataHandler;
@@ -60,6 +62,7 @@ public class Window extends JFrame {
 	private JMenuItem monthItem;
 	/** JFileChooser to select files to save and open. */
 	private JFileChooser fileChooser;
+	private FileNameExtensionFilter fileFilter;
 
 	public Dimension size;
 
@@ -75,6 +78,8 @@ public class Window extends JFrame {
 
 		gui = null;
 		GUIPanel = getContentPane();
+		
+		fileFilter = new FileNameExtensionFilter("Calendar file",DataHandler.calendarExtension);
 
 		menu = new JMenuBar();
 		fileMenu = new JMenu("File");
@@ -83,7 +88,10 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select open item show chooser window and store file path
 				fileChooser = new JFileChooser(openPath);
-				fileChooser.showOpenDialog(null);
+				fileChooser.removeChoosableFileFilter(fileChooser.getChoosableFileFilters()[0]);
+				fileChooser.addChoosableFileFilter(fileFilter);
+				fileChooser.showSaveDialog(null);
+				if (fileChooser.getSelectedFile() == null) return;
 				openPath = fileChooser.getSelectedFile().getPath();
 				List<CalendarEntry> list = new LinkedList<CalendarEntry>();
 				try {
@@ -91,8 +99,10 @@ public class Window extends JFrame {
 					DataModel.getEntryList().resetList(list);
 				} catch (IOException exception) {
 					exception.printStackTrace();
+					JOptionPane.showMessageDialog(null,"Could not open save file.","Read error",JOptionPane.ERROR_MESSAGE);
 				} catch (DataFormatException exception) {
-					JOptionPane.showMessageDialog(getContentPane(), "exception.getMessage()", "Read Error",
+					exception.printStackTrace();
+					JOptionPane.showMessageDialog(getContentPane(), "File corrupted.", "Read Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -101,39 +111,61 @@ public class Window extends JFrame {
 		saveItem.addActionListener(new ActionListener() { // Action listener to saveItem
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select save item show chooser window and store file path
-				fileChooser = new JFileChooser(openPath);
-				fileChooser.showSaveDialog(null);
-				savePath = fileChooser.getSelectedFile().getPath();
+				if (savePath == null || !new File(savePath).exists()){
+					fileChooser = new JFileChooser(openPath);
+					fileChooser.removeChoosableFileFilter(fileChooser.getChoosableFileFilters()[0]);
+					fileChooser.addChoosableFileFilter(fileFilter);
+					fileChooser.showSaveDialog(null);
+					if (fileChooser.getSelectedFile() == null) return;
+					savePath = fileChooser.getSelectedFile().getPath() + "." + DataHandler.calendarExtension;
+				}
+				
 				try {
 					DataHandler.writeData(savePath, DataModel.getEntryList());
+				} catch (IOException exception) {
+					exception.printStackTrace();
+					JOptionPane.showMessageDialog(getContentPane(),
+							"Error occured during save process.\nFile:\n" + savePath, "Save Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				
+				try{
 					Writer write = new FileWriter("Config.txt");
 					write.write(savePath);
 					write.close();
-				} catch (IOException exception) {
-					JOptionPane.showMessageDialog(getContentPane(), "exception.getMessage()", "Write Error",
-							JOptionPane.ERROR_MESSAGE);
+				}catch(IOException exception){
+					exception.printStackTrace();
 				}
 			}
 		});
 		saveAsItem = new JMenuItem("Save As");
 		saveAsItem.addActionListener(new ActionListener() { // Action listener to saveAsItem
-					@Override
-					public void actionPerformed(ActionEvent e) { // If select save as item show chooser window and store
-																	// file path
-						fileChooser = new JFileChooser(openPath);
-						fileChooser.showSaveDialog(null);
-						savePath = fileChooser.getSelectedFile().getPath();
-						try {
-							DataHandler.writeData(savePath, DataModel.getEntryList());
-							Writer write = new FileWriter("Config.txt");
-							write.write(savePath);
-							write.close();
-						} catch (IOException exception) {
-							JOptionPane.showMessageDialog(getContentPane(), "exception.getMessage()", "Write Error",
-									JOptionPane.ERROR_MESSAGE);
-						}
-					}
-				});
+			@Override
+			public void actionPerformed(ActionEvent e) { // If select save as item show chooser window and store
+															// file path
+				fileChooser = new JFileChooser(openPath);
+				fileChooser.removeChoosableFileFilter(fileChooser.getChoosableFileFilters()[0]);
+				fileChooser.addChoosableFileFilter(fileFilter);
+				fileChooser.showSaveDialog(null);
+				if (fileChooser.getSelectedFile() == null) return;
+				savePath = fileChooser.getSelectedFile().getPath() + "." + DataHandler.calendarExtension;
+				try {
+					DataHandler.writeData(savePath, DataModel.getEntryList());
+				} catch (IOException exception) {
+					exception.printStackTrace();
+					JOptionPane.showMessageDialog(getContentPane(), "Error occured during save process.\nFile:\n" + savePath, "Save Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				
+				try{
+					Writer write = new FileWriter("Config.txt");
+					write.write(savePath);
+					write.close();
+				}catch(IOException exception){
+					exception.printStackTrace();
+				}
+			}
+		});
 		exitItem = new JMenuItem("Exit");
 		exitItem.addActionListener(new ActionListener() { // Action listener to exitItem
 			@Override
