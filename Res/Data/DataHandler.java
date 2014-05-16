@@ -10,7 +10,7 @@ import Res.Bin.*;
 /**
  * DataRead class helps you read data from saved data file which contains your events you need to attend to, or your plannings.
  *
- * @author Szatmari Koppany Gergo
+ * @author SZKVAAT.SZE
  */
 
 public class DataHandler{
