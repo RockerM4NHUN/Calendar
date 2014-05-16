@@ -253,7 +253,7 @@ public class Window extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		Point location = new Point(400, 300);
+		Point location = new Point(200, 100);
 		setLocation(location);
 
 		setResizable(false);
@@ -262,20 +262,18 @@ public class Window extends JFrame {
 		int reqWidth = WeekView.getViewWidth();
 		int reqHeight = ViewGUI.getGUIHeight();
 		int extraW = 50;
-		int extraH = 0*100;
+		int extraH = 0;
 
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		// int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		// System.out.println(height + " - " + (reqHeight + extraH));
-		// height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+		int height = gd.getDisplayMode().getHeight() - 100;
 		if (height < reqHeight + extraH) {
-			setSize(reqWidth + extraW, height - 50);
-			size = new Dimension(reqWidth + extraW, height - 50);
+			size = new Dimension(reqWidth + extraW, height);
+			//setSize(reqWidth + extraW, height - 50);
 		} else {
-			setSize(reqWidth + extraW, reqHeight + extraH);
 			size = new Dimension(reqWidth + extraW, reqHeight + extraH);
+			//setSize(reqWidth + extraW, reqHeight + extraH);
 		}
+		setSize(size);
 
 		refreshGUI(new ViewGUI()); // loads the first GUI
 		setVisible(true);

@@ -15,6 +15,7 @@ import Res.Window;
 import Res.Bin.CalendarEntry;
 import Res.Bin.CalendarSelectionChangedListener;
 import Res.Bin.EventedList;
+import Res.Bin.Interval;
 import Res.Data.DataModel;
 import Res.GUI.Views.CalendarView;
 import Res.GUI.Views.WeekView;
@@ -27,8 +28,10 @@ public class ViewGUI implements GUIGenerator {
 	private JScrollPane scroll;
 	public static CalendarEntry selectedEntry;
 	
+	private static final int heightCorrection = 75;
+	
 	public static int getGUIHeight(){
-		return WeekView.getViewHeight() + 115;
+		return WeekView.getViewHeight() + heightCorrection;
 	}
 
 	@Override
@@ -57,16 +60,20 @@ public class ViewGUI implements GUIGenerator {
 		scroll = new JScrollPane(w);
 		int barWidth = 15;
 		scroll.getVerticalScrollBar().setPreferredSize(new Dimension(barWidth, 0));
-		scroll.setPreferredSize(new Dimension(WeekView.getViewWidth() + barWidth + 6, parent.getHeight() - 100));
+		if ((int)parent.size.getHeight() < getGUIHeight()){
+			scroll.setPreferredSize(new Dimension(WeekView.getViewWidth() + barWidth + 6, (int)parent.size.getHeight() - heightCorrection));
+		}else{
+			scroll.setPreferredSize(new Dimension(WeekView.getViewWidth() + barWidth + 6, WeekView.getViewHeight() + 6));
+		}
 
-		label = new JLabel(getDateString(w.getDisplayedInterval().getStartTimestamp().toString()));
+		label = new JLabel(getDateString(w.getDisplayedInterval()));
 
 		JButton btnNext = new JButton("Next");
 		btnNext.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				w.nextInterval();
-				label.setText(getDateString(w.getDisplayedInterval().getStartTimestamp().toString()));
+				label.setText(getDateString(w.getDisplayedInterval()));
 			}
 		});
 		JButton btnPrev = new JButton("Prev");
@@ -74,7 +81,7 @@ public class ViewGUI implements GUIGenerator {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				w.prevInterval();
-				label.setText(getDateString(w.getDisplayedInterval().getStartTimestamp().toString()));
+				label.setText(getDateString(w.getDisplayedInterval()));
 			}
 		});
 
@@ -85,8 +92,8 @@ public class ViewGUI implements GUIGenerator {
 		return w;
 	}
 	
-	private static String getDateString(String time){
-		return time.split(" ")[0];
+	private static String getDateString(Interval time){
+		return time.getStartTimestamp().toString().split(" ")[0] + " --- " + time.getEndTimestamp().toString().split(" ")[0];
 	}
 
 	@Override
