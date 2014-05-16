@@ -1,4 +1,0 @@
-<<<<<<< HEAD
-=======
-/data/Github/Calendar/First.cal
->>>>>>> 0fcc15f094e9d52de1ca2f48046ec7c279881c1e
