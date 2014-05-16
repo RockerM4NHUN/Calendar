@@ -259,7 +259,7 @@ public class Window extends JFrame {
 		setResizable(false);
 
 		// setting Window size according to WeekView's size
-		int reqWidth = WeekView.getViewWidth();
+		int reqWidth = ViewGUI.getGUIWidth();
 		int reqHeight = ViewGUI.getGUIHeight();
 		int extraW = 50;
 		int extraH = 0;
