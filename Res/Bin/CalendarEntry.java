@@ -40,7 +40,7 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 
 	// constants
 	public static final Color DEFAULT_FOREGROUND_COLOR = new Color(0, 0, 0);
-	public static final Color DEFAULT_BACKGROUND_COLOR = new Color(255, 102, 0);
+	public static final Color DEFAULT_BACKGROUND_COLOR = new Color(0, 227, 217);
 
 	// attributes
 	private Interval interval;
