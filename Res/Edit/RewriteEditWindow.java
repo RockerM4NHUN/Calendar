@@ -246,7 +246,6 @@ public class RewriteEditWindow extends JDialog {
 				} else if (newTypeField.getText().equals("")) {
 					entry.setInterval(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()));
 					entry.setType((String) boxType.getSelectedItem());
-					System.out.println((String) boxType.getSelectedItem());
 					entry.setTitle(titleField.getText());
 					entry.setForegroundColor((lc.change) ? lc.getLetterColor() : entry.getForegroundColor());
 					entry.setBackgroundColor((bc.change) ? bc.getBackColor() : entry.getBackgroundColor());
