@@ -15,51 +15,66 @@ import Res.Bin.*;
 
 public class DataHandler{
 	
-	public static final String calendarExtension = "cal";
+	public static final String calendarExtension="cal";
 	
+	/**
+	 * Handling special characters.
+	 * @param str Given string to be converted.
+	 */
 	private static String escape(String str){
 		return str.replaceAll("/","//").replaceAll(",","/c").replaceAll("\n","/n");
 	}
+	/**
+	 * Handling special characters.
+	 * @param str Given string to be decripted.
+	 */
 	private static String deescape(String str){
-		char[] ch = str.toCharArray();
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0;i < ch.length;i++){
-			if (ch[i] == '/'){
+		char[] ch=str.toCharArray();
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<ch.length;i++){
+			if(ch[i]=='/'){
 				i++;
 				switch(ch[i]){
-					case 'c': sb.append(','); break;
-					case 'n': sb.append('\n'); break;
-					case '/': sb.append('/'); break;
+					case 'c':sb.append(','); break;
+					case 'n':sb.append('\n'); break;
+					case '/':sb.append('/'); break;
 				}
-			}else{
+			} else {
 				sb.append(ch[i]);
 			}
 		}
 		return sb.toString();
 	}
+	/**
+	 * Getting data from given string sample.
+	 * @param sampleText Given string to be handled.
+	 * @throws DataFormatException
+	 */
 	private static String[] getFields(String sampleText) throws DataFormatException{
 		
-		String separates = ",";
-		StringTokenizer st = new StringTokenizer(sampleText, separates);
+		String separates=",";
+		StringTokenizer st=new StringTokenizer(sampleText, separates);
 		
 		if(st.countTokens()!=7){
 			throw new DataFormatException();
 		}
-		String[] ret = new String[7];
-		for (int i = 0;i < ret.length;i++){
-			ret[i] = st.nextToken();
+		String[] ret=new String[7];
+		for (int i=0;i<ret.length;i++){
+			ret[i]=st.nextToken();
 		}
 		return ret;
 	}
 	/**
-	 * Reading data
+	 * Reading data from given file converting it to handlable list of data.
 	 * @param fileName The given file's name.
 	 * @param data List for read data.
+	 * @throws IOException
+	 * @throws DataFormatException
 	 */
-	public static void readData(String fileName, List<CalendarEntry> data) throws IOException, DataFormatException{
-		BufferedReader inPut = null;
+	public static void readData(String fileName,List<CalendarEntry> data) throws IOException, DataFormatException{
+		BufferedReader inPut=null;
 		try{
-			inPut = new BufferedReader(new FileReader(fileName));
+			inPut=new BufferedReader(new FileReader(fileName));
 			
 			Interval ival=null;
 			String type=null;
@@ -69,28 +84,28 @@ public class DataHandler{
 			String desc=null;
 			
 			String line;
-			List<String> typeList = new LinkedList<String>();
-			String[] defaults = DataModel.getDefaultTypeArray();
-			for (int i = 0;i < defaults.length;i++){
+			List<String> typeList=new LinkedList<String>();
+			String[] defaults=DataModel.getDefaultTypeArray();
+			for (int i=0;i<defaults.length;i++){
 				typeList.add(defaults[i]);
 			}
 			
-			while((line = inPut.readLine()) != null){
-				String[] fields = getFields(line);
+			while((line=inPut.readLine())!= null){
+				String[] fields=getFields(line);
 				try{
 					long start=Long.parseLong(fields[0]);
 					long end=Long.parseLong(fields[1]);
 					ival=new Interval(start,end);
 					
 					type=deescape(fields[2]);
-					String typeCopy = type;
-					for (String str : typeList){
-						if (str.equals(type)){
-							type = str;
+					String typeCopy=type;
+					for (String str:typeList){
+						if(str.equals(type)){
+							type=str;
 							break;
 						}
 					}
-					if (type == typeCopy){
+					if (type==typeCopy){
 						typeList.add(type);
 					}
 					
@@ -98,7 +113,7 @@ public class DataHandler{
 					foreColor=new Color(Integer.parseInt(fields[4]));
 					backColor=new Color(Integer.parseInt(fields[5]));
 					desc=deescape(fields[6]);
-				} catch (NumberFormatException e){
+				} catch(NumberFormatException e){
 					throw new DataFormatException();
 				}
 				
@@ -110,23 +125,29 @@ public class DataHandler{
 		}catch(IOException e){
 			throw e;
 		}finally{
-			if (inPut != null){
+			if (inPut!=null){
 				inPut.close();
 			}
 		}
 	}
-	
+	/**
+	 * Writing data into given file converting a specific list of data into a handlable data model.
+	 * @param fileName The given file's name.
+	 * @param data List for read data.
+	 * @throws IOException
+	 * @throws DataFormatException
+	 */
 	public static void writeData(String fileName,EventedList<CalendarEntry> data) throws IOException{
 		
-		File f = new File(fileName);
-		if (!f.exists()){
+		File f=new File(fileName);
+		if(!f.exists()){
 			f.createNewFile();
 		}
 		
-		PrintWriter out = new PrintWriter(new FileWriter(fileName));
+		PrintWriter out=new PrintWriter(new FileWriter(fileName));
 		
-		for(CalendarEntry entry : data){
-			Interval ival = entry.getInterval();
+		for(CalendarEntry entry:data){
+			Interval ival=entry.getInterval();
 			out.print(ival.getStart()+",");
 			out.print(ival.getEnd()+",");
 			out.print(escape(entry.getType())+",");
