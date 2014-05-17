@@ -8,6 +8,7 @@ import java.awt.event.ItemListener;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.event.*;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -82,11 +83,13 @@ public class RewriteEditWindow extends JDialog {
 	private Date date;
 	private JScrollPane eventScroll;
 
+	private static int[] monthDays = new int[]{31,28,31,30,31,30,31,31,30,31,30,31};
+	
 	/**
 	 * Default constructor to JDialog.
 	 * */
 	public RewriteEditWindow(final CalendarEntry entry) {
-		setTitle("New"); // Set title of window
+		setTitle("Modify " + entry.getTitle()); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
 		date = new Date();
@@ -107,6 +110,7 @@ public class RewriteEditWindow extends JDialog {
 		hourTillM = new SpinnerNumberModel(till.getHours(), 0, 23, 1);
 		minFromM = new SpinnerNumberModel(from.getMinutes(), 0, 59, 1);
 		minTillM = new SpinnerNumberModel(till.getMinutes(), 0, 59, 1);
+		
 		hourFromLabel = new JLabel("Beginning of event:");
 		hourTillLabel = new JLabel("End of event:");
 		typeLabel = new JLabel("Type of event:");
@@ -115,6 +119,7 @@ public class RewriteEditWindow extends JDialog {
 		newTypeLabel = new JLabel("New type of entry:");
 		letterColorLabel = new JLabel("Color of letters:");
 		backColorLabel = new JLabel("Color of background:");
+		
 		yearDateFrom = new JSpinner(yearFromM);
 		monthDateFrom = new JSpinner(monthFromM);
 		dayDateFrom = new JSpinner(dayFromM);
@@ -125,6 +130,7 @@ public class RewriteEditWindow extends JDialog {
 		minFrom = new JSpinner(minFromM);
 		hourTill = new JSpinner(hourTillM);
 		minTill = new JSpinner(minTillM);
+		
 		titleField = new JTextField(entry.getTitle());
 		eventField = new JTextArea(entry.getDescription());
 		newTypeField = new JTextField(entry.getType());
@@ -142,17 +148,17 @@ public class RewriteEditWindow extends JDialog {
 		newTypeField.setText("");
 
 		hourFromLabel.setBounds(10, 10, 200, 20); // Set bounds all of item in window
-		yearDateFrom.setBounds(10, 30, 65, 30);
-		monthDateFrom.setBounds(75, 30, 50, 30);
-		dayDateFrom.setBounds(125, 30, 50, 30);
-		hourFrom.setBounds(200, 30, 50, 30);
-		minFrom.setBounds(250, 30, 50, 30);
+		yearDateFrom.setBounds(10, 30, 80, 30);
+		monthDateFrom.setBounds(90, 30, 50, 30);
+		dayDateFrom.setBounds(140, 30, 50, 30);
+		hourFrom.setBounds(215, 30, 50, 30);
+		minFrom.setBounds(265, 30, 50, 30);
 		hourTillLabel.setBounds(10, 70, 200, 20);
-		yearDateTill.setBounds(10, 90, 65, 30);
-		monthDateTill.setBounds(75, 90, 50, 30);
-		dayDateTill.setBounds(125, 90, 50, 30);
-		hourTill.setBounds(200, 90, 50, 30);
-		minTill.setBounds(250, 90, 50, 30);
+		yearDateTill.setBounds(10, 90, 80, 30);
+		monthDateTill.setBounds(90, 90, 50, 30);
+		dayDateTill.setBounds(140, 90, 50, 30);
+		hourTill.setBounds(215, 90, 50, 30);
+		minTill.setBounds(265, 90, 50, 30);
 		typeLabel.setBounds(10, 130, 200, 20);
 		boxType.setBounds(10, 150, 100, 30);
 		newTypeLabel.setBounds(10, 130, 200, 20);
@@ -175,11 +181,97 @@ public class RewriteEditWindow extends JDialog {
 
 		selectLetterColor.setBackground(entry.getForegroundColor());
 		selectBackColor.setBackground(entry.getBackgroundColor());
+		
+		monthDateFrom.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent e){
+				int year = (int)yearDateFrom.getValue();
+				int month = (int)monthDateFrom.getValue() - 1;
+				int day = (int)dayDateFrom.getValue();
+				
+				int max;
+				
+				boolean isLeapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+				
+				if (month == 1 && isLeapYear){
+					max = 29;
+				}else{
+					max = monthDays[month];
+				}
+				
+				if (max < day){
+					dayDateFrom.setValue(max);
+				}
+			}
+		});
+		dayDateFrom.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent e){
+				int year = (int)yearDateFrom.getValue();
+				int month = (int)monthDateFrom.getValue() - 1;
+				int day = (int)dayDateFrom.getValue();
+				
+				int max;
+				
+				boolean isLeapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+				
+				if (month == 1 && isLeapYear){
+					max = 29;
+				}else{
+					max = monthDays[month];
+				}
+				
+				if (max < day){
+					dayDateFrom.setValue(max);
+				}
+			}
+		});
+		monthDateTill.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent e){
+				int year = (int)yearDateTill.getValue();
+				int month = (int)monthDateTill.getValue() - 1;
+				int day = (int)dayDateTill.getValue();
+				
+				int max;
+				
+				boolean isLeapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+				
+				if (month == 1 && isLeapYear){
+					max = 29;
+				}else{
+					max = monthDays[month];
+				}
+				
+				if (max < day){
+					dayDateTill.setValue(max);
+				}
+			}
+		});
+		dayDateTill.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent e){
+				int year = (int)yearDateTill.getValue();
+				int month = (int)monthDateTill.getValue() - 1;
+				int day = (int)dayDateTill.getValue();
+				
+				int max;
+				
+				boolean isLeapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+				
+				if (month == 1 && isLeapYear){
+					max = 29;
+				}else{
+					max = monthDays[month];
+				}
+				
+				if (max < day){
+					dayDateTill.setValue(max);
+				}
+			}
+		});
 
+		
 		boxType.addItemListener(new ItemListener() { // Item listener to box list
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (((String) e.getItem()).equals("New")) { // If select new, you can make new type of event
+				if (((String) e.getItem()).equals(DataModel.newType)) { // If select new, you can make new type of event
 					remove(typeLabel); // If make new type, delete box list
 					remove(boxType);
 					add(newTypeLabel);
@@ -213,9 +305,13 @@ public class RewriteEditWindow extends JDialog {
 				Calendar fromDate = Calendar.getInstance();
 				fromDate.set((int) yearDateFrom.getValue(), (int) monthDateFrom.getValue() - 1,
 						(int) dayDateFrom.getValue(), (int) hourFrom.getValue(), (int) minFrom.getValue());
+				fromDate.set(Calendar.SECOND, 0);
+				fromDate.set(Calendar.MILLISECOND, 0);
 				Calendar tillDate = Calendar.getInstance();
 				tillDate.set((int) yearDateTill.getValue(), (int) monthDateTill.getValue() - 1,
 						(int) dayDateTill.getValue(), (int) hourTill.getValue(), (int) minTill.getValue());
+				tillDate.set(Calendar.SECOND, 0);
+				tillDate.set(Calendar.MILLISECOND, 0);
 
 				if ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue()
 						&& (int) monthDateFrom.getValue() == (int) monthDateTill.getValue()
@@ -274,7 +370,9 @@ public class RewriteEditWindow extends JDialog {
 						}
 					}
 					if (!faild) {
+						DataModel.getTypeList().remove(DataModel.newType);
 						DataModel.getTypeList().add(newTypeField.getText());
+						DataModel.getTypeList().add(DataModel.newType);
 					}
 
 					// modification finished

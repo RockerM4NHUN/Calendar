@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.Calendar;
+
+import java.sql.Timestamp;
 
 import javax.swing.*;
 import javax.swing.JLabel;
@@ -112,7 +115,7 @@ public class ViewGUI implements GUIGenerator {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				
-				final DateChooserWindow dateChooser = new DateChooserWindow();
+				final DateChooserWindow dateChooser = new DateChooserWindow(true);
 				dateChooser.show(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						System.out.println(dateChooser.getDate());
@@ -207,7 +210,11 @@ public class ViewGUI implements GUIGenerator {
 	}
 	
 	private static String getDateString(Interval time){
-		return time.getStartTimestamp().toString().split(" ")[0] + " --- " + time.getEndTimestamp().toString().split(" ")[0];
+		Calendar c = Calendar.getInstance();
+		c.setTime(time.getEndTimestamp());
+		c.add(Calendar.DAY_OF_WEEK, -1);
+		return time.getStartTimestamp().toString().split(" ")[0] + " --- " + new Timestamp(c.getTimeInMillis()).toString().split(" ")[0];
+		//return time.getStartTimestamp().toString().split(" ")[0] + " --- " + time.getEndTimestamp().toString().split(" ")[0];
 	}
 
 	@Override

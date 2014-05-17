@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.zip.DataFormatException;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
+import javax.swing.*;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -60,7 +60,7 @@ public class Window extends JFrame {
 	private JMenuItem newItem;
 	private JMenuItem weekItem;
 	private JMenuItem monthItem;
-	private JMenuItem currentDateItem;
+	private JButton currentDateItem;
 	/** JFileChooser to select files to save and open. */
 	private JFileChooser fileChooser;
 	private FileNameExtensionFilter fileFilter;
@@ -83,7 +83,8 @@ public class Window extends JFrame {
 		fileFilter = new FileNameExtensionFilter("Calendar file",DataHandler.calendarExtension);
 
 		menu = new JMenuBar();
-		fileMenu = new JMenu("File");
+		fileMenu = new JMenu("  File  ");
+		fileMenu.setMinimumSize(new Dimension(120,1));
 		openItem = new JMenuItem("Open");
 		openItem.addActionListener(new ActionListener() { // Action listener to openItem
 			@Override
@@ -174,7 +175,7 @@ public class Window extends JFrame {
 				System.exit(0);
 			}
 		});
-		editMenu = new JMenu("Edit");
+		editMenu = new JMenu("  Edit  ");
 		newItem = new JMenuItem("New");
 		newItem.addActionListener(new ActionListener() { // Action listener to newItem
 			@Override
@@ -213,7 +214,7 @@ public class Window extends JFrame {
 						}
 					}
 				});
-		currentDateItem = new JMenuItem("Current date");
+		currentDateItem = new JButton("Current date");
 		currentDateItem.addActionListener(new ActionListener() { // Action listener to weekItem
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select week item refresh gui to week view
@@ -235,7 +236,7 @@ public class Window extends JFrame {
 		// refreshGUI(new ViewGUI());
 		// }
 		// });*/
-
+		
 		setJMenuBar(menu); // Add menu bar to window
 		menu.add(fileMenu); // Add menus to menu bar
 		menu.add(editMenu);
@@ -256,7 +257,7 @@ public class Window extends JFrame {
 		//viewMenu.add(weekItem); // Add menu items to view menu
 		//v/ewMenu.addSeparator();
 		//viewMenu.add(monthItem);
-
+		
 		setLayout(new FlowLayout());
 		pack();
 
