@@ -200,6 +200,9 @@ public class ViewGUI implements GUIGenerator {
 				last = true;
 			}
 		}
+		if (!last){
+			ret += "some seconds";
+		}
 		return ret;
 	}
 	

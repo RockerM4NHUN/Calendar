@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 import javax.swing.JOptionPane;
@@ -12,8 +12,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import Res.Window;
 import Res.Bin.CalendarEntry;
-import Res.Data.DataHandler;
-import Res.Data.DataModel;
+import Res.Data.*;
 
 /**
  * Main entry point of program
@@ -48,9 +47,7 @@ public class CalendarProgram {
 		}
 
 		// Init BoxList
-		Res.Data.DataModel.getTypeList().add("Work");
-		Res.Data.DataModel.getTypeList().add("Family");
-		Res.Data.DataModel.getTypeList().add("New");
+		DataModel.getTypeList().addAll(Arrays.asList(DataModel.getDefaultTypeArray()));
 
 		// Last calendar load if exists
 		path = null;

@@ -13,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.zip.DataFormatException;
 
 import javax.swing.JFileChooser;
@@ -49,7 +49,7 @@ public class Window extends JFrame {
 	/** JMenu into the menu bar. */
 	private JMenu fileMenu;
 	private JMenu editMenu;
-	private JMenu viewMenu;
+	//private JMenu viewMenu;
 	/** JMenuItem into the menus. */
 	private JMenuItem openItem;
 	private JMenuItem saveItem;
@@ -60,6 +60,7 @@ public class Window extends JFrame {
 	private JMenuItem newItem;
 	private JMenuItem weekItem;
 	private JMenuItem monthItem;
+	private JMenuItem currentDateItem;
 	/** JFileChooser to select files to save and open. */
 	private JFileChooser fileChooser;
 	private FileNameExtensionFilter fileFilter;
@@ -212,7 +213,14 @@ public class Window extends JFrame {
 						}
 					}
 				});
-		viewMenu = new JMenu("View");
+		currentDateItem = new JMenuItem("Current date");
+		currentDateItem.addActionListener(new ActionListener() { // Action listener to weekItem
+			@Override
+			public void actionPerformed(ActionEvent e) { // If select week item refresh gui to week view
+				usingCalendarView.toInterval(new Date(System.currentTimeMillis()));
+			}
+		});
+		/*viewMenu = new JMenu("View");
 		weekItem = new JMenuItem("Week");
 		weekItem.addActionListener(new ActionListener() { // Action listener to weekItem
 			@Override
@@ -226,12 +234,13 @@ public class Window extends JFrame {
 		// public void actionPerformed(ActionEvent e) { // If select month item refresh gui to month view
 		// refreshGUI(new ViewGUI());
 		// }
-		// });
+		// });*/
 
 		setJMenuBar(menu); // Add menu bar to window
 		menu.add(fileMenu); // Add menus to menu bar
 		menu.add(editMenu);
-		menu.add(viewMenu);
+		//menu.add(viewMenu);
+		menu.add(currentDateItem);
 		fileMenu.add(openItem); // Add menu items to file menu
 		fileMenu.addSeparator();
 		fileMenu.add(saveItem);
@@ -244,9 +253,9 @@ public class Window extends JFrame {
 		editMenu.add(reWriteItem);
 		editMenu.addSeparator();
 		editMenu.add(deleteItem);
-		viewMenu.add(weekItem); // Add menu items to view menu
-		viewMenu.addSeparator();
-		viewMenu.add(monthItem);
+		//viewMenu.add(weekItem); // Add menu items to view menu
+		//v/ewMenu.addSeparator();
+		//viewMenu.add(monthItem);
 
 		setLayout(new FlowLayout());
 		pack();

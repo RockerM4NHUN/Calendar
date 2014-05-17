@@ -1,6 +1,6 @@
 package Res.Edit;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.Point;
 
 import javax.swing.JColorChooser;
@@ -45,7 +45,9 @@ public class BackColor extends JDialog {
 		Point location = new Point(400, 300);
 		setLocation(location);
 		setResizable(false);
-		setSize(700, 500);
+		//setSize(700, 500);
+		getContentPane().setPreferredSize(new Dimension(700, 500));
+		pack();
 	}
 
 	/**

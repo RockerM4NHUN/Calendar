@@ -24,13 +24,14 @@ public class DateChooserWindow extends JDialog{
 		Point location = new Point(400, 300);
 		setLocation(location);
 		setResizable(false);
-		setSize(340, 90);
+		getContentPane().setPreferredSize(new Dimension(340, 90));
+		pack();
 	}
 	
 	public void show(final ActionListener l){
-		years = new JSpinner(new SpinnerNumberModel(new Date(System.currentTimeMillis()).getYear() + 1900, 1970, 5000, 1));
+		years = new JSpinner(new SpinnerNumberModel(new Date(System.currentTimeMillis()).getYear() + 1900, 1970, 5000, -1));
 		months = new JSpinner(new SpinnerListModel(monthNames));
-		days = new JSpinner(new SpinnerNumberModel(1, 1, 31, 1));
+		days = new JSpinner(new SpinnerNumberModel(1, 1, 31, -1));
 		
 		
 		JButton btnOK = new JButton("Ok");
@@ -41,7 +42,7 @@ public class DateChooserWindow extends JDialog{
 			}
 		});
 		JButton btnCancel = new JButton("Cancel");
-		btnOK.addActionListener(new ActionListener(){
+		btnCancel.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
