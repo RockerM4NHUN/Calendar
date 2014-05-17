@@ -11,15 +11,20 @@ import Res.Bin.*;
  * DataRead class helps you read data from saved data file which contains your events you need to attend to, or your plannings.
  *
  * @author SZKVAAT.SZE
+ * @author ZODVAAT.SZE
  */
 
 public class DataHandler{
 	
+	/**
+	 * holds the save file extension
+	 */
 	public static final String calendarExtension="cal";
 	
 	/**
 	 * Handling special characters.
 	 * @param str Given string to be converted.
+	 * @author ZODVAAT.SZE
 	 */
 	private static String escape(String str){
 		return str.replaceAll("/","//").replaceAll(",","/c").replaceAll("\n","/n");
@@ -27,6 +32,7 @@ public class DataHandler{
 	/**
 	 * Handling special characters.
 	 * @param str Given string to be decripted.
+	 * @author ZODVAAT.SZE
 	 */
 	private static String deescape(String str){
 		char[] ch=str.toCharArray();
@@ -49,6 +55,8 @@ public class DataHandler{
 	 * Getting data from given string sample.
 	 * @param sampleText Given string to be handled.
 	 * @throws DataFormatException
+	 * @author SZKVAAT.SZE
+	 * @author ZODVAAT.SZE
 	 */
 	private static String[] getFields(String sampleText) throws DataFormatException{
 		
@@ -70,6 +78,8 @@ public class DataHandler{
 	 * @param data List for read data.
 	 * @throws IOException
 	 * @throws DataFormatException
+	 * @author ZODVAAT.SZE
+	 * @author SZKVAAT.SZE
 	 */
 	public static void readData(String fileName,List<CalendarEntry> data) throws IOException, DataFormatException{
 		BufferedReader inPut=null;
@@ -136,6 +146,8 @@ public class DataHandler{
 	 * @param data List for read data.
 	 * @throws IOException
 	 * @throws DataFormatException
+	 * @author ZODVAAT.SZE
+	 * @author SZKVAAT.SZE
 	 */
 	public static void writeData(String fileName,EventedList<CalendarEntry> data) throws IOException{
 		

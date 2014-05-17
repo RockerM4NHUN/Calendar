@@ -7,7 +7,15 @@ import java.util.*;
 
 import Res.Bin.*;
 
+/**
+ * Displays CalendarEntry objects ordered into weeks.
+ * @author ZODVAAT.SZE
+ */
 public class WeekView extends CalendarView{
+	/**
+	 * @param elist EventedList that holds initial entries.
+	 * @author ZODVAAT.SZE
+	 */
 	public WeekView(EventedList<CalendarEntry> elist){
 		super();
 		
@@ -93,9 +101,9 @@ public class WeekView extends CalendarView{
 		//    IntersectionGroup    \\
 		//*************************\\ 
 	/**
-	 * Inner class for storing entries drawing information
+	 * Inner class for handling and generating entries drawing information.
 	 * 
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 */
 	class IntersectionGroup{
 		public IntersectionGroup(CalendarEntry e){
@@ -118,10 +126,18 @@ public class WeekView extends CalendarView{
 		private java.util.List<EntryGFX> rects;//generated graphic elements
 		private boolean changePerformed;//refresh needed in graphics
 		
+		/**
+		 * @author ZODVAAT.SZE
+		 * @return Groups full interval.
+		 */
 		public Interval getInterval(){
 			return ival;
 		}
-		
+				
+		/**
+		 * @author ZODVAAT.SZE
+		 * @return Entries in the group.
+		 */
 		public Set<CalendarEntry> getEntries(){
 			return entries;
 		}
@@ -129,7 +145,7 @@ public class WeekView extends CalendarView{
 		/**
 		 * Merges two groups.
 		 * 
-		 * @author Zombori Dániel
+		 * @author ZODVAAT.SZE
 		 * @return True if changes performed correctly
 		 */
 		public boolean merge(IntersectionGroup g){
@@ -149,7 +165,7 @@ public class WeekView extends CalendarView{
 		/**
 		 * Adds entry to group.
 		 * 
-		 * @author Zombori Dániel
+		 * @author ZODVAAT.SZE
 		 * @return True if changes performed correctly
 		 */
 		public boolean addEntry(CalendarEntry e){
@@ -167,7 +183,7 @@ public class WeekView extends CalendarView{
 		/**
 		 * Removes entry from group.
 		 * 
-		 * @author Zombori Dániel
+		 * @author ZODVAAT.SZE
 		 * @return Intersection group(s) without specific CalendarEntry, the size will be 0 if 
 		 */
 		public java.util.List<IntersectionGroup> removeEntry(CalendarEntry e){
@@ -187,7 +203,7 @@ public class WeekView extends CalendarView{
 		/**
 		 * Returns recently updated graphics.
 		 * 
-		 * @author Zombori Dániel
+		 * @author ZODVAAT.SZE
 		 * @return Array of drawable rectangles
 		 */
 		public EntryGFX[] getRectangles(){
@@ -198,7 +214,7 @@ public class WeekView extends CalendarView{
 		/**
 		 * Adds entry to layers.
 		 * 
-		 * @author Zombori Dániel
+		 * @author ZODVAAT.SZE
 		 * @return True if changes performed correctly
 		 */
 		private boolean addToLayers(CalendarEntry e){
@@ -222,7 +238,7 @@ public class WeekView extends CalendarView{
 		/**
 		 * Removes entry from layers.
 		 * 
-		 * @author Zombori Dániel
+		 * @author ZODVAAT.SZE
 		 * @return True if changes performed correctly
 		 */
 		private boolean removeFromLayers(CalendarEntry e){
@@ -241,7 +257,7 @@ public class WeekView extends CalendarView{
 		/**
 		 * Calculates graphics.
 		 * 
-		 * @author Zombori Dániel
+		 * @author ZODVAAT.SZE
 		 */
 		private void gfx(){
 			changePerformed = false;
@@ -333,6 +349,10 @@ public class WeekView extends CalendarView{
 		//    EntryGFX    \\
 		//****************\\
 
+	/**
+	 * Inner class for storing entries drawing information.
+	 * @author ZODVAAT.SZE
+	 */
 	class EntryGFX{
 		public EntryGFX(CalendarEntry entry, Interval time, int x, int y, int width, int height){
 			this.entry = entry;
@@ -345,7 +365,11 @@ public class WeekView extends CalendarView{
 		CalendarEntry entry;
 		Interval time;
 		int x,y,height,width;
-		
+				
+		/**
+		 * @author ZODVAAT.SZE
+		 * @return True if the given point of the window is inside the entry rectangle.
+		 */
 		public boolean intersect(int x, int y){
 			return (this.x <= x && x <= this.x + width && this.y <= y && y <= this.y + height);
 		}
@@ -391,23 +415,43 @@ public class WeekView extends CalendarView{
 		//    Public methods    \\
 		//**********************\\ 
 	
+	/**
+	 * @author ZODVAAT.SZE
+	 * @return The views preferred width.
+	 */
 	public static int getViewWidth(){
 		return firstVerticalLine + 7 * 130 + finalVerticalGap;
 	}
 	
+	/**
+	 * @author ZODVAAT.SZE
+	 * @return The views preferred height.
+	 */
 	public static int getViewHeight(){
 		return firstHorizontalLine + 24 * 30 + finalHorizontalGap;
 	}
 	
+	/**
+	 * Jumps to the next displayable interval.
+	 * @author ZODVAAT.SZE
+	 */
 	public void nextInterval(){
 		toInterval(new Date(viewInterval.getEnd() + 1));
 	}
 	
+	/**
+	 * Jumps to the previous displayable interval.
+	 * @author ZODVAAT.SZE
+	 */
 	public void prevInterval(){
 		if (viewInterval.getStart() < WEEK_MILLIS) return;
 		toInterval(new Date(viewInterval.getStart() - HOUR_MILLIS * 24 - 1));
 	}
 	
+	/**
+	 * Generates the views graphics.
+	 * @author ZODVAAT.SZE
+	 */
 	public void paintComponent(Graphics g){
 		abstractPaintComponent(g);
 		
@@ -564,6 +608,10 @@ public class WeekView extends CalendarView{
 		}
 	}
 	
+	/**
+	 * Displays a specific interval.
+	 * @author ZODVAAT.SZE
+	 */
 	public void toInterval(Date week){
 		if (week == null) Thrower.Throw(new NullPointerException("Error: Argument can't be null"));
 		Calendar c = Calendar.getInstance();
@@ -587,14 +635,6 @@ public class WeekView extends CalendarView{
 		
 		viewInterval = new Interval(start,c.getTimeInMillis());
 		repaint();
-	}
-	
-	public void modifySelectedEntry(CalendarEntry e){
-		if (selected.size() == 0) return;
-		
-		removeCalendarEntry(selected.get(0).entry);
-		addCalendarEntry(e);
-		setSelected(e);
 	}
 	
 		//***********************\\
@@ -659,25 +699,36 @@ public class WeekView extends CalendarView{
 	}
 	
 	/**
-	 * Selects the given entry, don't repaint view.
+	 * Selects the given entry, don't repaint view but dispatches event if necessery.
+	 * @return True if selection made.
 	 */
-	private void setSelected(CalendarEntry e){
+	public boolean setSelected(CalendarEntry e){
 		boolean added = false;
+		CalendarEntry prevSelected = null;
+		if (selected.size() != 0) prevSelected = selected.get(0).entry;
 		
 		selected.clear();
-		if (e == null){
-			return;
-		}
-		for (IntersectionGroup group : groups){
-			EntryGFX[] entries = group.getRectangles();
-			for (int i = 0;i < entries.length;i++){
-				if (entries[i].entry == e){
-					added = true;
-					selected.add(entries[i]);
+		if (e != null){
+			for (IntersectionGroup group : groups){
+				EntryGFX[] entries = group.getRectangles();
+				for (int i = 0;i < entries.length;i++){
+					if (entries[i].entry == e){
+						added = true;
+						selected.add(entries[i]);
+					}
+				}
+				if (added){
+					if (prevSelected != selected.get(0).entry){
+						dispatchSelectionChanged(selected.get(0).entry);
+					}
+					return true;
 				}
 			}
-			if (added) break;
 		}
+		if (prevSelected != null){
+			dispatchSelectionChanged(null);
+		}
+		return false;
 	}
 	
 	/**

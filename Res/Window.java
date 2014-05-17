@@ -192,7 +192,7 @@ public class Window extends JFrame {
 							JOptionPane.showMessageDialog(getContentPane(), "No selected event!", "Selected Error",
 									JOptionPane.ERROR_MESSAGE);
 						} else {
-							RewriteEditWindow r = new RewriteEditWindow(wgui.selectedEntry);
+							RewriteEditWindow r = new RewriteEditWindow(wgui.selectedEntry,usingCalendarView);
 							r.setVisible(true);
 						}
 					}

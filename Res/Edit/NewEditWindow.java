@@ -30,6 +30,7 @@ import Res.GUI.Views.CalendarView;
  * New Edit Window to edit new events.
  * 
  * @author FENVABT.SZE
+ * @author ZODVAAT.SZE
  * */
 public class NewEditWindow extends JDialog {
 	private static final long serialVersionUID = 1L;
@@ -171,6 +172,9 @@ public class NewEditWindow extends JDialog {
 		selectLetterColor.setBackground(lc.getLetterColor());
 		selectBackColor.setBackground(bc.getBackColor());
 		
+		eventField.setLineWrap(true);
+		eventField.setWrapStyleWord(true);
+		
 		monthDateFrom.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e){
 				int year = (int)yearDateFrom.getValue();
@@ -259,7 +263,7 @@ public class NewEditWindow extends JDialog {
 		boxType.addItemListener(new ItemListener() { // Item listener to box list
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (((String) e.getItem()).equals(DataModel.newType)) { // If select new, you can make new type of event
+				if (((String) boxType.getSelectedItem()).equals(DataModel.newType)) { // If select new, you can make new type of event
 					remove(typeLabel); // If make new type, delete box list
 					remove(boxType);
 					add(newTypeLabel);
@@ -290,6 +294,21 @@ public class NewEditWindow extends JDialog {
 		okButton.addActionListener(new ActionListener() { // Action listener to Ok button
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				if (titleField.getText().equals("")){
+					JOptionPane.showMessageDialog(getContentPane(),
+							"No title set!", "Title Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (eventField.getText().equals("")){
+					JOptionPane.showMessageDialog(getContentPane(),
+							"No event description set!", "Description Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				
 				Calendar fromDate = Calendar.getInstance();
 				fromDate.set((int) yearDateFrom.getValue(), (int) monthDateFrom.getValue() - 1,
 						(int) dayDateFrom.getValue(), (int) hourFrom.getValue(), (int) minFrom.getValue());
@@ -327,11 +346,23 @@ public class NewEditWindow extends JDialog {
 							"The end of the given event must be later than its beginning!", "Date Error",
 							JOptionPane.ERROR_MESSAGE);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
-					Res.Data.DataModel.getEntryList().add(
-							new CalendarEntry(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
+					if (boxType.getSelectedItem() == DataModel.newType){
+						JOptionPane.showMessageDialog(getContentPane(),
+								"No type selected!", "Type Error",
+								JOptionPane.ERROR_MESSAGE);
+						remove(newTypeLabel);
+						remove(newTypeField);
+						add(typeLabel);
+						add(boxType);
+						boxType.setSelectedItem(DataModel.getDefaultTypeArray()[0]);
+						repaint();
+						return;
+					}
+					CalendarEntry entry = new CalendarEntry(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()),
 									(String) boxType.getSelectedItem(), titleField.getText(), lc.getLetterColor(), bc
-											.getBackColor(), eventField.getText()));
-					usingCalendarView.repaint();
+											.getBackColor(), eventField.getText());
+					Res.Data.DataModel.getEntryList().add(entry);
+					usingCalendarView.setSelected(entry);
 					dispose();
 				} else { // Else make new Entry with new tpye
 					CalendarEntry entry = new CalendarEntry();
@@ -358,6 +389,7 @@ public class NewEditWindow extends JDialog {
 
 					// modification finished
 					DataModel.getEntryList().add(entry);
+					usingCalendarView.setSelected(entry);
 					dispose();
 				}
 			}

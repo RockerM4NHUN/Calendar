@@ -10,6 +10,10 @@ import java.util.LinkedList;
  * @author ZODVAAT.SZE
  */
 public class EventedList<ListItem> implements Iterable<ListItem>{
+	/**
+	 * @param l Custom list that extends java.util.List, and holding initial items.
+	 * @author ZODVAAT.SZE
+	 */
 	public EventedList(List<ListItem> l){
 		list = l;
 		addListeners = new LinkedList<EventedListListener<ListItem>>();

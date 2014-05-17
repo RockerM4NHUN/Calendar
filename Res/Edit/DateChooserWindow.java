@@ -7,7 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-
+/**
+ * Displays a window for choosing date.
+ * 
+ * @author ZODVAAT.SZE
+ */
 public class DateChooserWindow extends JDialog{
 	
 	private JSpinner years;
@@ -18,6 +22,12 @@ public class DateChooserWindow extends JDialog{
 	private static int[] monthDaysBackwards;
 	private int direction;
 	
+	/**
+	 * Constructor with direction controlling.
+	 * 
+	 * @param forward Specifies if the time increases when user push arrows pointing upwards.
+	 * @author ZODVAAT.SZE
+	 */
 	public DateChooserWindow(boolean forward) {
 		setVisible(false);
 		setTitle("Choose date"); // Set title of window
@@ -41,6 +51,12 @@ public class DateChooserWindow extends JDialog{
 		pack();
 	}
 	
+	/**
+	 * Displays the dialog and if the user press the Ok button fires the ActionListener.
+	 * 
+	 * @param l Action listener for callback.
+	 * @author ZODVAAT.SZE
+	 */
 	public void show(final ActionListener l){
 		years = new JSpinner(new SpinnerNumberModel(new Date(System.currentTimeMillis()).getYear() + 1900, 1970, 5000, direction));
 		months = new JSpinner(new SpinnerListModel(monthNamesBackwards));
@@ -123,6 +139,10 @@ public class DateChooserWindow extends JDialog{
 		setVisible(true);
 	}
 	
+	/**
+	 * @author ZODVAAT.SZE
+	 * @return The choosen date.
+	 */
 	public Date getDate(){
 		Calendar c = Calendar.getInstance();
 		

@@ -2,6 +2,11 @@ package Res.Bin;
 
 import java.awt.Color;
 
+/**
+ * Holds the data of a Calendar event.
+ * 
+ * @author ZODVAAT.SZE
+ */
 public class CalendarEntry implements Comparable<CalendarEntry> {
 	public CalendarEntry(){
 		
@@ -12,7 +17,19 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 		backgroundColor = null;
 		description = null;
 	}
-	// constructor
+	
+	/**
+	 * Fully parametered constructor.
+	 * 
+	 * @param ival Time interval of event with timestamp long values.
+	 * @param type The type of the event.
+	 * @param title The title of the event.
+	 * @param foreColor Color of displayed event letters.
+	 * @param backColor Color of event background.
+	 * @param desc Description of the event.
+	 * 
+	 * @author ZODVAAT.SZE
+	 */
 	public CalendarEntry(Interval ival, String type, String title, Color foreColor, Color backColor, String desc) {
 		if (ival == null || type == null || foreColor == null || backColor == null || desc == null) {
 			Thrower.Throw(new NullPointerException("Null found in constructor"));
@@ -25,8 +42,14 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 		backgroundColor = backColor;
 		description = desc;
 	}
-
-	@Override
+	
+	/**
+	 * Compares two entries based on their intervals length.
+	 * 
+	 * @param o CalendarEntry to compare with.
+	 * 
+	 * @author ZODVAAT.SZE
+	 */
 	public int compareTo(CalendarEntry o) {
 		long l = interval.getLength() - o.interval.getLength();
 		if (l == 0) {
@@ -78,7 +101,8 @@ public class CalendarEntry implements Comparable<CalendarEntry> {
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
-
+	
+	// setters
 	public void setInterval(Interval interval) {
 		this.interval = interval;
 	}

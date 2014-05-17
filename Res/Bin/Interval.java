@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * Holds data for a positively directed interval.
  * 
- * @author Zombori Dániel
+ * @author ZODVAAT.SZE
  */
 public class Interval{
 	private long start;
@@ -22,7 +22,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return True if the two intervals have more than one common point.
 	 */
 	public boolean intersect(Interval i){
@@ -30,7 +30,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return Returns new Interval or null if no intersection.
 	 */
 	public Interval intersection(Interval i){
@@ -39,7 +39,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return True if the point is in the interval. (start <= point < end)
 	 */
 	public boolean contains(long i){
@@ -47,7 +47,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return True if the parameter is in the interval. (start <= i.start,i.end < end)
 	 */
 	public boolean contains(Interval i){
@@ -55,7 +55,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return Union of the intervals or null if not possible
 	 */
 	public Interval union(Interval i){
@@ -76,7 +76,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return True if the point is in the interval. (start <= point < end)
 	 */
 	public Interval clone(){
@@ -84,9 +84,7 @@ public class Interval{
 	}
 	
 	/**
-	 * #UNTESTED
-	 * 
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return True if there is no interval between the two intervals.
 	 */
 	public boolean joinable(Interval i){
@@ -94,7 +92,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return Start of interval
 	 */
 	public long getStart(){
@@ -102,7 +100,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return End of interval
 	 */
 	public long getEnd(){
@@ -110,7 +108,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return Length of interval
 	 */
 	public long getLength(){
@@ -118,7 +116,7 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return Timestamp created from start
 	 */
 	public Timestamp getStartTimestamp(){
@@ -126,14 +124,14 @@ public class Interval{
 	}
 	
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return Timestamp created from end
 	 */
 	public Timestamp getEndTimestamp(){
 		return new Timestamp(end);
 	}
 	/**
-	 * @author Zombori Dániel
+	 * @author ZODVAAT.SZE
 	 * @return String that represents the interval
 	 */
 	public String toString(){

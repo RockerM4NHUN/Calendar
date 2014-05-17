@@ -26,11 +26,13 @@ import Res.Bin.CalendarEntry;
 import Res.Bin.EventedList;
 import Res.Bin.Interval;
 import Res.Data.DataModel;
+import Res.GUI.Views.CalendarView;
 
 /**
  * Rewriter Edit Window to edit events.
  * 
  * @author FENVABT.SZE
+ * @author ZODVAAT.SZE
  * */
 public class RewriteEditWindow extends JDialog {
 
@@ -88,7 +90,7 @@ public class RewriteEditWindow extends JDialog {
 	/**
 	 * Default constructor to JDialog.
 	 * */
-	public RewriteEditWindow(final CalendarEntry entry) {
+	public RewriteEditWindow(final CalendarEntry entry, final CalendarView usingCalendarView) {
 		setTitle("Modify " + entry.getTitle()); // Set title of window
 		setModalityType(ModalityType.APPLICATION_MODAL); // Set modality of window
 
@@ -182,6 +184,9 @@ public class RewriteEditWindow extends JDialog {
 		selectLetterColor.setBackground(entry.getForegroundColor());
 		selectBackColor.setBackground(entry.getBackgroundColor());
 		
+		eventField.setLineWrap(true);
+		eventField.setWrapStyleWord(true);
+		
 		monthDateFrom.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e){
 				int year = (int)yearDateFrom.getValue();
@@ -271,7 +276,7 @@ public class RewriteEditWindow extends JDialog {
 		boxType.addItemListener(new ItemListener() { // Item listener to box list
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (((String) e.getItem()).equals(DataModel.newType)) { // If select new, you can make new type of event
+				if (((String) boxType.getSelectedItem()).equals(DataModel.newType)) { // If select new, you can make new type of event
 					remove(typeLabel); // If make new type, delete box list
 					remove(boxType);
 					add(newTypeLabel);
@@ -302,6 +307,21 @@ public class RewriteEditWindow extends JDialog {
 		okButton.addActionListener(new ActionListener() { // Action listener to Ok button
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				if (titleField.getText().equals("")){
+					JOptionPane.showMessageDialog(getContentPane(),
+							"No title set!", "Title Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (eventField.getText().equals("")){
+					JOptionPane.showMessageDialog(getContentPane(),
+							"No event description set!", "Description Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				
 				Calendar fromDate = Calendar.getInstance();
 				fromDate.set((int) yearDateFrom.getValue(), (int) monthDateFrom.getValue() - 1,
 						(int) dayDateFrom.getValue(), (int) hourFrom.getValue(), (int) minFrom.getValue());
@@ -340,6 +360,19 @@ public class RewriteEditWindow extends JDialog {
 							"Begening of the event mustn't be leater than the and of it!", "Date Error",
 							JOptionPane.ERROR_MESSAGE);
 				} else if (newTypeField.getText().equals("")) {
+					if (boxType.getSelectedItem() == DataModel.newType){
+						JOptionPane.showMessageDialog(getContentPane(),
+								"No type selected!", "Type Error",
+								JOptionPane.ERROR_MESSAGE);
+						remove(newTypeLabel);
+						remove(newTypeField);
+						add(typeLabel);
+						add(boxType);
+						boxType.setSelectedItem(DataModel.getDefaultTypeArray()[0]);
+						repaint();
+						return;
+					}
+					
 					entry.setInterval(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()));
 					entry.setType((String) boxType.getSelectedItem());
 					entry.setTitle(titleField.getText());
@@ -348,10 +381,10 @@ public class RewriteEditWindow extends JDialog {
 					entry.setDescription(eventField.getText());
 
 					// modification finished
-					Res.Data.DataModel.getTypeList().add(newTypeField.getText());
 					EventedList<CalendarEntry> elist = DataModel.getEntryList();
 					elist.remove(entry);
 					elist.add(entry);
+					usingCalendarView.setSelected(entry);
 					dispose();
 				} else { // Else rewrite entry
 					entry.setInterval(new Interval(fromDate.getTimeInMillis(), tillDate.getTimeInMillis()));
@@ -379,6 +412,7 @@ public class RewriteEditWindow extends JDialog {
 					EventedList<CalendarEntry> elist = DataModel.getEntryList();
 					elist.remove(entry);
 					elist.add(entry);
+					usingCalendarView.setSelected(entry);
 					dispose();
 				}
 			}

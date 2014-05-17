@@ -24,6 +24,10 @@ import Res.Edit.DateChooserWindow;
 import Res.GUI.Views.CalendarView;
 import Res.GUI.Views.WeekView;
 
+/**
+ * Sets the contents of a window to display CalendarEntry data.
+ * @author ZODVAAT.SZE
+ */
 public class ViewGUI implements GUIGenerator {
 
 	private Window parent;
@@ -37,15 +41,30 @@ public class ViewGUI implements GUIGenerator {
 	private static final int heightCorrection = 75;
 	private static final int widthCorrection = 210;
 	
-	public static int getGUIHeight(){
-		return WeekView.getViewHeight() + heightCorrection;
-	}
-
+	/**
+	 * @author ZODVAAT.SZE
+	 * @return The preferred view width.
+	 */
 	public static int getGUIWidth(){
 		return WeekView.getViewWidth() + widthCorrection;
 	}
 
-	@Override
+	/**
+	 * @author ZODVAAT.SZE
+	 * @return The preferred view height.
+	 */
+	public static int getGUIHeight(){
+		return WeekView.getViewHeight() + heightCorrection;
+	}
+	
+	/**
+	 * Adds GUI components to te container.
+	 * 
+	 * @param parent The window that holds the container of view.
+	 * @param container The container to add GUI components.
+	 * @author ZODVAAT.SZE
+	 * @return The displayed CalendarView object.
+	 */
 	public CalendarView show(final Window parent, Container container) {
 		this.parent = parent;
 		
@@ -144,7 +163,13 @@ public class ViewGUI implements GUIGenerator {
 		container.add(scroll);
 		return w;
 	}
-	
+	/**
+	 * Generates the contents of label that shows CalendarEntry.
+	 * 
+	 * @param e CalendarEntry to display.
+	 * @param currentMillis Time to relativate entrys occur.
+	 * @author ZODVAAT.SZE
+	 */
 	private static String generateSelectionText(CalendarEntry e, long currentMillis){
 		String ret = "<html><font size=+0>";
 		String retEnd = "</font></html>";
@@ -172,6 +197,12 @@ public class ViewGUI implements GUIGenerator {
 		return ret + retEnd;
 	}
 	
+	/**
+	 * Generates string to describes an amount of time.
+	 * 
+	 * @param m Time in millis to describe.
+	 * @author ZODVAAT.SZE
+	 */
 	private static String formatTime(long m){
 		int[] times = new int[4];
 		int years = times[0] = (int)(m / (WeekView.HOUR_MILLIS * 24 * 365));
@@ -209,6 +240,11 @@ public class ViewGUI implements GUIGenerator {
 		return ret;
 	}
 	
+	/**
+	 * Generates the string for date interval label.
+	 * 
+	 * @author ZODVAAT.SZE
+	 */
 	private static String getDateString(Interval time){
 		Calendar c = Calendar.getInstance();
 		c.setTime(time.getEndTimestamp());

@@ -6,6 +6,8 @@ import Res.GUI.Views.CalendarView;
 
 /**
  * Builds and holds the changing contents of window.
+ * 
+ * @author ZODVAAT.SZE
  */
 public interface GUIGenerator {
 	/**
