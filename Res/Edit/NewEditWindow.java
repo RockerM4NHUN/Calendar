@@ -212,7 +212,7 @@ public class NewEditWindow extends JDialog {
 						&& (int) hourFrom.getValue() == (int) hourTill.getValue()
 						&& (int) minFrom.getValue() == (int) minTill.getValue()) { // If have any error show error
 																					// window
-					JOptionPane.showMessageDialog(getContentPane(), "Begening of the event equals end of event!",
+					JOptionPane.showMessageDialog(getContentPane(), "Beginning of event equals end of event!",
 							"Date Error", JOptionPane.ERROR_MESSAGE);
 				} else if (((int) yearDateFrom.getValue() > (int) yearDateTill.getValue())
 						|| ((int) yearDateFrom.getValue() == (int) yearDateTill.getValue() && (int) monthDateFrom
@@ -230,7 +230,7 @@ public class NewEditWindow extends JDialog {
 								&& (int) hourFrom.getValue() == (int) hourTill.getValue() && (int) minFrom.getValue() > (int) minTill
 								.getValue())) {
 					JOptionPane.showMessageDialog(getContentPane(),
-							"Begening of the event mustn't be leater than the and of it!", "Date Error",
+							"The end of the given event must be later than its beginning!", "Date Error",
 							JOptionPane.ERROR_MESSAGE);
 				} else if (newTypeField.getText().equals("")) { // If no have new type make a new Entry with choose type
 					Res.Data.DataModel.getEntryList().add(
