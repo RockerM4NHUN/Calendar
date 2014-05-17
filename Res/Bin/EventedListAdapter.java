@@ -19,7 +19,6 @@ public class EventedListAdapter<ListItem> implements EventedListListener<ListIte
 	 * Called when full list modified.
 	 * 
 	 * @author ZODVAAT.SZE
-	 * @param oldVersion Old entries of list.
 	 * @param newVersion New entries of list.
 	 */
 	public void listModified(EventedList<ListItem> newVersion){}

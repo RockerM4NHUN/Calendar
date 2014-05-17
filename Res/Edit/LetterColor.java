@@ -63,7 +63,7 @@ public class LetterColor extends JDialog {
 	/**
 	 * Setter to set letter color.
 	 * 
-	 * @param letterColor
+	 * @param letterColor Value to be set.
 	 * */
 	public void setLetterColor(Color letterColor) {
 		this.letterColor = letterColor;

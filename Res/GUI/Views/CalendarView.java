@@ -43,6 +43,7 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 	/**
 	 * Adds SelectionChangedListener to view.
 	 * @author ZODVAAT.SZE
+	 * @param listener Value to add.
 	 */
 	public void addSelectionChangedListener(CalendarSelectionChangedListener listener){
 		for (CalendarSelectionChangedListener l : selectionChangedListeners){
@@ -55,6 +56,7 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 	 * Removes the listener.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param listener Value to remove.
 	 * @return False if listener not found.
 	 */
 	public boolean removeSelectionChangedListener(CalendarSelectionChangedListener listener){
@@ -65,6 +67,7 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 	 * Fires all SelectionChangedListeners
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param selected Selected value to dispatch.
 	 */
 	public void dispatchSelectionChanged(CalendarEntry selected){
 		for (CalendarSelectionChangedListener l : selectionChangedListeners){
@@ -76,6 +79,7 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 	 * Wrapper method for JPanels paintComponent()
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param g Graphics painting component.
 	 */
 	protected void abstractPaintComponent(Graphics g){
 		super.paintComponent(g);
@@ -117,20 +121,25 @@ public abstract class CalendarView extends JPanel implements CalendarEventGenera
 	public abstract void prevInterval();
 	/**
 	 * Displays the specified time interval.
+	 * @param t Specified time interval.
 	 */
 	public abstract void toInterval(Date t);
 	/**
 	 * Sets the selected entry.
+	 * @param e Selected entry.
+	 * @return Default value.
 	 */
 	public abstract boolean setSelected(CalendarEntry e);
 	/**
 	 * Displays the drawable contents.
+	 * @param g Drawable content.
 	 */
 	public abstract void paintComponent(Graphics g);
 	
 	/**
 	 * Handles the mouse clicks.
 	 * @author ZODVAAT.SZE
+	 * @param e Performed click.
 	 */
 	protected abstract void clickPerformed(MouseEvent e);
 }

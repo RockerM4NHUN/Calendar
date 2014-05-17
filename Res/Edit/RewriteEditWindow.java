@@ -89,6 +89,8 @@ public class RewriteEditWindow extends JDialog {
 	
 	/**
 	 * Default constructor to JDialog.
+	 * @param entry Calendar entry.
+	 * @param usingCalendarView Value for creating editing window.
 	 * */
 	public RewriteEditWindow(final CalendarEntry entry, final CalendarView usingCalendarView) {
 		setTitle("Modify " + entry.getTitle()); // Set title of window

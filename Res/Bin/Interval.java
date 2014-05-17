@@ -23,6 +23,7 @@ public class Interval{
 	
 	/**
 	 * @author ZODVAAT.SZE
+	 * @param i Intersect Interval value.
 	 * @return True if the two intervals have more than one common point.
 	 */
 	public boolean intersect(Interval i){
@@ -31,6 +32,7 @@ public class Interval{
 	
 	/**
 	 * @author ZODVAAT.SZE
+	 * @param i Intersection Interval value.
 	 * @return Returns new Interval or null if no intersection.
 	 */
 	public Interval intersection(Interval i){
@@ -40,7 +42,8 @@ public class Interval{
 	
 	/**
 	 * @author ZODVAAT.SZE
-	 * @return True if the point is in the interval. (start <= point < end)
+	 * @param i Containter value.
+	 * @return True if the point is in the interval. Start value must be less or equal to Point. Point value must be less than End value.
 	 */
 	public boolean contains(long i){
 		return (start <= i && i < end);
@@ -48,7 +51,8 @@ public class Interval{
 	
 	/**
 	 * @author ZODVAAT.SZE
-	 * @return True if the parameter is in the interval. (start <= i.start,i.end < end)
+	 * @param i Container Interval value.
+	 * @return True if the parameter is in the interval. Start value must be less or equal to Start interval. End interval must be less than End value.
 	 */
 	public boolean contains(Interval i){
 		return (contains(i.start) && contains(i.end));
@@ -56,6 +60,7 @@ public class Interval{
 	
 	/**
 	 * @author ZODVAAT.SZE
+	 * @param i Union Interval value.
 	 * @return Union of the intervals or null if not possible
 	 */
 	public Interval union(Interval i){
@@ -77,7 +82,7 @@ public class Interval{
 	
 	/**
 	 * @author ZODVAAT.SZE
-	 * @return True if the point is in the interval. (start <= point < end)
+	 * @return True if the point is in the interval. Start value must be less or equal to Point. Point value must be less than End value.
 	 */
 	public Interval clone(){
 		return new Interval(start,end);
@@ -85,6 +90,7 @@ public class Interval{
 	
 	/**
 	 * @author ZODVAAT.SZE
+	 * @param i Joinable Interval value.
 	 * @return True if there is no interval between the two intervals.
 	 */
 	public boolean joinable(Interval i){

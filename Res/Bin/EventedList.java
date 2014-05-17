@@ -35,6 +35,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Add's item to list.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param item An item of a list.
 	 * @return Boolean as specified in List.
 	 */
 	public boolean add(ListItem item){
@@ -47,6 +48,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Remove's all item's of list.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param l List to reset.
 	 */
 	public void resetList(List<ListItem> l){
 		if (l == null) Thrower.Throw(new NullPointerException("Argument can't be null"));
@@ -58,6 +60,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Remove's item from list.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param item Item to remove from list.
 	 * @return Boolean as specified in List.
 	 */
 	public boolean remove(ListItem item){
@@ -70,6 +73,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Remove's item from list.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param index ID of an item to remove.
 	 * @return Removed list item.
 	 */
 	public ListItem remove(int index){
@@ -124,6 +128,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Add's listener for list item added.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param l List listener item to add.
 	 */
 	public void addItemAddedListener(EventedListListener<ListItem> l){
 		addListeners.add(l);
@@ -133,6 +138,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Add's listener for list item removed.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param l List listener item to remove.
 	 */
 	public void addItemRemovedListener(EventedListListener<ListItem> l){
 		removeListeners.add(l);
@@ -142,6 +148,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Add's listener for list reseted.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param l List listener item to reset.
 	 */
 	public void addListResetListener(EventedListListener<ListItem> l){
 		resetListeners.add(l);
@@ -156,6 +163,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Removes's item added listener.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param l Item added listener to remove.
 	 * @return Boolean as specified in List.
 	 */
 	public boolean removeItemAddedListener(EventedListListener<ListItem> l){
@@ -166,6 +174,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Removes's item removed listener.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param l Item revoved listener to remove.
 	 * @return Boolean as specified in List.
 	 */
 	public boolean removeItemRemovedListener(EventedListListener<ListItem> l){
@@ -176,6 +185,7 @@ public class EventedList<ListItem> implements Iterable<ListItem>{
 	 * Removes's list reseted listener.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param l List reset listener to remove.
 	 * @return Boolean as specified in List.
 	 */
 	public boolean removeListResetListener(EventedListListener<ListItem> l){

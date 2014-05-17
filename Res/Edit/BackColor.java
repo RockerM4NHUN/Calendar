@@ -62,7 +62,7 @@ public class BackColor extends JDialog {
 	/**
 	 * Setter to set background color.
 	 * 
-	 * @param backColor
+	 * @param backColor Value to be set.
 	 * */
 	public void setBackColor(Color backColor) {
 		this.backColor = backColor;

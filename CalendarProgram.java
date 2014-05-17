@@ -31,7 +31,7 @@ public class CalendarProgram {
 	 * @author Zombori Dániel
 	 * @param args
 	 *            Passes arguments via command line
-	 * @throws IOException
+	 * @throws IOException Nimbus LAF not available
 	 */
 	public static void main(String[] args) throws IOException {
 		try {

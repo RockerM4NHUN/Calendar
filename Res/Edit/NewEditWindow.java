@@ -86,6 +86,7 @@ public class NewEditWindow extends JDialog {
 	
 	/**
 	 * Default constructor to JDialog.
+	 * @param usingCalendarView Value for creating editing window.
 	 * */
 	public NewEditWindow(final CalendarView usingCalendarView) {
 		setTitle("New event"); // Set title of window

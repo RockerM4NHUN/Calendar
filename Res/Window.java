@@ -69,7 +69,8 @@ public class Window extends JFrame {
 	public Dimension size;
 
 	/**
-	 * Default constructor, which make window.
+	 * Default constructor, which makes window.
+	 * @param path Path parameter required for window creating.
 	 */
 	public Window(String path) {
 		super("Calendar");

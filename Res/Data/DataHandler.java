@@ -54,7 +54,7 @@ public class DataHandler{
 	/**
 	 * Getting data from given string sample.
 	 * @param sampleText Given string to be handled.
-	 * @throws DataFormatException
+	 * @throws DataFormatException Exception cause by corrupted or misformatted data.
 	 * @author SZKVAAT.SZE
 	 * @author ZODVAAT.SZE
 	 */
@@ -76,8 +76,8 @@ public class DataHandler{
 	 * Reading data from given file converting it to handlable list of data.
 	 * @param fileName The given file's name.
 	 * @param data List for read data.
-	 * @throws IOException
-	 * @throws DataFormatException
+	 * @throws IOException Exception for data, which cannot be handled.
+	 * @throws DataFormatException Exception for corrupted or misformatted data.
 	 * @author ZODVAAT.SZE
 	 * @author SZKVAAT.SZE
 	 */
@@ -144,8 +144,7 @@ public class DataHandler{
 	 * Writing data into given file converting a specific list of data into a handlable data model.
 	 * @param fileName The given file's name.
 	 * @param data List for read data.
-	 * @throws IOException
-	 * @throws DataFormatException
+	 * @throws IOException Exception for data, which cannot be handled.
 	 * @author ZODVAAT.SZE
 	 * @author SZKVAAT.SZE
 	 */

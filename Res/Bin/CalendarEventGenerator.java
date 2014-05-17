@@ -9,6 +9,7 @@ public interface CalendarEventGenerator{
 	public void addSelectionChangedListener(CalendarSelectionChangedListener listener);
 	/**
 	 * @author ZODVAAT.SZE
+	 * @param listener Listener to remove.
 	 * @return True if the listener have been succesfully removed.
 	 */
 	public boolean removeSelectionChangedListener(CalendarSelectionChangedListener listener);

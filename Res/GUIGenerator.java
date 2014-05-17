@@ -12,6 +12,9 @@ import Res.GUI.Views.CalendarView;
 public interface GUIGenerator {
 	/**
 	 * Builds the gui in container on parent window.
+	 * @param parent Parent window.
+	 * @param container Container window.
+	 * @return Default value.
 	 */
 	public CalendarView show(Window parent, Container container);
 

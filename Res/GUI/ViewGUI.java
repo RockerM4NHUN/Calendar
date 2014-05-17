@@ -262,6 +262,8 @@ public class ViewGUI implements GUIGenerator {
 	 * Generates the string for date interval label.
 	 * 
 	 * @author ZODVAAT.SZE
+	 * @param time Time interval to get.
+	 * @return Timestamp.
 	 */
 	public static String getDateString(Interval time) {
 		Calendar c = Calendar.getInstance();
