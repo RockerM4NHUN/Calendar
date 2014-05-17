@@ -206,7 +206,7 @@ public class ViewGUI implements GUIGenerator {
 			ret += "Event ended " + formatTime(currentMillis - ival.getEnd()) + " ago";
 		}
 		ret += "<br/><br/>";
-		ret += "<b>Event description:</b><br/>" + e.getDescription();
+		ret += "<b>Event description:</b><br/>" + e.getDescription().replaceAll("\n","<br/>");
 		return ret + retEnd;
 	}
 
