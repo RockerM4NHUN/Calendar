@@ -12,12 +12,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Date;
 import java.util.LinkedList;
-import java.util.*;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.*;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -31,7 +33,6 @@ import Res.Edit.NewEditWindow;
 import Res.Edit.RewriteEditWindow;
 import Res.GUI.ViewGUI;
 import Res.GUI.Views.CalendarView;
-import Res.GUI.Views.WeekView;
 
 /**
  * Window class, which extends JFrame to whole GUI.
@@ -49,7 +50,7 @@ public class Window extends JFrame {
 	/** JMenu into the menu bar. */
 	private JMenu fileMenu;
 	private JMenu editMenu;
-	//private JMenu viewMenu;
+	// private JMenu viewMenu;
 	/** JMenuItem into the menus. */
 	private JMenuItem openItem;
 	private JMenuItem saveItem;
@@ -79,12 +80,12 @@ public class Window extends JFrame {
 
 		gui = null;
 		GUIPanel = getContentPane();
-		
-		fileFilter = new FileNameExtensionFilter("Calendar file",DataHandler.calendarExtension);
+
+		fileFilter = new FileNameExtensionFilter("Calendar file", DataHandler.calendarExtension);
 
 		menu = new JMenuBar();
 		fileMenu = new JMenu("  File  ");
-		fileMenu.setMinimumSize(new Dimension(120,1));
+		fileMenu.setMinimumSize(new Dimension(120, 1));
 		openItem = new JMenuItem("Open");
 		openItem.addActionListener(new ActionListener() { // Action listener to openItem
 			@Override
@@ -93,7 +94,9 @@ public class Window extends JFrame {
 				fileChooser.removeChoosableFileFilter(fileChooser.getChoosableFileFilters()[0]);
 				fileChooser.addChoosableFileFilter(fileFilter);
 				fileChooser.showSaveDialog(null);
-				if (fileChooser.getSelectedFile() == null) return;
+				if (fileChooser.getSelectedFile() == null) {
+					return;
+				}
 				openPath = fileChooser.getSelectedFile().getPath();
 				List<CalendarEntry> list = new LinkedList<CalendarEntry>();
 				try {
@@ -101,7 +104,8 @@ public class Window extends JFrame {
 					DataModel.getEntryList().resetList(list);
 				} catch (IOException exception) {
 					exception.printStackTrace();
-					JOptionPane.showMessageDialog(null,"Could not open save file.","Read error",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Could not open save file.", "Read error",
+							JOptionPane.ERROR_MESSAGE);
 				} catch (DataFormatException exception) {
 					exception.printStackTrace();
 					JOptionPane.showMessageDialog(getContentPane(), "File corrupted.", "Read Error",
@@ -113,61 +117,65 @@ public class Window extends JFrame {
 		saveItem.addActionListener(new ActionListener() { // Action listener to saveItem
 			@Override
 			public void actionPerformed(ActionEvent e) { // If select save item show chooser window and store file path
-				if (savePath == null || !new File(savePath).exists()){
+				if (savePath == null || !new File(savePath).exists()) {
 					fileChooser = new JFileChooser(openPath);
 					fileChooser.removeChoosableFileFilter(fileChooser.getChoosableFileFilters()[0]);
 					fileChooser.addChoosableFileFilter(fileFilter);
 					fileChooser.showSaveDialog(null);
-					if (fileChooser.getSelectedFile() == null) return;
+					if (fileChooser.getSelectedFile() == null) {
+						return;
+					}
 					savePath = fileChooser.getSelectedFile().getPath() + "." + DataHandler.calendarExtension;
 				}
-				
+
 				try {
 					DataHandler.writeData(savePath, DataModel.getEntryList());
 				} catch (IOException exception) {
 					exception.printStackTrace();
-					JOptionPane.showMessageDialog(getContentPane(),
-							"Error occured during save process.\nFile:\n" + savePath, "Save Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(getContentPane(), "Error occured during save process.\nFile:\n"
+							+ savePath, "Save Error", JOptionPane.ERROR_MESSAGE);
 				}
-				
-				try{
+
+				try {
 					Writer write = new FileWriter("Config.txt");
 					write.write(savePath);
 					write.close();
-				}catch(IOException exception){
+				} catch (IOException exception) {
 					exception.printStackTrace();
 				}
 			}
 		});
 		saveAsItem = new JMenuItem("Save As");
 		saveAsItem.addActionListener(new ActionListener() { // Action listener to saveAsItem
-			@Override
-			public void actionPerformed(ActionEvent e) { // If select save as item show chooser window and store
-															// file path
-				fileChooser = new JFileChooser(openPath);
-				fileChooser.removeChoosableFileFilter(fileChooser.getChoosableFileFilters()[0]);
-				fileChooser.addChoosableFileFilter(fileFilter);
-				fileChooser.showSaveDialog(null);
-				if (fileChooser.getSelectedFile() == null) return;
-				savePath = fileChooser.getSelectedFile().getPath() + "." + DataHandler.calendarExtension;
-				try {
-					DataHandler.writeData(savePath, DataModel.getEntryList());
-				} catch (IOException exception) {
-					exception.printStackTrace();
-					JOptionPane.showMessageDialog(getContentPane(), "Error occured during save process.\nFile:\n" + savePath, "Save Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-				
-				try{
-					Writer write = new FileWriter("Config.txt");
-					write.write(savePath);
-					write.close();
-				}catch(IOException exception){
-					exception.printStackTrace();
-				}
-			}
-		});
+					@Override
+					public void actionPerformed(ActionEvent e) { // If select save as item show chooser window and store
+																	// file path
+						fileChooser = new JFileChooser(openPath);
+						fileChooser.removeChoosableFileFilter(fileChooser.getChoosableFileFilters()[0]);
+						fileChooser.addChoosableFileFilter(fileFilter);
+						fileChooser.showSaveDialog(null);
+						if (fileChooser.getSelectedFile() == null) {
+							return;
+						}
+						savePath = fileChooser.getSelectedFile().getPath() + "." + DataHandler.calendarExtension;
+						try {
+							DataHandler.writeData(savePath, DataModel.getEntryList());
+						} catch (IOException exception) {
+							exception.printStackTrace();
+							JOptionPane.showMessageDialog(getContentPane(),
+									"Error occured during save process.\nFile:\n" + savePath, "Save Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+
+						try {
+							Writer write = new FileWriter("Config.txt");
+							write.write(savePath);
+							write.close();
+						} catch (IOException exception) {
+							exception.printStackTrace();
+						}
+					}
+				});
 		exitItem = new JMenuItem("Exit");
 		exitItem.addActionListener(new ActionListener() { // Action listener to exitItem
 			@Override
@@ -192,7 +200,7 @@ public class Window extends JFrame {
 							JOptionPane.showMessageDialog(getContentPane(), "No selected event!", "Selected Error",
 									JOptionPane.ERROR_MESSAGE);
 						} else {
-							RewriteEditWindow r = new RewriteEditWindow(wgui.selectedEntry,usingCalendarView);
+							RewriteEditWindow r = new RewriteEditWindow(wgui.selectedEntry, usingCalendarView);
 							r.setVisible(true);
 						}
 					}
@@ -216,31 +224,27 @@ public class Window extends JFrame {
 				});
 		currentDateItem = new JButton("Current date");
 		currentDateItem.addActionListener(new ActionListener() { // Action listener to weekItem
-			@Override
-			public void actionPerformed(ActionEvent e) { // If select week item refresh gui to week view
-				usingCalendarView.toInterval(new Date(System.currentTimeMillis()));
-			}
-		});
-		/*viewMenu = new JMenu("View");
-		weekItem = new JMenuItem("Week");
-		weekItem.addActionListener(new ActionListener() { // Action listener to weekItem
-			@Override
-			public void actionPerformed(ActionEvent e) { // If select week item refresh gui to week view
-				refreshGUI(wgui);
-			}
-		});
-		monthItem = new JMenuItem("Month");
-		// monthItem.addActionListener(new ActionListener() { // Action listener to monthItem
-		// @Override
-		// public void actionPerformed(ActionEvent e) { // If select month item refresh gui to month view
-		// refreshGUI(new ViewGUI());
-		// }
-		// });*/
-		
+					@Override
+					public void actionPerformed(ActionEvent e) { // If select week item refresh gui to week view
+						usingCalendarView.toInterval(new Date(System.currentTimeMillis()));
+						Res.GUI.ViewGUI.label.setText(Res.GUI.ViewGUI.getDateString(usingCalendarView
+								.getDisplayedInterval()));
+					}
+				});
+		/*
+		 * viewMenu = new JMenu("View"); weekItem = new JMenuItem("Week"); weekItem.addActionListener(new
+		 * ActionListener() { // Action listener to weekItem
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) { // If select week item refresh gui to week view
+		 * refreshGUI(wgui); } }); monthItem = new JMenuItem("Month"); // monthItem.addActionListener(new
+		 * ActionListener() { // Action listener to monthItem // @Override // public void actionPerformed(ActionEvent e)
+		 * { // If select month item refresh gui to month view // refreshGUI(new ViewGUI()); // } // });
+		 */
+
 		setJMenuBar(menu); // Add menu bar to window
 		menu.add(fileMenu); // Add menus to menu bar
 		menu.add(editMenu);
-		//menu.add(viewMenu);
+		// menu.add(viewMenu);
 		menu.add(currentDateItem);
 		fileMenu.add(openItem); // Add menu items to file menu
 		fileMenu.addSeparator();
@@ -254,10 +258,10 @@ public class Window extends JFrame {
 		editMenu.add(reWriteItem);
 		editMenu.addSeparator();
 		editMenu.add(deleteItem);
-		//viewMenu.add(weekItem); // Add menu items to view menu
-		//v/ewMenu.addSeparator();
-		//viewMenu.add(monthItem);
-		
+		// viewMenu.add(weekItem); // Add menu items to view menu
+		// v/ewMenu.addSeparator();
+		// viewMenu.add(monthItem);
+
 		setLayout(new FlowLayout());
 		pack();
 
@@ -278,10 +282,10 @@ public class Window extends JFrame {
 		int height = gd.getDisplayMode().getHeight() - 100;
 		if (height < reqHeight + extraH) {
 			size = new Dimension(reqWidth + extraW, height);
-			//setSize(reqWidth + extraW, height - 50);
+			// setSize(reqWidth + extraW, height - 50);
 		} else {
 			size = new Dimension(reqWidth + extraW, reqHeight + extraH);
-			//setSize(reqWidth + extraW, reqHeight + extraH);
+			// setSize(reqWidth + extraW, reqHeight + extraH);
 		}
 		setSize(size);
 
